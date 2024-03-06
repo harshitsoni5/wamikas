@@ -1,0 +1,94 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:wamikas/Utils/Color/colors.dart';
+import '../../SharedPrefernce/shared_pref.dart';
+import '../../Utils/Components/Text/simple_text.dart';
+import '../../Utils/Routes/route_name.dart';
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen>with SingleTickerProviderStateMixin {
+
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 5),
+    )..addListener(() {
+      setState(() {});
+    });
+    controller.repeat();
+    Timer(
+        const Duration(seconds: 5),
+            () {
+          SharedData.getIsLoggedIn('IsOnboardDone').then((value) {
+            if (value == true) {
+              SharedData.getIsLoggedIn('IsLoggedIn').then((value1) {
+                if (value1 == true) {
+                  Navigator.pushReplacementNamed(context, RouteName.signIn);
+                }
+                else {
+                  Navigator.pushReplacementNamed(context, RouteName.signIn);
+                }
+              });
+            }
+            else {
+              Navigator.pushReplacementNamed(context, RouteName.welcome);
+            }
+          }
+          );
+        });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      backgroundColor: const Color(0xFFFFFFFF),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+                width: size.width*0.6,
+                height:  size.height*0.4,
+                child: SvgPicture.asset(
+                    "assets/svg/logo.svg")),
+            Container(
+              width: size.width*0.3,
+              margin: const EdgeInsets.symmetric(horizontal: 50),
+              child: LinearProgressIndicator(
+                borderRadius: BorderRadius.circular(40),
+                color: ColorClass.textColor,
+                value: controller.value,
+                semanticsLabel: 'Linear progress indicator',
+              ),
+            ),
+            const SimpleText(
+              text: 'LOADING....',
+              textAlign: TextAlign.center,
+              fontColor: Colors.black,
+              fontSize: 10,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
