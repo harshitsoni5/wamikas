@@ -7,11 +7,13 @@ class TextFieldContainer extends StatelessWidget {
   final String hintText;
   final String titleBox;
   final TextEditingController controller;
+  final int? maxLines;
   const TextFieldContainer({
     super.key,
     required this.hintText,
     required this.titleBox,
     required this.controller,
+    this.maxLines,
   });
 
   @override
@@ -38,6 +40,7 @@ class TextFieldContainer extends StatelessWidget {
           ),
           child: TextField(
             controller: controller,
+            maxLines: maxLines,
             decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.only(left: 10),
@@ -49,7 +52,7 @@ class TextFieldContainer extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 15,)
+        const SizedBox(height: 10,)
       ],
     );
   }

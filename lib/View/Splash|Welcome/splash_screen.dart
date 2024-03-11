@@ -59,34 +59,47 @@ class _SplashScreenState extends State<SplashScreen>with SingleTickerProviderSta
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-                width: size.width*0.6,
-                height:  size.height*0.4,
-                child: SvgPicture.asset(
-                    "assets/svg/logo.svg")),
-            Container(
-              width: size.width*0.3,
-              margin: const EdgeInsets.symmetric(horizontal: 50),
-              child: LinearProgressIndicator(
-                borderRadius: BorderRadius.circular(40),
-                color: ColorClass.textColor,
-                value: controller.value,
-                semanticsLabel: 'Linear progress indicator',
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFFFFFFF), // Top color (white)
+              Color(0xffE3289A), // Bottom color (light pinkish)
+            ],
+            stops: [0.7, 1.0],
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                  width: size.width*0.6,
+                  height:  size.height*0.4,
+                  child: SvgPicture.asset(
+                      "assets/svg/logo.svg")),
+              Container(
+                width: size.width*0.3,
+                margin: const EdgeInsets.symmetric(horizontal: 50),
+                child: LinearProgressIndicator(
+                  borderRadius: BorderRadius.circular(40),
+                  color: ColorClass.textColor,
+                  value: controller.value,
+                  semanticsLabel: 'Linear progress indicator',
+                ),
               ),
-            ),
-            const SimpleText(
-              text: 'LOADING....',
-              textAlign: TextAlign.center,
-              fontColor: Colors.black,
-              fontSize: 10,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w500,
-            ),
-          ],
+              const SimpleText(
+                text: 'LOADING....',
+                textAlign: TextAlign.center,
+                fontColor: Colors.black,
+                fontSize: 10,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w500,
+              ),
+            ],
+          ),
         ),
       ),
     );

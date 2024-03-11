@@ -104,6 +104,7 @@ class FirebaseAuthService {
     }
   }
 
+
   Future<String?> addPinToTheUser(
       {required User user, required String pin}) async {
     try {
@@ -169,4 +170,5 @@ class FirebaseAuthService {
       return false;
     }
   }
+
 }

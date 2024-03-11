@@ -102,6 +102,7 @@ androidx/coordinatorlayout/widget/CoordinatorLayout$DispatchChangeEvent.class
 androidx/core/app/CoreComponentFactory$CompatWrapped.class
 androidx/core/app/CoreComponentFactory.class
 androidx/core/app/FrameMetricsAggregator$MetricType.class
+androidx/core/app/GrammaticalInflectionManagerCompat$GrammaticalGender.class
 androidx/core/app/NotificationCompat$Action$SemanticAction.class
 androidx/core/app/NotificationCompat$BadgeIconType.class
 androidx/core/app/NotificationCompat$CallStyle$CallType.class
@@ -109,6 +110,7 @@ androidx/core/app/NotificationCompat$GroupAlertBehavior.class
 androidx/core/app/NotificationCompat$NotificationVisibility.class
 androidx/core/app/NotificationCompat$ServiceNotificationBehavior.class
 androidx/core/app/NotificationCompat$StreamType.class
+androidx/core/app/NotificationManagerCompat$InterruptionFilter.class
 androidx/core/app/PendingIntentCompat$Flags.class
 androidx/core/app/RemoteInput$EditChoicesBeforeSending.class
 androidx/core/app/RemoteInput$Source.class
@@ -125,11 +127,21 @@ androidx/core/graphics/drawable/IconCompat$IconType.class
 androidx/core/location/GnssStatusCompat$ConstellationType.class
 androidx/core/location/LocationRequestCompat$Quality.class
 androidx/core/net/ConnectivityManagerCompat$RestrictBackgroundStatus.class
+androidx/core/os/BuildCompat$PrereleaseSdkCheck.class
+androidx/core/os/BuildCompat.class
 androidx/core/os/TraceKt.class
 androidx/core/provider/FontsContractCompat$FontRequestCallback$FontRequestFailReason.class
 androidx/core/text/util/LinkifyCompat$LinkifyMask.class
+androidx/core/text/util/LocalePreferences$CalendarType$CalendarTypes.class
+androidx/core/text/util/LocalePreferences$FirstDayOfWeek$Days.class
+androidx/core/text/util/LocalePreferences$HourCycle$HourCycleTypes.class
+androidx/core/text/util/LocalePreferences$TemperatureUnit$TemperatureUnits.class
+androidx/core/util/TypedValueCompat$ComplexDimensionUnit.class
 androidx/core/view/ContentInfoCompat$Flags.class
 androidx/core/view/ContentInfoCompat$Source.class
+androidx/core/view/HapticFeedbackConstantsCompat$HapticFeedbackFlags.class
+androidx/core/view/HapticFeedbackConstantsCompat$HapticFeedbackType.class
+androidx/core/view/VelocityTrackerCompat$VelocityTrackableMotionEventAxis.class
 androidx/core/view/ViewCompat$FocusDirection.class
 androidx/core/view/ViewCompat$FocusRealDirection.class
 androidx/core/view/ViewCompat$FocusRelativeDirection.class

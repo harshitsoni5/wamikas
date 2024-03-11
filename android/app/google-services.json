@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "186413252291",
-    "project_id": "wamikas1",
-    "storage_bucket": "wamikas1.appspot.com"
+    "project_number": "350187485615",
+    "project_id": "wamikas-c82b2",
+    "storage_bucket": "wamikas-c82b2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:186413252291:android:2ad7bc68ed5d7420fdec76",
+        "mobilesdk_app_id": "1:350187485615:android:f9d20580d8392e6286d75a",
         "android_client_info": {
           "package_name": "com.example.wamikas"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD33SyZDJ3qymDSY2I9YCjouSNuvGsenY8"
+          "current_key": "AIzaSyAlDmwOlgjGVXxLXGE8SbvHs9wu_VcdcSM"
         }
       ],
       "services": {

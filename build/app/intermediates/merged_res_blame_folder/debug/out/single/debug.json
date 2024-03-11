@@ -16,10 +16,6 @@
         "source": "com.example.wamikas.app-main-35:/mipmap-hdpi/ic_launcher.png"
     },
     {
-        "merged": "com.example.wamikas.app-merged_res-41:/drawable_launch_background.xml.flat",
-        "source": "com.example.wamikas.app-main-35:/drawable/launch_background.xml"
-    },
-    {
         "merged": "com.example.wamikas.app-merged_res-41:/mipmap-xhdpi_ic_launcher.png.flat",
         "source": "com.example.wamikas.app-main-35:/mipmap-xhdpi/ic_launcher.png"
     },

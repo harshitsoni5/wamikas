@@ -3,7 +3,7 @@
   "packages": [
     {
       "name": "_flutterfire_internals",
-      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/_flutterfire_internals-1.3.23",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/_flutterfire_internals-1.3.24",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -86,6 +86,12 @@
       "languageVersion": "2.15"
     },
     {
+      "name": "dotted_border",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/dotted_border-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "fake_async",
       "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/fake_async-1.3.1",
       "packageUri": "lib/",
@@ -110,20 +116,38 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "firebase_app_check",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/firebase_app_check-0.2.1+16",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "firebase_app_check_platform_interface",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/firebase_app_check_platform_interface-0.1.0+18",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "firebase_app_check_web",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/firebase_app_check_web-0.1.0+18",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "firebase_auth",
-      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/firebase_auth-4.17.6",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/firebase_auth-4.17.7",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_auth_platform_interface",
-      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/firebase_auth_platform_interface-7.1.6",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/firebase_auth_platform_interface-7.1.7",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_auth_web",
-      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/firebase_auth_web-5.9.6",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/firebase_auth_web-5.9.7",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -162,6 +186,12 @@
       "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/firebase_storage_web-3.7.1",
       "packageUri": "lib/",
       "languageVersion": "3.2"
+    },
+    {
+      "name": "fixnum",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/fixnum-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
     },
     {
       "name": "flutter",
@@ -204,6 +234,72 @@
       "rootUri": "file:///home/amantya/snap/flutter/common/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "3.2"
+    },
+    {
+      "name": "fluttertoast",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/fluttertoast-8.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "geocoding",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/geocoding-2.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "geocoding_android",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/geocoding_android-3.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "geocoding_ios",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/geocoding_ios-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "geocoding_platform_interface",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/geocoding_platform_interface-3.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "geolocator",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/geolocator-11.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "geolocator_android",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/geolocator_android-4.5.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "geolocator_apple",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/geolocator_apple-2.3.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "geolocator_platform_interface",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/geolocator_platform_interface-4.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "geolocator_web",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/geolocator_web-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "geolocator_windows",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/geolocator_windows-0.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
     },
     {
       "name": "google_fonts",
@@ -320,6 +416,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "path_drawing",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/path_drawing-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "path_parsing",
       "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/path_parsing-1.0.1",
       "packageUri": "lib/",
@@ -360,6 +462,42 @@
       "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/path_provider_windows-2.2.1",
       "packageUri": "lib/",
       "languageVersion": "2.19"
+    },
+    {
+      "name": "permission_handler",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/permission_handler-11.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "permission_handler_android",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/permission_handler_android-12.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "permission_handler_apple",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/permission_handler_apple-9.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "permission_handler_html",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/permission_handler_html-0.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "permission_handler_platform_interface",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/permission_handler_platform_interface-4.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "permission_handler_windows",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/permission_handler_windows-0.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "petitparser",
@@ -458,6 +596,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "sprintf",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/sprintf-7.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "stack_trace",
       "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/stack_trace-1.11.1",
       "packageUri": "lib/",
@@ -548,6 +692,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "uuid",
+      "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/uuid-4.3.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "vector_graphics",
       "rootUri": "file:///home/amantya/.pub-cache/hosted/pub.dev/vector_graphics-1.1.11+1",
       "packageUri": "lib/",
@@ -608,7 +758,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-03-06T08:59:39.087826Z",
+  "generated": "2024-03-11T08:29:14.877951Z",
   "generator": "pub",
   "generatorVersion": "3.3.0"
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="gcm_defaultSenderId" translatable="false">186413252291</string>
-    <string name="google_api_key" translatable="false">AIzaSyD33SyZDJ3qymDSY2I9YCjouSNuvGsenY8</string>
-    <string name="google_app_id" translatable="false">1:186413252291:android:2ad7bc68ed5d7420fdec76</string>
-    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyD33SyZDJ3qymDSY2I9YCjouSNuvGsenY8</string>
-    <string name="google_storage_bucket" translatable="false">wamikas1.appspot.com</string>
-    <string name="project_id" translatable="false">wamikas1</string>
+    <string name="gcm_defaultSenderId" translatable="false">350187485615</string>
+    <string name="google_api_key" translatable="false">AIzaSyAlDmwOlgjGVXxLXGE8SbvHs9wu_VcdcSM</string>
+    <string name="google_app_id" translatable="false">1:350187485615:android:f9d20580d8392e6286d75a</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAlDmwOlgjGVXxLXGE8SbvHs9wu_VcdcSM</string>
+    <string name="google_storage_bucket" translatable="false">wamikas-c82b2.appspot.com</string>
+    <string name="project_id" translatable="false">wamikas-c82b2</string>
 </resources>

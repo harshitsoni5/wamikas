@@ -20,4 +20,9 @@ class SharedData {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool("IsOnboardDone", value);
   }
+
+  static Future setUid(String uid) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("uid", uid);
+  }
 }

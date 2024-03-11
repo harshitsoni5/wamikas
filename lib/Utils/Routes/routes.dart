@@ -3,6 +3,10 @@ import 'package:wamikas/Utils/Routes/route_name.dart';
 import 'package:wamikas/View/AuthScreens/auth_screen.dart';
 import 'package:wamikas/View/AuthScreens/signup.dart';
 import 'package:wamikas/View/Splash%7CWelcome/welcome_screen.dart';
+import 'package:wamikas/View/UserDetails/create_job_profile.dart';
+import 'package:wamikas/View/UserDetails/intrests.dart';
+import 'package:wamikas/View/UserDetails/location_deatils.dart';
+import 'package:wamikas/View/UserDetails/upload_photo.dart';
 import '../../View/AuthScreens/otp_verfication.dart';
 import '../../View/AuthScreens/signin.dart';
 import '../../View/Splash|Welcome/splash_screen.dart';
@@ -17,6 +21,18 @@ class Routes {
         case RouteName.register:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SignUp());
+        case RouteName.interests:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const Interests());
+        case RouteName.createJobProfile:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const CreateJobProfile());
+        case RouteName.locationDetails:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const LocationDetails());
+        case RouteName.uploadPhoto:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const UploadPhoto());
         case RouteName.splash:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SplashScreen());
@@ -30,8 +46,18 @@ class Routes {
         return MaterialPageRoute(
             builder: (BuildContext context) => const SignIn());
         case RouteName.otpVerification:
-          return MaterialPageRoute(
-              builder: (BuildContext context) =>  const OtpVerification());
+          if(argument is Map){
+            return MaterialPageRoute(
+                builder: (BuildContext context) =>   OtpVerification(
+                  verificationId: argument["verificationId"],));
+          }
+          return MaterialPageRoute(builder: (_) {
+            return const Scaffold(
+              body: Center(
+                child: Text('No route defined'),
+              ),
+            );
+          });
       default:
         return MaterialPageRoute(builder: (_) {
           return const Scaffold(
