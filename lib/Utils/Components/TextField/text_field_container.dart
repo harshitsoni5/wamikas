@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../Text/simple_text.dart';
 
 class TextFieldContainer extends StatelessWidget {
@@ -8,12 +7,14 @@ class TextFieldContainer extends StatelessWidget {
   final String titleBox;
   final TextEditingController controller;
   final int? maxLines;
+  final bool? readOnlyTrue;
   const TextFieldContainer({
     super.key,
     required this.hintText,
     required this.titleBox,
     required this.controller,
     this.maxLines,
+    this.readOnlyTrue,
   });
 
   @override
@@ -41,6 +42,7 @@ class TextFieldContainer extends StatelessWidget {
           child: TextField(
             controller: controller,
             maxLines: maxLines,
+            readOnly: readOnlyTrue ?? false,
             decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.only(left: 10),

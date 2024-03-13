@@ -84,12 +84,37 @@ class _SignUpState extends State<SignUp> {
                    if(state is AuthCodeSentState){
                      Navigator.of(context).pushNamed(
                          RouteName.otpVerification,arguments:{
-                           "verificationId" : state.verificationId
-                     });
+                           "verificationId" : state.verificationId,
+                           "phone":phone.text,
+                           "email":email.text,
+                           "username":name.text,
+                           "fromLogin":false
+                         });
                    }
                    if(state is AuthErrorState){
                      Fluttertoast.showToast(
                          msg: "oops something went wrong",
+                         toastLength: Toast.LENGTH_SHORT,
+                         gravity: ToastGravity.CENTER,
+                         timeInSecForIosWeb: 1,
+                         textColor: Colors.black,
+                         fontSize: 15.0
+                     );
+                   }
+                   if(state is UserAlreadyExists){
+                     Fluttertoast.showToast(
+                         msg: "user already exists",
+                         toastLength: Toast.LENGTH_SHORT,
+                         gravity: ToastGravity.CENTER,
+                         timeInSecForIosWeb: 1,
+                         textColor: Colors.black,
+                         fontSize: 15.0
+                     );
+                   }
+
+                   if(state is FormNotFilledProperly){
+                     Fluttertoast.showToast(
+                         msg: "please fill out the form properly",
                          toastLength: Toast.LENGTH_SHORT,
                          gravity: ToastGravity.CENTER,
                          timeInSecForIosWeb: 1,
@@ -106,7 +131,10 @@ class _SignUpState extends State<SignUp> {
                         margin: const EdgeInsets.symmetric(horizontal: 25),
                         child: InkWell(
                           onTap: (){
-                            BlocProvider.of<SignupCubit>(context).sendOtp(phone.text);
+                            BlocProvider.of<SignupCubit>(context).register(
+                                phone.text,
+                                name.text
+                            );
                           },
                             child: RoundAuthButtons(size: size, btnText: "Send OTP"))
                     );

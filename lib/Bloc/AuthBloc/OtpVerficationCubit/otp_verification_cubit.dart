@@ -1,12 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wamikas/Core/FirebaseDataBaseService/firestore_database_services.dart';
 import 'package:wamikas/SharedPrefernce/shared_pref.dart';
 import 'otp_verfication_state.dart';
-
+//9582973777
 class OtpVerificationCubit extends Cubit<OtpVerificationState> {
   OtpVerificationCubit() : super(OtpVerificationInitial());
 
-  Future verifyOtp(String otp,String verificationId)async {
+  Future verifyOtp(
+      String otp,
+      String verificationId,
+      String? username,
+      String phoneNumber,
+      String? email
+      )async {
     emit(OtpVerificationLoading());
     try {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
@@ -15,13 +23,23 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> {
       );
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithCredential(credential);
-
       if (userCredential.additionalUserInfo!.isNewUser) {
         SharedData.setUid(userCredential.user!.uid);
+        SharedData.setPhone(phoneNumber);
+        CollectionReference collectionReference = FireStoreDataBaseServices.
+        createNewCollectionOrAddToExisting("users");
+        collectionReference.doc(phoneNumber).
+        set({
+          "name":username,
+          "phone":phoneNumber,
+          "email":email
+        });
         emit(OtpVerificationSuccess());
         emit(OtpVerificationInitial());
-      } else {
+      }
+      else {
         SharedData.setUid(userCredential.user!.uid);
+        SharedData.setPhone(phoneNumber);
         emit(OtpVerificationUserAlreadyExistsState());
         emit(OtpVerificationInitial());
       }

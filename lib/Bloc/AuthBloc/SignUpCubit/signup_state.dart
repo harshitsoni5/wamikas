@@ -13,6 +13,12 @@ class AuthCodeSentState extends SignUpActionState {
   AuthCodeSentState({required this.verificationId});
 }
 
+class UserAlreadyExists extends SignUpActionState{}
+
+class UserNotExists extends SignUpActionState{}
+
+class FormNotFilledProperly extends SignUpActionState{}
+
 class AuthCodeVerifiedState extends SignupState {}
 
 class AuthLoggedInState extends SignupState {

@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wamikas/Bloc/AuthBloc/OtpVerficationCubit/otp_verification_cubit.dart';
 import 'package:wamikas/Bloc/AuthBloc/SignUpCubit/signup_cubit.dart';
+import 'package:wamikas/Bloc/UserProfileBloc/CreateJobProfile/create_job_profile_cubit.dart';
+import 'package:wamikas/Bloc/UserProfileBloc/ImageCubit/upload_image_cubit.dart';
+import 'package:wamikas/Bloc/UserProfileBloc/LocationCubit/location_cubit.dart';
+import 'Bloc/UserProfileBloc/InterestsCubit/interests_cubit.dart';
 import 'Utils/Routes/route_name.dart';
 import 'Utils/Routes/routes.dart';
 
@@ -15,6 +19,7 @@ void main() async{
       appId: "1:350187485615:android:f9d20580d8392e6286d75a",
       messagingSenderId: "350187485615",
       projectId: "wamikas-c82b2",
+      storageBucket: "wamikas-c82b2.appspot.com",
     ),
   );
   await FirebaseAppCheck.instance.activate(
@@ -36,13 +41,21 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) =>SignupCubit()),
         BlocProvider<OtpVerificationCubit>(
             create: (BuildContext context) =>OtpVerificationCubit()),
+        BlocProvider<LocationCubit>(
+            create: (BuildContext context) =>LocationCubit()),
+        BlocProvider<UploadImageCubit>(
+            create: (BuildContext context) =>UploadImageCubit()),
+        BlocProvider<CreateJobProfileCubit>(
+            create: (BuildContext context) =>CreateJobProfileCubit()),
+        BlocProvider<InterestsCubit>(
+            create: (BuildContext context) =>InterestsCubit()),
       ],
       child: MaterialApp(
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        initialRoute: RouteName.locationDetails,
+        initialRoute: RouteName.signIn,
         onGenerateRoute: Routes.generateRoute,
         debugShowCheckedModeBanner: false,
       ),

@@ -1,0 +1,1 @@
+ /home/amantya/StudioProjects/wamikas/.dart_tool/flutter_build/7c657ca8aec33fa3fc8c5ed9b43f92e7/native_assets.yaml: 

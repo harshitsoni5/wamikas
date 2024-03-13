@@ -11,6 +11,11 @@ class SharedData {
     preferences.setBool("IsLoggedIn", value);
   }
 
+  static Future setPhone(String phone) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("phone", phone);
+  }
+
   static Future getIsOnboardDone(String key) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.get(key);
@@ -24,5 +29,10 @@ class SharedData {
   static Future setUid(String uid) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("uid", uid);
+  }
+
+  static Future setImageUrl(String imageUrl) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("profile", imageUrl);
   }
 }

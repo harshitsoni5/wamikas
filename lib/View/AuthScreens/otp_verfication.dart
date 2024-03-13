@@ -7,11 +7,23 @@ import 'package:wamikas/Bloc/AuthBloc/OtpVerficationCubit/otp_verfication_state.
 import 'package:wamikas/Bloc/AuthBloc/OtpVerficationCubit/otp_verification_cubit.dart';
 import 'package:wamikas/Utils/Color/colors.dart';
 import 'package:wamikas/Utils/Components/Text/simple_text.dart';
+import 'package:wamikas/Utils/Routes/route_name.dart';
 import '../../Utils/Components/Buttons/round_auth_buttons.dart';
 
 class OtpVerification extends StatefulWidget {
   final String verificationId;
-  const OtpVerification({super.key, required this.verificationId});
+  final String? email;
+  final String? username;
+  final String phone;
+  final bool fromLogin;
+  const OtpVerification({
+    super.key,
+    required this.verificationId,
+    required this.email,
+    required this.username,
+    required this.phone,
+    required this.fromLogin,
+  });
 
   @override
   State<OtpVerification> createState() => _OtpVerificationState();
@@ -55,8 +67,8 @@ class _OtpVerificationState extends State<OtpVerification> {
                   fontColor: Colors.black,
                   fontWeight:FontWeight.w500,
                 ),
-                const SimpleText(
-                  text: "+91- 96XXXX1317",
+                 SimpleText(
+                  text: "+91- ${widget.phone}",
                   fontSize: 16,
                   textAlign: TextAlign.center,
                   fontColor: Colors.black,
@@ -143,24 +155,12 @@ class _OtpVerificationState extends State<OtpVerification> {
                   buildWhen: (previous, current) => current is! OtpVerificationActionState,
                   listener: (context, state) {
                     if(state is OtpVerificationSuccess){
-                      Fluttertoast.showToast(
-                          msg: "User Signed in",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
-                          textColor: Colors.black,
-                          fontSize: 15.0
-                      );
+                     Navigator.of(context).pushNamedAndRemoveUntil(
+                         RouteName.locationDetails, (route) => false);
                     }
                     if(state is OtpVerificationUserAlreadyExistsState){
-                      Fluttertoast.showToast(
-                          msg: "User already exists",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
-                          textColor: Colors.black,
-                          fontSize: 15.0
-                      );
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          RouteName.interests, (route) => false);
                     }
                     if(state is OtpVerificationFailed){
                       Fluttertoast.showToast(
@@ -182,7 +182,10 @@ class _OtpVerificationState extends State<OtpVerification> {
                     child: InkWell(
                       onTap: (){
                         BlocProvider.of<OtpVerificationCubit>(context).
-                        verifyOtp(pin.text, widget.verificationId);
+                        verifyOtp(pin.text, widget.verificationId,
+                          widget.username, widget.phone,
+                          widget.email
+                        );
                       },
                         child: RoundAuthButtons(size: size, btnText: "Validate"))
                 );
