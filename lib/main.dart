@@ -5,9 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wamikas/Bloc/AuthBloc/OtpVerficationCubit/otp_verification_cubit.dart';
 import 'package:wamikas/Bloc/AuthBloc/SignUpCubit/signup_cubit.dart';
+import 'package:wamikas/Bloc/UserProfileBloc/ContactDetailsCubit/contact_details_cubit.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/CreateJobProfile/create_job_profile_cubit.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/ImageCubit/upload_image_cubit.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/LocationCubit/location_cubit.dart';
+import 'package:wamikas/Bloc/UserProfileBloc/UserProfileBloc/user_profile_bloc.dart';
 import 'Bloc/UserProfileBloc/InterestsCubit/interests_cubit.dart';
 import 'Utils/Routes/route_name.dart';
 import 'Utils/Routes/routes.dart';
@@ -50,6 +52,10 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) =>CreateJobProfileCubit()),
         BlocProvider<InterestsCubit>(
             create: (BuildContext context) =>InterestsCubit()),
+        BlocProvider<UserProfileBloc>(
+            create: (BuildContext context) =>UserProfileBloc()),
+        BlocProvider<ContactDetailsCubit>(
+            create: (BuildContext context) =>ContactDetailsCubit()),
       ],
       child: ScreenUtilInit(
         child: MaterialApp(
@@ -57,7 +63,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          initialRoute: RouteName.signIn,
+          initialRoute: RouteName.splash,
           onGenerateRoute: Routes.generateRoute,
           debugShowCheckedModeBanner: false,
         ),

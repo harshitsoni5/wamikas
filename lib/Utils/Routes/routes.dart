@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:wamikas/Models/user_profile_model.dart';
 import 'package:wamikas/Utils/Routes/route_name.dart';
 import 'package:wamikas/View/AuthScreens/auth_screen.dart';
 import 'package:wamikas/View/AuthScreens/signup.dart';
 import 'package:wamikas/View/Splash%7CWelcome/welcome_screen.dart';
+import 'package:wamikas/View/UserDetails/contact_details.dart';
 import 'package:wamikas/View/UserDetails/create_job_profile.dart';
 import 'package:wamikas/View/UserDetails/edit_profile.dart';
 import 'package:wamikas/View/UserDetails/interests.dart';
+import 'package:wamikas/View/UserDetails/job_description.dart';
 import 'package:wamikas/View/UserDetails/location_deatils.dart';
 import 'package:wamikas/View/UserDetails/upload_photo.dart';
 import 'package:wamikas/View/UserDetails/user_profile.dart';
@@ -30,8 +33,44 @@ class Routes {
         return MaterialPageRoute(
             builder: (BuildContext context) => const UserProfile());
         case RouteName.editProfile:
-        return MaterialPageRoute(
-            builder: (BuildContext context) => const EditProfile());
+          if(argument is UserProfileModel){
+            return MaterialPageRoute(
+                builder: (BuildContext context) =>  EditProfile(
+                  userData: argument,));
+          }
+          return MaterialPageRoute(builder: (_) {
+            return const Scaffold(
+              body: Center(
+                child: Text('No route defined'),
+              ),
+            );
+          });
+          case RouteName.jobDescription:
+          if(argument is UserProfileModel){
+            return MaterialPageRoute(
+                builder: (BuildContext context) =>  JobProfileDescription(
+                  userData: argument,));
+          }
+          return MaterialPageRoute(builder: (_) {
+            return const Scaffold(
+              body: Center(
+                child: Text('No route defined'),
+              ),
+            );
+          });
+          case RouteName.contactDetails:
+          if(argument is UserProfileModel){
+            return MaterialPageRoute(
+                builder: (BuildContext context) =>  ContactDetails(
+                  userData: argument,));
+          }
+          return MaterialPageRoute(builder: (_) {
+            return const Scaffold(
+              body: Center(
+                child: Text('No route defined'),
+              ),
+            );
+          });
         case RouteName.createJobProfile:
         return MaterialPageRoute(
             builder: (BuildContext context) => const CreateJobProfile());

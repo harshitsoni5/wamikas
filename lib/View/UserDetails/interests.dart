@@ -124,7 +124,7 @@ class _InterestsState extends State<Interests> {
                     BlocConsumer<InterestsCubit, InterestsState>(
                     listener: (context, state) {
                       if(state is InterestsSuccess){
-                        Navigator.of(context).pushNamed(RouteName.locationDetails);
+                        Navigator.of(context).pushNamed(RouteName.userProfile);
                       }
                       if(state is InterestsNotSelected){
                         Fluttertoast.showToast(

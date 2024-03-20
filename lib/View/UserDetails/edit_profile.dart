@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wamikas/Models/user_profile_model.dart';
+import 'package:wamikas/Utils/Routes/route_name.dart';
+import '../../Bloc/UserProfileBloc/ImageCubit/upload_image_cubit.dart';
+import '../../Bloc/UserProfileBloc/ImageCubit/upload_image_state.dart';
 import '../../Utils/Color/colors.dart';
 import '../../Utils/Components/Text/simple_text.dart';
+import 'dart:io';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({super.key});
+  final UserProfileModel userData;
+  const EditProfile({
+    super.key,
+    required this.userData});
 
   @override
   State<EditProfile> createState() => _EditProfileState();
@@ -79,23 +88,75 @@ class _EditProfileState extends State<EditProfile> {
                                       borderRadius: BorderRadius.circular(80),
                                       border: Border.all(
                                           color: const Color(0xffFF9CEA),
-                                          width: 12)),
+                                          width: 12
+                                      )
+                                  ),
+                                  child: BlocBuilder<UploadImageCubit, UploadImageState>(
+                                    builder: (context, state) {
+                                      if(state is UploadImageLoading){
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                      else if(state is UploadImageSuccess){
+                                        return Center(
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(80),
+                                            child: Image.file(
+                                              File(state.path!),
+                                              fit: BoxFit.cover,
+                                              width: 140,
+                                              height: 140,
+                                            ),
+                                          ),
+                                        );
+                                      }else{
+                                        return widget.userData.profilePic == null ?
+                                        Center(
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(80),
+                                            child: SvgPicture.asset(
+                                              "assets/svg/profile.svg",
+                                            ),
+                                          ),
+                                        ):
+                                        Center(
+                                          child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(80),
+                                              child: Image.network(
+                                                widget.userData.profilePic!,
+                                                fit: BoxFit.cover,
+                                                width: 140,
+                                                height: 140,
+                                              )
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
                                 ),
                                 Positioned(
                                   bottom: 5,
                                   left: 45,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(12),
-                                    height: 60,
-                                    width: 60,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30),
-                                        color: ColorClass.primaryColor,
-                                        border: Border.all(
-                                            color: const Color(0xffFF9CEA),
-                                            width: 6)),
-                                    child: SvgPicture.asset(
-                                      "assets/svg/plus_profile.svg",
+                                  child: InkWell(
+                                    onTap: (){
+                                      BlocProvider.of<UploadImageCubit>(context).
+                                      uploadPhotoEvent(false);
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(12),
+                                      height: 60,
+                                      width: 60,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(30),
+                                          color: ColorClass.primaryColor,
+                                          border: Border.all(
+                                              color: const Color(0xffFF9CEA),
+                                              width: 6
+                                          )
+                                      ),
+                                      child: SvgPicture.asset
+                                        ("assets/svg/plus_profile.svg",),
                                     ),
                                   ),
                                 )
@@ -103,24 +164,43 @@ class _EditProfileState extends State<EditProfile> {
                             ),
                             Container(
                               padding: const EdgeInsets.only(left: 15),
-                              child: const Column(
+                              child:  Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SimpleText(
-                                    text: "Tanveer Fatima",
+                                    text: widget.userData.name,
                                     fontSize: 20,
                                     fontWeight: FontWeight.w800,
                                   ),
-                                  SimpleText(
-                                    text: "UI/UX Designer",
-                                    fontSize: 18,
-                                    fontColor: Color(0xff6C6C6C),
-                                    fontWeight: FontWeight.w300,
+                                  Row(
+                                    children: [
+                                      widget.userData.jobTitle !=null ?
+                                      SimpleText(
+                                        text: widget.userData.jobTitle!,
+                                        fontSize: 16.sp,
+                                        fontColor: const Color(0xff6C6C6C),
+                                        fontWeight: FontWeight.w300,
+                                      ):
+                                      SimpleText(
+                                        text: "Not Specified",
+                                        fontSize: 16.sp,
+                                        fontColor: const Color(0xff6C6C6C),
+                                        fontWeight: FontWeight.w300,
+                                      ),
+                                      const SizedBox(width: 5,),
+                                      const Icon(Icons.edit),
+                                    ],
                                   ),
                                   SimpleText(
-                                    text: "@tanveer.fatima-9313",
-                                    fontSize: 18,
-                                    fontColor: Color(0xff386BF6),
+                                    text: widget.userData.phone,
+                                    fontSize: 15,
+                                    fontColor: const Color(0xff6C6C6C),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  SimpleText(
+                                    text: widget.userData.email,
+                                    fontSize: 15,
+                                    fontColor: const Color(0xff6C6C6C),
                                     fontWeight: FontWeight.w300,
                                   ),
                                 ],
@@ -182,93 +262,43 @@ class _EditProfileState extends State<EditProfile> {
             ),
             EditProfileTiles(
               tileName: "Contact Details",
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(
+                    RouteName.contactDetails,
+                    arguments: widget.userData);
+              },
               isLastTile: false,
-              widget: Row(
-                children: [
-                const SizedBox(width: 10,),
-                Container(
-                  height: 4,
-                  width: 100,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: const Color(0xffF2F2F2)
-                  ),
-                  child:  Align(
-                    alignment: Alignment.centerLeft,
-                    child: FractionallySizedBox(
-                      widthFactor: 0.6, // 85% of the width of the parent
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Color(0xff0AEE49),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 5,),
-                SimpleText(text: "60%", fontSize: 12.sp,fontColor: const Color(0xffB5B5B5),),
-              ],),
+              assetName: "assets/svg/iconamoon_profile-light.svg",
             ),
             EditProfileTiles(
               tileName: "Job Profile & Description",
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(
+                    RouteName.jobDescription,
+                    arguments: widget.userData);
+              },
               isLastTile: false,
-              widget: Row(
-                children: [
-                  const SizedBox(width: 10,),
-                  Container(
-                    height: 4,
-                    width: 100,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: const Color(0xffF2F2F2)
-                    ),
-                    child:  Align(
-                      alignment: Alignment.centerLeft,
-                      child: FractionallySizedBox(
-                        widthFactor: 0.25,
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            color: Color(0xff0AEE49),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 5,),
-                  SimpleText(text: "25%", fontSize: 12.sp,fontColor: const Color(0xffB5B5B5),),
-                ],),
+              assetName: "assets/svg/bag.svg",
             ),
             EditProfileTiles(
               tileName: "Interests and Preferences",
               onPressed: () {},
               isLastTile: false,
+              assetName: "assets/svg/tabler_hand-love-you.svg",
+              widget: const Padding(
+                padding: EdgeInsets.only(left: 10,top: 2),
+                child: SimpleText(
+                  text: "Not Selected",
+                  fontSize: 10,
+                  fontColor: Color(0xffF72532),
+                ),
+              ),
             ),
             EditProfileTiles(
-              tileName: "Community Engagement",
-              onPressed: () {},
-              isLastTile: false,
-            ),
-            EditProfileTiles(
-              tileName: "Privacy Settings",
-              onPressed: () {},
-              isLastTile: false,
-            ),
-            EditProfileTiles(
-              tileName: "Accessibility",
-              onPressed: () {},
-              isLastTile: false,
-            ),
-            EditProfileTiles(
-              tileName: "Verification",
-              onPressed: () {},
-              isLastTile: false,
-            ),
-            EditProfileTiles(
-              tileName: "Feedback and Support",
+              tileName: "Logout",
               onPressed: () {},
               isLastTile: true,
+              assetName: "assets/svg/logout.svg",
             ),
           ],
         ),
@@ -282,11 +312,13 @@ class EditProfileTiles extends StatelessWidget {
   final VoidCallback onPressed;
   final bool isLastTile;
   final Widget? widget;
+  final String assetName;
   const EditProfileTiles({
     super.key,
     required this.tileName,
     required this.onPressed,
     required this.isLastTile,
+    required this.assetName,
     this.widget,
   });
 
@@ -294,24 +326,32 @@ class EditProfileTiles extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
-      child: InkWell(
-        onTap: onPressed,
-        child: Column(
-          children: [
-            Row(
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 10,
+          ),
+          InkWell(
+            onTap: onPressed,
+            child: Row(
               children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: SvgPicture.asset(assetName)
+                ),
                 SimpleText(text: tileName, fontSize: 14.sp),
                 widget ?? const SizedBox(),
                 const Spacer(),
                 SvgPicture.asset("assets/svg/forward.svg"),
               ],
             ),
-            const SizedBox(
-              height: 5,
-            ),
-            isLastTile ? const SizedBox() : const Divider()
-          ],
-        ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          isLastTile ? const SizedBox() : const Divider(
+            color: Color(0xffCFCFCF),)
+        ],
       ),
     );
   }

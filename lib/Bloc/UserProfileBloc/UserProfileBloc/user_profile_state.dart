@@ -1,6 +1,14 @@
-part of 'user_profile_bloc.dart';
+import 'package:wamikas/Models/user_profile_model.dart';
 
-@immutable
 abstract class UserProfileState {}
 
 class UserProfileInitial extends UserProfileState {}
+
+class UserProfileLoading extends UserProfileState {}
+
+class UserProfileSuccess extends UserProfileState {
+  final UserProfileModel userData;
+  UserProfileSuccess({required this.userData});
+}
+
+class UserProfileError extends UserProfileState {}

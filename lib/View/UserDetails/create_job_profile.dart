@@ -81,8 +81,6 @@ class _CreateJobProfileState extends State<CreateJobProfile> {
     'Water and Sanitation',
     'Wholesale Trade & retail',
   ];
-
-
   @override
   void dispose() {
     jobTitle.dispose();

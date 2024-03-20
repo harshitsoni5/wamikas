@@ -4,13 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../Text/simple_text.dart';
 
-
-
 class EmailInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    final regExp = RegExp(r'^[\w@]*$');
+    final regExp = RegExp(r'^[\w@\s.]*$'); // Include . to allow dot character
     if (regExp.hasMatch(newValue.text)) {
       return newValue;
     } else {
