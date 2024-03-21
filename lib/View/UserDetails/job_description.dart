@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:wamikas/Bloc/UserProfileBloc/JobDescriptionCubit/job_description_cubit.dart';
+import 'package:wamikas/Bloc/UserProfileBloc/JobDescriptionCubit/job_description_state.dart';
 import 'package:wamikas/Models/user_profile_model.dart';
-
+import '../../Utils/Components/AppBar/back_button_appbar.dart';
 import '../../Utils/Components/Buttons/round_auth_buttons.dart';
 import '../../Utils/Components/Text/simple_text.dart';
 import '../../Utils/Components/TextField/text_field_container.dart';
@@ -82,7 +87,16 @@ class _JobProfileDescriptionState extends State<JobProfileDescription> {
     'Water and Sanitation',
     'Wholesale Trade & retail',
   ];
-
+@override
+  void initState() {
+    if(widget.userData.jobTitle != null){
+      jobTitle.text=widget.userData.jobTitle!;
+      companyName.text=widget.userData.companyName!;
+      selectIndustry.text=widget.userData.industry!;
+      jobDesc.text=widget.userData.description!;
+    }
+    super.initState();
+  }
   @override
   void dispose() {
     jobTitle.dispose();
@@ -99,48 +113,7 @@ class _JobProfileDescriptionState extends State<JobProfileDescription> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Stack(
-              children: [
-                SvgPicture.asset(
-                  "assets/svg/semi_circle.svg",
-                  height: size.height * 0.15,
-                ),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 15),
-                  padding: const EdgeInsets.only(top: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          InkWell(
-                              onTap: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: SvgPicture.asset(
-                                "assets/svg/ep_back (2).svg",
-                                height: 35,
-                              )),
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          const SimpleText(
-                            text: "Job Profile",
-                            fontSize: 24,
-                            fontColor: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ],
-                      ),
-                      SvgPicture.asset(
-                        "assets/svg/w-logo.svg",
-                        height: 40,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            BackButtonAppBar(size: size,title: "Job Profile",),
             const SizedBox(height: 15,),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -200,25 +173,26 @@ class _JobProfileDescriptionState extends State<JobProfileDescription> {
                           border: InputBorder.none,
                           hintStyle: GoogleFonts.poppins(
                             color: const Color(0xff888888),
-                            fontSize: 12,
+                            fontSize: 13.sp,
                           )
                       ),
                     ),
                   ),
+                  const SizedBox(height: 10,),
                   TextFieldContainer(
-                    hintText: "Please Enter Location",
+                    hintText: "Please enter Location",
                     titleBox: "Location",
                     controller: location,
                   ),
                   TextFieldContainer(
                     hintText: "Please enter your skills",
                     titleBox: "Skills",
-                    controller: location,
+                    controller: skills,
                   ),
                   TextFieldContainer(
                     hintText: "Education",
                     titleBox: "Education",
-                    controller: location,
+                    controller: education,
                   ),
                   const SizedBox(height: 10,),
                   TextFieldContainer(
@@ -230,11 +204,60 @@ class _JobProfileDescriptionState extends State<JobProfileDescription> {
                   const SizedBox(height: 20,),
                   Container(
                     margin: const EdgeInsets.only(bottom: 40),
-                    child: InkWell(
-                    onTap: (){
-
-                    },
-                    child: RoundAuthButtons(size: size, btnText: "Update")),
+                    child: BlocConsumer<JobDescriptionCubit, JobDescriptionState>(
+                      listener: (context, state) {
+                        if(state is JobDescNotFilledState){
+                          Fluttertoast.showToast(
+                              msg: "Please fill out all the details properly",
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              textColor: Colors.black,
+                              fontSize: 15.0
+                          );
+                        }
+                        if(state is JobDescSuccessState){
+                          Fluttertoast.showToast(
+                              msg: "Job profile updated successfully",
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              textColor: Colors.black,
+                              fontSize: 15.0
+                          );
+                        }
+                        if(state is JobDescErrorState){
+                          Fluttertoast.showToast(
+                              msg: "Oops something went wrong please try again later",
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              textColor: Colors.black,
+                              fontSize: 15.0
+                          );
+                        }
+                      },
+                      builder: (context, state) {
+                        if(state is JobDescLoadingState){
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return InkWell(
+                         onTap: (){
+                         BlocProvider.of<JobDescriptionCubit>(context).
+                           updateJobDescription(
+                          jobTitle: jobTitle.text,
+                          company: companyName.text,
+                          industry: industry.text,
+                          location: location.text,
+                          skills: skills.text, 
+                          education: education.text,
+                          jobDesc: jobDesc.text);
+                        },
+                        child: RoundAuthButtons(size: size, btnText: "Update"));
+                        },
+                      ),
                   )
                 ],
               ),
@@ -245,3 +268,4 @@ class _JobProfileDescriptionState extends State<JobProfileDescription> {
     );
   }
 }
+

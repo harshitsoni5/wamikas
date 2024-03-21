@@ -16,11 +16,11 @@ class LocationCubit extends Cubit<LocationState> {
             "users",
             documentId,
             {
-              "Country":country,
-              "State":state,
-              "City":city,
-              "Address":address,
-              "ZipCode":pin
+              "country":country,
+              "state":state,
+              "city":city,
+              "address":address,
+              "zipCode":pin
             }
         );
         emit(LocationSuccess());

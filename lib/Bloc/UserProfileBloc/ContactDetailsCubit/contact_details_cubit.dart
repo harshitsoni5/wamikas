@@ -27,10 +27,10 @@ class ContactDetailsCubit extends Cubit<ContactDetailsState> {
               "users",
               documentId,
               {
-                "Country":country,
-                "State":state,
-                "City":city,
-                "Address":fullAddress,
+                "country":country,
+                "state":state,
+                "city":city,
+                "address":fullAddress,
                 "apartment":apartment,
                 "name":name,
                 "email":email
@@ -53,4 +53,6 @@ class ContactDetailsCubit extends Cubit<ContactDetailsState> {
       emit(ContactDetailsError());
     }
   }
+
+
 }

@@ -8,6 +8,7 @@ import 'package:wamikas/View/UserDetails/contact_details.dart';
 import 'package:wamikas/View/UserDetails/create_job_profile.dart';
 import 'package:wamikas/View/UserDetails/edit_profile.dart';
 import 'package:wamikas/View/UserDetails/interests.dart';
+import 'package:wamikas/View/UserDetails/interst_and_prefrences.dart';
 import 'package:wamikas/View/UserDetails/job_description.dart';
 import 'package:wamikas/View/UserDetails/location_deatils.dart';
 import 'package:wamikas/View/UserDetails/upload_photo.dart';
@@ -62,6 +63,19 @@ class Routes {
           if(argument is UserProfileModel){
             return MaterialPageRoute(
                 builder: (BuildContext context) =>  ContactDetails(
+                  userData: argument,));
+          }
+          return MaterialPageRoute(builder: (_) {
+            return const Scaffold(
+              body: Center(
+                child: Text('No route defined'),
+              ),
+            );
+          });
+          case RouteName.interestAndPref:
+          if(argument is UserProfileModel){
+            return MaterialPageRoute(
+                builder: (BuildContext context) =>  InterestAndPreferences(
                   userData: argument,));
           }
           return MaterialPageRoute(builder: (_) {

@@ -8,6 +8,7 @@ import 'package:wamikas/Bloc/AuthBloc/SignUpCubit/signup_cubit.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/ContactDetailsCubit/contact_details_cubit.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/CreateJobProfile/create_job_profile_cubit.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/ImageCubit/upload_image_cubit.dart';
+import 'package:wamikas/Bloc/UserProfileBloc/JobDescriptionCubit/job_description_cubit.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/LocationCubit/location_cubit.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/UserProfileBloc/user_profile_bloc.dart';
 import 'Bloc/UserProfileBloc/InterestsCubit/interests_cubit.dart';
@@ -56,6 +57,8 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) =>UserProfileBloc()),
         BlocProvider<ContactDetailsCubit>(
             create: (BuildContext context) =>ContactDetailsCubit()),
+        BlocProvider<JobDescriptionCubit>(
+            create: (BuildContext context) =>JobDescriptionCubit()),
       ],
       child: ScreenUtilInit(
         child: MaterialApp(
@@ -63,7 +66,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          initialRoute: RouteName.splash,
+          initialRoute: RouteName.userProfile,
           onGenerateRoute: Routes.generateRoute,
           debugShowCheckedModeBanner: false,
         ),

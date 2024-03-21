@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/CreateJobProfile/create_job_profile_state.dart';
 import 'package:wamikas/Utils/Routes/route_name.dart';
-import 'package:wamikas/View/UserDetails/user_profile.dart';
 import '../../Bloc/UserProfileBloc/CreateJobProfile/create_job_profile_cubit.dart';
 import '../../Utils/Color/colors.dart';
 import '../../Utils/Components/Buttons/back_button_with_logo.dart';
@@ -173,7 +173,7 @@ class _CreateJobProfileState extends State<CreateJobProfile> {
                           border: InputBorder.none,
                             hintStyle: GoogleFonts.poppins(
                               color: const Color(0xff888888),
-                              fontSize: 12,
+                              fontSize: 13.sp,
                             )
                         ),
                       ),

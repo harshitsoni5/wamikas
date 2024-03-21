@@ -8,6 +8,8 @@ import 'package:wamikas/Bloc/UserProfileBloc/ContactDetailsCubit/contact_details
 import 'package:wamikas/Models/user_profile_model.dart';
 import '../../Bloc/UserProfileBloc/ImageCubit/upload_image_cubit.dart';
 import '../../Bloc/UserProfileBloc/ImageCubit/upload_image_state.dart';
+import '../../Bloc/UserProfileBloc/UserProfileBloc/user_profile_bloc.dart';
+import '../../Bloc/UserProfileBloc/UserProfileBloc/user_profile_event.dart';
 import '../../Utils/Color/colors.dart';
 import '../../Utils/Components/Buttons/round_auth_buttons.dart';
 import '../../Utils/Components/Text/simple_text.dart';
@@ -31,9 +33,12 @@ class _ContactDetailsState extends State<ContactDetails> {
   final TextEditingController userState = TextEditingController();
   final TextEditingController city = TextEditingController();
   final TextEditingController country = TextEditingController();
-
+  late String username;
+  late String emailId;
   @override
   void initState() {
+    username = widget.userData.name;
+    emailId=widget.userData.email;
     name.text = widget.userData.name;
     email.text = widget.userData.email;
     phone.text = widget.userData.phone;
@@ -90,6 +95,8 @@ class _ContactDetailsState extends State<ContactDetails> {
                                 InkWell(
                                     onTap: () {
                                       Navigator.of(context).pop();
+                                      BlocProvider.of<UserProfileBloc>(context).
+                                      add(GetUserDataEvent());
                                     },
                                     child: SvgPicture.asset(
                                       "assets/svg/ep_back (2).svg",
@@ -210,7 +217,7 @@ class _ContactDetailsState extends State<ContactDetails> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SimpleText(
-                                    text: widget.userData.name,
+                                    text: username,
                                     fontSize: 20,
                                     fontWeight: FontWeight.w800,
                                   ),
@@ -240,7 +247,7 @@ class _ContactDetailsState extends State<ContactDetails> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                   SimpleText(
-                                    text: widget.userData.email,
+                                    text: emailId,
                                     fontSize: 15,
                                     fontColor: const Color(0xff6C6C6C),
                                     fontWeight: FontWeight.w300,
@@ -344,6 +351,10 @@ class _ContactDetailsState extends State<ContactDetails> {
                          );
                        }
                        else if(state is ContactDetailsSuccess){
+                         setState(() {
+                           emailId = email.text;
+                           username = name.text;
+                         });
                          Fluttertoast.showToast(
                              msg: "Profile successfully updated",
                              toastLength: Toast.LENGTH_LONG,

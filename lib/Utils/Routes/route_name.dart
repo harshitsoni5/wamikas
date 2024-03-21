@@ -14,4 +14,5 @@ class RouteName {
   static const String editProfile = 'edit_profile';
   static const String contactDetails = 'contact_details';
   static const String jobDescription = 'job_description';
+  static const String interestAndPref = 'interest_preferences';
 }

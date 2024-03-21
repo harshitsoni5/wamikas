@@ -12,6 +12,7 @@ import 'package:wamikas/Models/user_profile_model.dart';
 import 'package:wamikas/Utils/Color/colors.dart';
 import 'package:wamikas/Utils/Components/Text/simple_text.dart';
 import 'dart:io';
+import '../../Utils/Routes/route_name.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -246,10 +247,10 @@ class _UserProfileState extends State<UserProfile> with SingleTickerProviderStat
                                       const SizedBox(height: 15,),
                                       InkWell(
                                         onTap: (){
-                                          // Navigator.of(context).pushNamed(
-                                          //     RouteName.editProfile,
-                                          //     arguments: data
-                                          // );
+                                          Navigator.of(context).pushNamed(
+                                              RouteName.editProfile,
+                                              arguments: data
+                                          );
                                         },
                                         child: Container(
                                           decoration:  BoxDecoration(

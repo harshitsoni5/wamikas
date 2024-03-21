@@ -27,4 +27,27 @@ class InterestsCubit extends Cubit<InterestsState> {
       emit(InterestsError());
     }
   }
+
+  Future updateInterests(List interests,List events)async{
+    emit(InterestsLoading());
+    try{
+      if(interests.isEmpty){
+        emit(InterestsNotSelected());
+      }else{
+        String documentId = await SharedData.getIsLoggedIn("phone");
+        await FireStoreDataBaseServices.addDataOfUserToCollection(
+            "users",
+            documentId,
+            {
+              "interests":interests,
+              "events_or_group_rec":events,
+            }
+        );
+        emit(InterestsSuccess());
+      }
+    }
+    catch(e){
+      emit(InterestsError());
+    }
+  }
 }
