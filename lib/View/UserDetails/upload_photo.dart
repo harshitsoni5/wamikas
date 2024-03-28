@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/ImageCubit/upload_image_cubit.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/ImageCubit/upload_image_state.dart';
 import 'package:wamikas/Utils/Components/Buttons/back_button_with_logo.dart';
@@ -20,7 +21,8 @@ class UploadPhoto extends StatefulWidget {
 }
 
 class _UploadPhotoState extends State<UploadPhoto> {
-  void _pickedImage() {
+
+  void _pickedImage(){
     showDialog<ImageSource>(
       context: context,
       builder: (context) => AlertDialog(
@@ -28,24 +30,84 @@ class _UploadPhotoState extends State<UploadPhoto> {
         actions: [
           ElevatedButton(
             child: const Text('Camera'),
-            onPressed: (){
-              Navigator.of(context).pop();
-              BlocProvider.of<UploadImageCubit>(context).
-              uploadPhotoEvent(true);
+            onPressed: () async {
+              Permission permission = Permission.camera;
+              if (await permission.isGranted) {
+                Navigator.of(context).pop();
+                BlocProvider.of<UploadImageCubit>(context)
+                    .uploadPhotoEvent(true);
+              } else if (await permission.isDenied) {
+                permission = Permission.camera;
+                if (await permission.isGranted) {
+                  Navigator.of(context).pop();
+                  BlocProvider.of<UploadImageCubit>(context)
+                      .uploadPhotoEvent(true);
+                } else {
+                  showPermissionDeniedDialog('Camera');
+                }
+              } else {
+                showPermissionDeniedDialog('Camera');
+              }
             },
           ),
           ElevatedButton(
             child: const Text('Gallery'),
-            onPressed: (){
-              Navigator.of(context).pop();
-              BlocProvider.of<UploadImageCubit>(context).
-              uploadPhotoEvent(false);
+            onPressed: () async {
+              PermissionStatus status =await Permission.photos.request();
+              if ( status.isGranted) {
+                Navigator.of(context).pop();
+                BlocProvider.of<UploadImageCubit>(context)
+                    .uploadPhotoEvent(false);
+              } else if ( status.isDenied) {
+                status = await Permission.photos.request();
+                if ( status.isGranted) {
+                  Navigator.of(context).pop();
+                  BlocProvider.of<UploadImageCubit>(context)
+                      .uploadPhotoEvent(false);
+                } else {
+                  showPermissionDeniedDialog('Gallery');
+                }
+              } else {
+                showPermissionDeniedDialog('Gallery');
+              }
             },
           ),
         ],
       ),
+    ).then((ImageSource? source) async {
+      if (source == null) return;
+
+      final pickedFile = await ImagePicker().pickImage(source: source);
+      if (pickedFile == null) return;
+    });
+  }
+
+  void showPermissionDeniedDialog(String permissionType) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Permission Required'),
+          content: Text(
+              'Permission to access $permissionType is required to use this feature.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                openAppSettings();
+                Navigator.of(context).pop();
+              },
+              child: const Text('Settings'),
+            ),
+          ],
+        );
+      },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

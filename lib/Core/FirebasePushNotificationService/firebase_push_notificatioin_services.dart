@@ -1,3 +1,5 @@
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+//
 // import '../../SharedPrefernce/shared_pref.dart';
 // import '../../main.dart';
 //
@@ -20,8 +22,7 @@
 //
 //   static void saveFcmToken() async {
 //     await FirebaseMessaging.instance.getToken().then((value) async {
-//       print(value);
-//       await SharedData.setFCMToken(value!);
+//       await SharedFcmToken.setFcmToken(value!);
 //     });
 //   }
 //
@@ -62,7 +63,6 @@
 //     await notificationsPlugin.show(
 //         0, message.notification?.title, message.notification?.body, notiDetails,
 //         payload: message.data["title"]);
-//     print("yes");
 //   }
 //
 //   static void incomingMessage() async {

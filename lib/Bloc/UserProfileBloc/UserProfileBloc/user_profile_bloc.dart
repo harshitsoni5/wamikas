@@ -23,10 +23,25 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
       var snapshot = await reference.doc(docId).get();
       if (snapshot.exists) {
         var data = snapshot.data();
-        if (data != null && data is Map<String,dynamic>) {
+        if (data != null && data is Map<String, dynamic>) {
+          int profilePercentage = 0;
+          if (data.containsKey("state")) {
+            profilePercentage += 25;
+          }
+          if (data.containsKey("profile_pic") &&
+              data["profile_pic"].toString().isNotEmpty) {
+            profilePercentage += 25;
+          }
+          if (data.containsKey("job_title") &&
+              data["job_title"].toString().isNotEmpty) {
+            profilePercentage += 25;
+          }
+          if (data.containsKey("interests")) {
+            profilePercentage += 25;
+          }
           emit(UserProfileSuccess(
-              userData:
-                  UserProfileModel.fromJson(data)));
+              userData: UserProfileModel.fromJson(data),
+              profilePercentage: profilePercentage));
         } else {
           emit(UserProfileError());
         }

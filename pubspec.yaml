@@ -53,6 +53,8 @@ dependencies:
   dotted_border: 2.1.0
   flutter_screenutil: ^5.9.0
   image_picker: ^1.0.7
+  flutter_local_notifications: ^15.1.1
+  permission_handler: 10.4.0
 
 
 dev_dependencies:

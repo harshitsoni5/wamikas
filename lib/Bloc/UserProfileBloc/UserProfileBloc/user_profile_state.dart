@@ -8,7 +8,11 @@ class UserProfileLoading extends UserProfileState {}
 
 class UserProfileSuccess extends UserProfileState {
   final UserProfileModel userData;
-  UserProfileSuccess({required this.userData});
+  final int profilePercentage;
+  UserProfileSuccess({
+    required this.userData,
+    required this.profilePercentage,
+  });
 }
 
 class UserProfileError extends UserProfileState {}

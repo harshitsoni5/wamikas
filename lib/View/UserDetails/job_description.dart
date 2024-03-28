@@ -28,7 +28,6 @@ class _JobProfileDescriptionState extends State<JobProfileDescription> {
   final TextEditingController companyName = TextEditingController();
   final TextEditingController selectIndustry = TextEditingController();
   final TextEditingController jobDesc = TextEditingController();
-  final TextEditingController industry = TextEditingController();
   final TextEditingController skills = TextEditingController();
   final TextEditingController education = TextEditingController();
   final TextEditingController location = TextEditingController();
@@ -95,6 +94,15 @@ class _JobProfileDescriptionState extends State<JobProfileDescription> {
       selectIndustry.text=widget.userData.industry!;
       jobDesc.text=widget.userData.description!;
     }
+    if(widget.userData.jobLocation != null){
+      location.text=widget.userData.jobLocation!;
+    }
+    if(widget.userData.skills != null){
+      skills.text=widget.userData.skills!;
+    }
+    if(widget.userData.education != null){
+      education.text=widget.userData.education!;
+    }
     super.initState();
   }
   @override
@@ -103,7 +111,9 @@ class _JobProfileDescriptionState extends State<JobProfileDescription> {
     companyName.dispose();
     selectIndustry.dispose();
     jobDesc.dispose();
-    industry.dispose();
+    education.dispose();
+    skills.dispose();
+    location.dispose();
     super.dispose();
   }
   @override
@@ -153,12 +163,12 @@ class _JobProfileDescriptionState extends State<JobProfileDescription> {
                     ),
                     child: DropdownButtonFormField<String>(
                       icon: SvgPicture.asset("assets/svg/down_arrow.svg"),
-                      value: industry.text.isEmpty
+                      value: selectIndustry.text.isEmpty
                           ? null
-                          : industry.text,
+                          : selectIndustry.text,
                       onChanged: (String? newValue) {
                         if (newValue != null) {
-                          industry.text = newValue;
+                          selectIndustry.text = newValue;
                         }
                       },
                       items: sectors
@@ -249,7 +259,7 @@ class _JobProfileDescriptionState extends State<JobProfileDescription> {
                            updateJobDescription(
                           jobTitle: jobTitle.text,
                           company: companyName.text,
-                          industry: industry.text,
+                          industry: selectIndustry.text,
                           location: location.text,
                           skills: skills.text, 
                           education: education.text,

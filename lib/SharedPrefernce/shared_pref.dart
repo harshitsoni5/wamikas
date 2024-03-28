@@ -35,4 +35,9 @@ class SharedData {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("profile", imageUrl);
   }
+
+  static Future clearPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.clear();
+  }
 }

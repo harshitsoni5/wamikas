@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/UserProfileBloc/user_profile_state.dart';
 import 'package:wamikas/Models/user_profile_model.dart';
+import 'package:wamikas/SharedPrefernce/shared_pref.dart';
 import 'package:wamikas/Utils/Routes/route_name.dart';
 import '../../Bloc/UserProfileBloc/ImageCubit/upload_image_cubit.dart';
 import '../../Bloc/UserProfileBloc/ImageCubit/upload_image_state.dart';
@@ -39,7 +40,6 @@ class _EditProfileState extends State<EditProfile> {
             return const Center(child: CircularProgressIndicator(),);
           }
           else if(state is UserProfileSuccess){
-            print("sss");
             final UserProfileModel data = state.userData;
             return Column(
               children: [
@@ -232,7 +232,8 @@ class _EditProfileState extends State<EditProfile> {
                 const SizedBox(
                   height: 15,
                 ),
-                Container(
+                state.profilePercentage == 100 ?
+                const SizedBox():Container(
                   margin: const EdgeInsets.symmetric(horizontal: 25),
                   child: Row(
                     children: [
@@ -245,17 +246,17 @@ class _EditProfileState extends State<EditProfile> {
                         child: Container(
                           color: const Color(0xffFFF0FA),
                           padding: const EdgeInsets.only(left: 10, right: 2),
-                          child: const Column(
+                          child:  Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SimpleText(
+                              const SimpleText(
                                 text: 'Attention',
                                 fontSize: 16,
                                 fontColor: ColorClass.primaryColor,
                                 fontWeight: FontWeight.bold,
                               ),
                               SimpleText(
-                                text: "Your profile is currently 85% complete. "
+                                text: "Your profile is currently ${state.profilePercentage}% complete. "
                                     "Please update missing information to ensure"
                                     " that your profile is fully optimized"
                                     " and performs well",
@@ -268,6 +269,9 @@ class _EditProfileState extends State<EditProfile> {
                       )
                     ],
                   ),
+                ),
+                const SizedBox(
+                  height: 10,
                 ),
                 const SizedBox(
                   height: 10,
@@ -304,18 +308,25 @@ class _EditProfileState extends State<EditProfile> {
                   },
                   isLastTile: false,
                   assetName: "assets/svg/tabler_hand-love-you.svg",
-                  widget: const Padding(
+                  widget: state.userData.eventsOrGroupRec == null
+                  && state.userData.eventsOrGroupRec!.isEmpty
+                      ?const Padding(
                     padding: EdgeInsets.only(left: 10,top: 2),
                     child: SimpleText(
                       text: "Not Selected",
                       fontSize: 10,
                       fontColor: Color(0xffF72532),
                     ),
-                  ),
+                  ):
+                  const SizedBox(),
                 ),
                 EditProfileTiles(
                   tileName: "Logout",
-                  onPressed: () {},
+                  onPressed: () {
+                    SharedData.clearPref();
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        RouteName.signIn, (route) => false);
+                  },
                   isLastTile: true,
                   assetName: "assets/svg/logout.svg",
                 ),
