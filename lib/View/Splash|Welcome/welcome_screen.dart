@@ -32,17 +32,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Container(
-          decoration:   const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFFFFFFFF), // Top color (white)
-                Color.fromARGB(140,227,40,154), // Bottom color (light pinkish)
-              ],
-              stops: [0.7, 1.0],
-            ),
-          ),
+          // decoration:   const BoxDecoration(
+          //   gradient: LinearGradient(
+          //     begin: Alignment.topCenter,
+          //     end: Alignment.bottomCenter,
+          //     colors: [
+          //       Color(0xFFFFFFFF), // Top color (white)
+          //       Color.fromARGB(140,227,40,154), // Bottom color (light pinkish)
+          //     ],
+          //     stops: [0.7, 1.0],
+          //   ),
+          // ),
           child: PageView(
             controller: pageController,
             onPageChanged: (index) {

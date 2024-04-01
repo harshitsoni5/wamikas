@@ -3,6 +3,7 @@ import 'package:wamikas/Models/user_profile_model.dart';
 import 'package:wamikas/Utils/Routes/route_name.dart';
 import 'package:wamikas/View/AuthScreens/auth_screen.dart';
 import 'package:wamikas/View/AuthScreens/signup.dart';
+import 'package:wamikas/View/Home/home.dart';
 import 'package:wamikas/View/Splash%7CWelcome/welcome_screen.dart';
 import 'package:wamikas/View/UserDetails/contact_details.dart';
 import 'package:wamikas/View/UserDetails/create_job_profile.dart';
@@ -22,8 +23,8 @@ class Routes {
     final argument = settings.arguments;
     switch (settings.name) {
       case RouteName.home:
-        // return MaterialPageRoute(
-        //     builder: (BuildContext context) => const Home());
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const HomeScreen());
         case RouteName.register:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SignUp());

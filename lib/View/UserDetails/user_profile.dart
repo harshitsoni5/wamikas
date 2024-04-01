@@ -25,12 +25,16 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
+  int tabIndex=0;
 
   @override
   void initState() {
     BlocProvider.of<UserProfileBloc>(context).add(GetUserDataEvent());
     tabController = TabController(length: 3, vsync: this);
-    tabController.addListener(() {});
+    if(tabController.indexIsChanging){
+      tabIndex=tabController.index;
+      setState(() {});
+    }
     super.initState();
   }
 
@@ -139,10 +143,10 @@ class _UserProfileState extends State<UserProfile>
                   children: [
                     SvgPicture.asset(
                       "assets/svg/rectangle_design.svg",
-                      height: size.height * 0.35,
+                      height: size.height >850 ?size.height*0.3 :size.height*0.35,
                     ),
                     Container(
-                      padding: const EdgeInsets.only(top: 30),
+                      padding:  EdgeInsets.only(top: size.height*0.04),
                       child: Column(
                         children: [
                           Container(
@@ -189,11 +193,11 @@ class _UserProfileState extends State<UserProfile>
                                   children: [
                                     Container(
                                       margin: const EdgeInsets.only(bottom: 20),
-                                      height: 150,
-                                      width: 150,
+                                      height: size.height >850 ?180:160,
+                                      width: size.height >850 ?180:160,
                                       decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(80),
+                                              BorderRadius.circular(size.height >850 ?90:80),
                                           border: Border.all(
                                               color: const Color(0xffFF9CEA),
                                               width: 12)),
@@ -210,12 +214,12 @@ class _UserProfileState extends State<UserProfile>
                                             return Center(
                                               child: ClipRRect(
                                                 borderRadius:
-                                                    BorderRadius.circular(80),
+                                                    BorderRadius.circular(size.height >850 ?90:80),
                                                 child: Image.file(
                                                   File(state.path!),
                                                   fit: BoxFit.cover,
-                                                  width: 140,
-                                                  height: 140,
+                                                  height: size.height >850 ?180:160,
+                                                  width: size.height >850 ?180:160,
                                                 ),
                                               ),
                                             );
@@ -225,7 +229,7 @@ class _UserProfileState extends State<UserProfile>
                                                     child: ClipRRect(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              80),
+                                                              size.height >850 ?90:80),
                                                       child: SvgPicture.asset(
                                                         "assets/svg/profile.svg",
                                                       ),
@@ -239,8 +243,8 @@ class _UserProfileState extends State<UserProfile>
                                                         child: Image.network(
                                                           data.profilePic!,
                                                           fit: BoxFit.cover,
-                                                          width: 140,
-                                                          height: 140,
+                                                          height: size.height >850 ?180:160,
+                                                          width: size.height >850 ?180:160,
                                                         )),
                                                   );
                                           }
@@ -249,7 +253,7 @@ class _UserProfileState extends State<UserProfile>
                                     ),
                                     Positioned(
                                       bottom: 5,
-                                      left: 45,
+                                      left: size.height >850 ?55:50,
                                       child: InkWell(
                                         onTap: () {
                                           _pickedImage();
@@ -305,7 +309,13 @@ class _UserProfileState extends State<UserProfile>
                                           const SizedBox(
                                             width: 5,
                                           ),
-                                          const Icon(Icons.edit),
+                                           InkWell(
+                                            onTap: (){
+                                              Navigator.of(context).pushNamed(
+                                                  RouteName.jobDescription,
+                                                  arguments: data);
+                                            },
+                                              child: const Icon(Icons.edit)),
                                         ],
                                       ),
                                       SimpleText(
@@ -366,12 +376,13 @@ class _UserProfileState extends State<UserProfile>
                   child: Row(
                     children: [
                       Container(
-                        height: size.height * 0.1,
+                        height:size.height>850?size.height * 0.1 :size.height * 0.12,
                         width: 4,
                         color: ColorClass.primaryColor,
                       ),
                       Flexible(
                         child: Container(
+                          height:size.height>850?size.height * 0.1 :size.height * 0.12,
                           color: const Color(0xffFFF0FA),
                           padding: const EdgeInsets.only(left: 10, right: 2),
                           child:  Column(
@@ -403,13 +414,18 @@ class _UserProfileState extends State<UserProfile>
                 ),
                 TabBar(
                   controller: tabController,
-                  indicatorColor: ColorClass.primaryColor,
+                  indicatorColor: ColorClass.textColor,
+                  labelStyle: const TextStyle(color: ColorClass.textColor),
+                  unselectedLabelColor: const Color(0xffB5B5B5),
                   tabs: <Widget>[
                     Tab(
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SvgPicture.asset("assets/svg/forum.svg"),
+                          tabIndex ==0 ?
+                          SvgPicture.asset("assets/svg/forum.svg"):
+                          SvgPicture.asset("assets/svg/forum.svg",
+                            color: const Color(0xffB5B5B5),),
                           const SizedBox(
                             width: 5,
                           ),
@@ -424,6 +440,8 @@ class _UserProfileState extends State<UserProfile>
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          tabIndex == 1 ?
+                          SvgPicture.asset("assets/svg/selected_event.svg",):
                           SvgPicture.asset("assets/svg/events.svg"),
                           const SizedBox(
                             width: 5,
@@ -439,7 +457,10 @@ class _UserProfileState extends State<UserProfile>
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SvgPicture.asset("assets/svg/resources.svg"),
+                          tabIndex ==2 ?
+                          SvgPicture.asset("assets/svg/resources.svg",
+                            color: ColorClass.textColor,)
+                              :SvgPicture.asset("assets/svg/resources.svg"),
                           const SizedBox(
                             width: 5,
                           ),

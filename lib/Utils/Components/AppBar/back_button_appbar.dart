@@ -25,7 +25,7 @@ class BackButtonAppBar extends StatelessWidget {
         ),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 15),
-          padding: const EdgeInsets.only(top: 30),
+          padding: EdgeInsets.only(top: size.height*0.04),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

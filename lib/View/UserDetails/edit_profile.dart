@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/UserProfileBloc/user_profile_state.dart';
 import 'package:wamikas/Models/user_profile_model.dart';
 import 'package:wamikas/SharedPrefernce/shared_pref.dart';
@@ -30,6 +32,93 @@ class _EditProfileState extends State<EditProfile> {
     BlocProvider.of<UserProfileBloc>(context).add(GetUserDataEvent());
     super.initState();
   }
+
+  void showPermissionDeniedDialog(String permissionType) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Permission Required'),
+          content: Text(
+              'Permission to access $permissionType is required to use this feature.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                openAppSettings();
+                Navigator.of(context).pop();
+              },
+              child: const Text('Settings'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _pickedImage(){
+    showDialog<ImageSource>(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: const Text('Choose image source'),
+        actions: [
+          ElevatedButton(
+            child: const Text('Camera'),
+            onPressed: () async {
+              Permission permission = Permission.camera;
+              if (await permission.isGranted) {
+                Navigator.of(context).pop();
+                BlocProvider.of<UploadImageCubit>(context)
+                    .uploadPhotoEvent(true);
+              } else if (await permission.isDenied) {
+                permission = Permission.camera;
+                if (await permission.isGranted) {
+                  Navigator.of(context).pop();
+                  BlocProvider.of<UploadImageCubit>(context)
+                      .uploadPhotoEvent(true);
+                } else {
+                  showPermissionDeniedDialog('Camera');
+                }
+              } else {
+                showPermissionDeniedDialog('Camera');
+              }
+            },
+          ),
+          ElevatedButton(
+            child: const Text('Gallery'),
+            onPressed: () async {
+              PermissionStatus status =await Permission.photos.request();
+              if ( status.isGranted) {
+                Navigator.of(context).pop();
+                BlocProvider.of<UploadImageCubit>(context)
+                    .uploadPhotoEvent(false);
+              } else if ( status.isDenied) {
+                status = await Permission.photos.request();
+                if ( status.isGranted) {
+                  Navigator.of(context).pop();
+                  BlocProvider.of<UploadImageCubit>(context)
+                      .uploadPhotoEvent(false);
+                } else {
+                  showPermissionDeniedDialog('Gallery');
+                }
+              } else {
+                showPermissionDeniedDialog('Gallery');
+              }
+            },
+          ),
+        ],
+      ),
+    ).then((ImageSource? source) async {
+      if (source == null) return;
+
+      final pickedFile = await ImagePicker().pickImage(source: source);
+      if (pickedFile == null) return;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -47,10 +136,10 @@ class _EditProfileState extends State<EditProfile> {
                   children: [
                     SvgPicture.asset(
                       "assets/svg/rectangle_design.svg",
-                      height: size.height * 0.35,
+                      height: size.height >850 ?size.height*0.3 :size.height*0.35,
                     ),
                     Container(
-                      padding: const EdgeInsets.only(top: 30),
+                      padding:  EdgeInsets.only(top: size.height*0.04),
                       child: Column(
                         children: [
                           Container(
@@ -62,7 +151,7 @@ class _EditProfileState extends State<EditProfile> {
                                   children: [
                                     InkWell(
                                         onTap: () {
-                                          Navigator.of(context).pop();
+                                          // Navigator.of(context).pop();
                                         },
                                         child: SvgPicture.asset(
                                           "assets/svg/ep_back (2).svg",
@@ -97,54 +186,59 @@ class _EditProfileState extends State<EditProfile> {
                                   children: [
                                     Container(
                                       margin: const EdgeInsets.only(bottom: 20),
-                                      height: 150,
-                                      width: 150,
+                                      height: size.height >850 ?180:160,
+                                      width: size.height >850 ?180:160,
                                       decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(80),
+                                          borderRadius:
+                                          BorderRadius.circular(size.height >850 ?90:80),
                                           border: Border.all(
                                               color: const Color(0xffFF9CEA),
-                                              width: 12
-                                          )
-                                      ),
-                                      child: BlocBuilder<UploadImageCubit, UploadImageState>(
+                                              width: 12)),
+                                      child: BlocBuilder<UploadImageCubit,
+                                          UploadImageState>(
                                         builder: (context, state) {
-                                          if(state is UploadImageLoading){
+                                          if (state is UploadImageLoading) {
                                             return const Center(
-                                              child: CircularProgressIndicator(),
+                                              child:
+                                              CircularProgressIndicator(),
                                             );
-                                          }
-                                          else if(state is UploadImageSuccess){
+                                          } else if (state
+                                          is UploadImageSuccess) {
                                             return Center(
                                               child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(80),
+                                                borderRadius:
+                                                BorderRadius.circular(size.height >850 ?90:80),
                                                 child: Image.file(
                                                   File(state.path!),
                                                   fit: BoxFit.cover,
-                                                  width: 140,
-                                                  height: 140,
+                                                  height: size.height >850 ?180:160,
+                                                  width: size.height >850 ?180:160,
                                                 ),
                                               ),
                                             );
-                                          }else{
-                                            return data.profilePic == null ?
-                                            Center(
+                                          } else {
+                                            return data.profilePic == null
+                                                ? Center(
                                               child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(80),
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    size.height >850 ?90:80),
                                                 child: SvgPicture.asset(
                                                   "assets/svg/profile.svg",
                                                 ),
                                               ),
-                                            ):
-                                            Center(
+                                            )
+                                                : Center(
                                               child: ClipRRect(
-                                                  borderRadius: BorderRadius.circular(80),
+                                                  borderRadius:
+                                                  BorderRadius
+                                                      .circular(80),
                                                   child: Image.network(
                                                     data.profilePic!,
                                                     fit: BoxFit.cover,
-                                                    width: 140,
-                                                    height: 140,
-                                                  )
-                                              ),
+                                                    height: size.height >850 ?180:160,
+                                                    width: size.height >850 ?180:160,
+                                                  )),
                                             );
                                           }
                                         },
@@ -152,26 +246,26 @@ class _EditProfileState extends State<EditProfile> {
                                     ),
                                     Positioned(
                                       bottom: 5,
-                                      left: 45,
+                                      left: size.height >850 ?55:50,
                                       child: InkWell(
-                                        onTap: (){
-                                          BlocProvider.of<UploadImageCubit>(context).
-                                          uploadPhotoEvent(false);
+                                        onTap: () {
+                                          _pickedImage();
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.all(12),
                                           height: 60,
                                           width: 60,
                                           decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(30),
+                                              borderRadius:
+                                              BorderRadius.circular(30),
                                               color: ColorClass.primaryColor,
                                               border: Border.all(
-                                                  color: const Color(0xffFF9CEA),
-                                                  width: 6
-                                              )
+                                                  color:
+                                                  const Color(0xffFF9CEA),
+                                                  width: 6)),
+                                          child: SvgPicture.asset(
+                                            "assets/svg/plus_profile.svg",
                                           ),
-                                          child: SvgPicture.asset
-                                            ("assets/svg/plus_profile.svg",),
                                         ),
                                       ),
                                     )
@@ -179,31 +273,42 @@ class _EditProfileState extends State<EditProfile> {
                                 ),
                                 Container(
                                   padding: const EdgeInsets.only(left: 15),
-                                  child:  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
                                     children: [
                                       SimpleText(
                                         text: data.name,
-                                        fontSize: 20,
+                                        fontSize: 20.sp,
                                         fontWeight: FontWeight.w800,
                                       ),
                                       Row(
                                         children: [
-                                          data.jobTitle !=null ?
-                                          SimpleText(
+                                          data.jobTitle != null
+                                              ? SimpleText(
                                             text: data.jobTitle!,
                                             fontSize: 16.sp,
-                                            fontColor: const Color(0xff6C6C6C),
+                                            fontColor:
+                                            const Color(0xff6C6C6C),
                                             fontWeight: FontWeight.w300,
-                                          ):
-                                          SimpleText(
+                                          )
+                                              : SimpleText(
                                             text: "Not Specified",
                                             fontSize: 16.sp,
-                                            fontColor: const Color(0xff6C6C6C),
+                                            fontColor:
+                                            const Color(0xff6C6C6C),
                                             fontWeight: FontWeight.w300,
                                           ),
-                                          const SizedBox(width: 5,),
-                                          const Icon(Icons.edit),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          InkWell(
+                                              onTap: (){
+                                                Navigator.of(context).pushNamed(
+                                                    RouteName.jobDescription,
+                                                    arguments: data);
+                                              },
+                                              child: const Icon(Icons.edit)),
                                         ],
                                       ),
                                       SimpleText(
@@ -271,12 +376,6 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const SizedBox(
                   height: 20,
                 ),
                 EditProfileTiles(
@@ -309,8 +408,7 @@ class _EditProfileState extends State<EditProfile> {
                   isLastTile: false,
                   assetName: "assets/svg/tabler_hand-love-you.svg",
                   widget: state.userData.eventsOrGroupRec == null
-                  && state.userData.eventsOrGroupRec!.isEmpty
-                      ?const Padding(
+                      ? const Padding(
                     padding: EdgeInsets.only(left: 10,top: 2),
                     child: SimpleText(
                       text: "Not Selected",
@@ -318,7 +416,7 @@ class _EditProfileState extends State<EditProfile> {
                       fontColor: Color(0xffF72532),
                     ),
                   ):
-                  const SizedBox(),
+                        const SizedBox(),
                 ),
                 EditProfileTiles(
                   tileName: "Logout",

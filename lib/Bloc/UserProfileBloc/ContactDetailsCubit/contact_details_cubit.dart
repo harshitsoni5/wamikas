@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wamikas/Utils/regex.dart';
+import 'package:wamikas/Utils/Regex/regex.dart';
 import '../../../Core/FirebaseDataBaseService/firestore_database_services.dart';
 import '../../../SharedPrefernce/shared_pref.dart';
 import 'contact_details_state.dart';

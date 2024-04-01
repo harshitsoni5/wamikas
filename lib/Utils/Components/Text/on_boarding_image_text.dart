@@ -29,11 +29,11 @@ class OnBoardingText extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SvgPicture.asset("assets/svg/logo.svg",height: 100,width: 100,),
-          const SizedBox(height: 20,),
+          const SizedBox(height: 25,),
           SimpleText(
             textAlign: TextAlign.center,
             text: title,
@@ -48,9 +48,9 @@ class OnBoardingText extends StatelessWidget {
             fontSize: 18.sp,
             fontFamily: 'Poppins',
             fontWeight: FontWeight.w400,),
-          const SizedBox(height: 15,),
+          const SizedBox(height: 25,),
           SizedBox(
-            height: size.height*0.4,
+            height: size.height*0.38,
             width: size.width,
             child: SvgPicture.asset(svgPicture,fit: BoxFit.contain,),
           ),
@@ -58,7 +58,7 @@ class OnBoardingText extends StatelessWidget {
             padding:
             const EdgeInsets.symmetric(vertical: 25.0, horizontal: 10.0),
             child: Container(
-              height: 125,
+              height: 80,
               padding: const EdgeInsets.only(bottom: 10),
               margin: const EdgeInsets.symmetric(horizontal: 15),
               child: pageIndex == 2
@@ -107,7 +107,7 @@ class OnBoardingText extends StatelessWidget {
                     },
                     child:  SimpleText(
                       text: "Skip",
-                      fontColor: const Color(0xFF888888),
+                      fontColor: Colors.white,
                       fontSize: 18.sp,
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.w400,

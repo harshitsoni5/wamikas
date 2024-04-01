@@ -42,7 +42,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               child: SvgPicture.asset("assets/svg/ep_back.svg")),
                       ),
                       SvgPicture.asset("assets/svg/logo.svg",
-                      height: size.height*0.25,
+                      height: size.height*0.2,
                         width: size.width*0.4,
                       ),
                       const Spacer(),

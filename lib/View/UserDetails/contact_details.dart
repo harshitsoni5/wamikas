@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/ContactDetailsCubit/contact_details_cubit.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/ContactDetailsCubit/contact_details_state.dart';
 import 'package:wamikas/Models/user_profile_model.dart';
@@ -15,6 +17,7 @@ import '../../Utils/Components/Buttons/round_auth_buttons.dart';
 import '../../Utils/Components/Text/simple_text.dart';
 import 'dart:io';
 import '../../Utils/Components/TextField/text_field_container.dart';
+import '../../Utils/Routes/route_name.dart';
 
 class ContactDetails extends StatefulWidget {
   final UserProfileModel userData;
@@ -56,6 +59,90 @@ class _ContactDetailsState extends State<ContactDetails> {
     }
     super.initState();
   }
+  void showPermissionDeniedDialog(String permissionType) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Permission Required'),
+          content: Text(
+              'Permission to access $permissionType is required to use this feature.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                openAppSettings();
+                Navigator.of(context).pop();
+              },
+              child: const Text('Settings'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void _pickedImage(){
+    showDialog<ImageSource>(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: const Text('Choose image source'),
+        actions: [
+          ElevatedButton(
+            child: const Text('Camera'),
+            onPressed: () async {
+              Permission permission = Permission.camera;
+              if (await permission.isGranted) {
+                Navigator.of(context).pop();
+                BlocProvider.of<UploadImageCubit>(context)
+                    .uploadPhotoEvent(true);
+              } else if (await permission.isDenied) {
+                permission = Permission.camera;
+                if (await permission.isGranted) {
+                  Navigator.of(context).pop();
+                  BlocProvider.of<UploadImageCubit>(context)
+                      .uploadPhotoEvent(true);
+                } else {
+                  showPermissionDeniedDialog('Camera');
+                }
+              } else {
+                showPermissionDeniedDialog('Camera');
+              }
+            },
+          ),
+          ElevatedButton(
+            child: const Text('Gallery'),
+            onPressed: () async {
+              PermissionStatus status =await Permission.photos.request();
+              if ( status.isGranted) {
+                Navigator.of(context).pop();
+                BlocProvider.of<UploadImageCubit>(context)
+                    .uploadPhotoEvent(false);
+              } else if ( status.isDenied) {
+                status = await Permission.photos.request();
+                if ( status.isGranted) {
+                  Navigator.of(context).pop();
+                  BlocProvider.of<UploadImageCubit>(context)
+                      .uploadPhotoEvent(false);
+                } else {
+                  showPermissionDeniedDialog('Gallery');
+                }
+              } else {
+                showPermissionDeniedDialog('Gallery');
+              }
+            },
+          ),
+        ],
+      ),
+    ).then((ImageSource? source) async {
+      if (source == null) return;
+
+      final pickedFile = await ImagePicker().pickImage(source: source);
+      if (pickedFile == null) return;
+    });
+  }
   @override
   void dispose() {
     email.dispose();
@@ -79,10 +166,10 @@ class _ContactDetailsState extends State<ContactDetails> {
               children: [
                 SvgPicture.asset(
                   "assets/svg/rectangle_design.svg",
-                  height: size.height * 0.35,
+                  height: size.height >850 ?size.height*0.3 :size.height*0.35,
                 ),
                 Container(
-                  padding: const EdgeInsets.only(top: 30),
+                  padding:  EdgeInsets.only(top:size.height*0.04),
                   child: Column(
                     children: [
                       Container(
@@ -101,7 +188,8 @@ class _ContactDetailsState extends State<ContactDetails> {
                                     child: SvgPicture.asset(
                                       "assets/svg/ep_back (2).svg",
                                       height: 35,
-                                    )),
+                                    ),
+                                ),
                                 const SizedBox(
                                   width: 15,
                                 ),
@@ -131,54 +219,60 @@ class _ContactDetailsState extends State<ContactDetails> {
                               children: [
                                 Container(
                                   margin: const EdgeInsets.only(bottom: 20),
-                                  height: 150,
-                                  width: 150,
+                                  height: size.height >850 ?180:160,
+                                  width: size.height >850 ?180:160,
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(80),
+                                      borderRadius:
+                                      BorderRadius.circular(size.height >850 ?90:80),
                                       border: Border.all(
                                           color: const Color(0xffFF9CEA),
-                                          width: 12
-                                      )
-                                  ),
-                                  child: BlocBuilder<UploadImageCubit, UploadImageState>(
+                                          width: 12)),
+                                  child: BlocBuilder<UploadImageCubit,
+                                      UploadImageState>(
                                     builder: (context, state) {
-                                      if(state is UploadImageLoading){
+                                      if (state is UploadImageLoading) {
                                         return const Center(
-                                          child: CircularProgressIndicator(),
+                                          child:
+                                          CircularProgressIndicator(),
                                         );
-                                      }
-                                      else if(state is UploadImageSuccess){
+                                      } else if (state
+                                      is UploadImageSuccess) {
                                         return Center(
                                           child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(80),
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                size.height >850 ?90:80),
                                             child: Image.file(
                                               File(state.path!),
                                               fit: BoxFit.cover,
-                                              width: 140,
-                                              height: 140,
+                                              height: size.height >850 ?180:160,
+                                              width: size.height >850 ?180:160,
                                             ),
                                           ),
                                         );
-                                      }else{
-                                        return widget.userData.profilePic == null ?
-                                        Center(
+                                      } else {
+                                        return widget.userData.profilePic == null
+                                            ? Center(
                                           child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(80),
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                size.height >850 ?90:80),
                                             child: SvgPicture.asset(
                                               "assets/svg/profile.svg",
                                             ),
                                           ),
-                                        ):
-                                        Center(
+                                        )
+                                            : Center(
                                           child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(80),
+                                              borderRadius:
+                                              BorderRadius
+                                                  .circular(80),
                                               child: Image.network(
                                                 widget.userData.profilePic!,
                                                 fit: BoxFit.cover,
-                                                width: 140,
-                                                height: 140,
-                                              )
-                                          ),
+                                                height: size.height >850 ?180:160,
+                                                width: size.height >850 ?180:160,
+                                              )),
                                         );
                                       }
                                     },
@@ -186,26 +280,26 @@ class _ContactDetailsState extends State<ContactDetails> {
                                 ),
                                 Positioned(
                                   bottom: 5,
-                                  left: 45,
+                                  left: size.height >850 ?55:50,
                                   child: InkWell(
-                                    onTap: (){
-                                      BlocProvider.of<UploadImageCubit>(context).
-                                      uploadPhotoEvent(false);
+                                    onTap: () {
+                                      _pickedImage();
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.all(12),
                                       height: 60,
                                       width: 60,
                                       decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(30),
+                                          borderRadius:
+                                          BorderRadius.circular(30),
                                           color: ColorClass.primaryColor,
                                           border: Border.all(
-                                              color: const Color(0xffFF9CEA),
-                                              width: 6
-                                          )
+                                              color:
+                                              const Color(0xffFF9CEA),
+                                              width: 6)),
+                                      child: SvgPicture.asset(
+                                        "assets/svg/plus_profile.svg",
                                       ),
-                                      child: SvgPicture.asset
-                                        ("assets/svg/plus_profile.svg",),
                                     ),
                                   ),
                                 )
@@ -213,31 +307,42 @@ class _ContactDetailsState extends State<ContactDetails> {
                             ),
                             Container(
                               padding: const EdgeInsets.only(left: 15),
-                              child:  Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
                                 children: [
                                   SimpleText(
                                     text: username,
-                                    fontSize: 20,
+                                    fontSize: 20.sp,
                                     fontWeight: FontWeight.w800,
                                   ),
                                   Row(
                                     children: [
-                                      widget.userData.jobTitle !=null ?
-                                      SimpleText(
+                                      widget.userData.jobTitle != null
+                                          ? SimpleText(
                                         text: widget.userData.jobTitle!,
                                         fontSize: 16.sp,
-                                        fontColor: const Color(0xff6C6C6C),
+                                        fontColor:
+                                        const Color(0xff6C6C6C),
                                         fontWeight: FontWeight.w300,
-                                      ):
-                                      SimpleText(
+                                      )
+                                          : SimpleText(
                                         text: "Not Specified",
                                         fontSize: 16.sp,
-                                        fontColor: const Color(0xff6C6C6C),
+                                        fontColor:
+                                        const Color(0xff6C6C6C),
                                         fontWeight: FontWeight.w300,
                                       ),
-                                      const SizedBox(width: 5,),
-                                      const Icon(Icons.edit),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      InkWell(
+                                          onTap: (){
+                                            Navigator.of(context).pushNamed(
+                                                RouteName.jobDescription,
+                                                arguments: widget.userData);
+                                          },
+                                          child: const Icon(Icons.edit)),
                                     ],
                                   ),
                                   SimpleText(
@@ -247,7 +352,7 @@ class _ContactDetailsState extends State<ContactDetails> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                   SimpleText(
-                                    text: emailId,
+                                    text:emailId,
                                     fontSize: 15,
                                     fontColor: const Color(0xff6C6C6C),
                                     fontWeight: FontWeight.w300,
@@ -315,11 +420,14 @@ class _ContactDetailsState extends State<ContactDetails> {
                  ),
                  const SizedBox(height: 20,),
                  Container(
-                   margin: const EdgeInsets.only(bottom: 40),
-                     child: BlocConsumer<ContactDetailsCubit, ContactDetailsState>(
-                       listenWhen: (previous, current) => current is ContactDetailsActionState,
-                       buildWhen: (previous, current) => current is! ContactDetailsActionState,
-                      listener: (context, state) {
+                      margin: const EdgeInsets.only(bottom: 40),
+                      child: BlocConsumer<ContactDetailsCubit,
+                          ContactDetailsState>(
+                        listenWhen: (previous, current) =>
+                            current is ContactDetailsActionState,
+                        buildWhen: (previous, current) =>
+                            current is! ContactDetailsActionState,
+                        listener: (context, state) {
                        if(state is NameEmpty){
                          Fluttertoast.showToast(
                              msg: "User name field should not be empty",
@@ -386,14 +494,15 @@ class _ContactDetailsState extends State<ContactDetails> {
                            BlocProvider.of<ContactDetailsCubit>(context).
                            updateProfile(
                                name: name.text,
-                               email: email.text, 
+                               email: email.text,
                                country: country.text,
                                city: city.text,
                                state: userState.text,
                                fullAddress: fullAddress.text,
                                apartment: apartment.text);
                          },
-                         child: RoundAuthButtons(size: size, btnText: "Update"));
+                         child: RoundAuthButtons(
+                             size: size, btnText: "Update"));
                         },
                       )
                  )

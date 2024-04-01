@@ -9,7 +9,7 @@ import 'package:wamikas/Bloc/AuthBloc/SignUpCubit/signup_cubit.dart';
 import 'package:wamikas/Bloc/AuthBloc/SignUpCubit/signup_state.dart';
 import 'package:wamikas/Utils/Color/colors.dart';
 import 'package:wamikas/Utils/Components/Buttons/round_auth_buttons.dart';
-import 'package:wamikas/Utils/regex.dart';
+import 'package:wamikas/Utils/Regex/regex.dart';
 import '../../Utils/Components/Text/simple_text.dart';
 import '../../Utils/Components/TextField/text_field_container.dart';
 import '../../Utils/Routes/route_name.dart';
