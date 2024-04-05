@@ -3,8 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FireStoreDataBaseServices{
   static  createNewCollectionOrAddToExisting(String collectionName){
    try{
-     CollectionReference collectionReference = FirebaseFirestore.instance.collection(collectionName);
-     return collectionReference;
+      CollectionReference collectionReference =
+          FirebaseFirestore.instance.collection(collectionName);
+      return collectionReference;
    }
    catch (e) {
      return e.toString();
@@ -23,6 +24,20 @@ class FireStoreDataBaseServices{
    catch (e) {
      return e.toString();
    }
+  }
+
+  static  setDataToUserCollection(
+      String collectionName,
+      String docId,
+      Map<String,dynamic> data)async{
+    try{
+      var result = await FirebaseFirestore.instance.collection(collectionName).
+      doc(docId).set(data);
+      return result;
+    }
+    catch (e) {
+      return e.toString();
+    }
   }
 
 

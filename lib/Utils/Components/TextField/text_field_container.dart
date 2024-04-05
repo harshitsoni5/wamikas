@@ -47,12 +47,12 @@ class TextFieldContainer extends StatelessWidget {
           padding: const EdgeInsets.only(left: 10),
           child: SimpleText(
             text: titleBox,
-            fontSize: 15.sp,
+            fontSize: 14.sp,
             fontColor: Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 5,),
+        const SizedBox(height: 2,),
         Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),

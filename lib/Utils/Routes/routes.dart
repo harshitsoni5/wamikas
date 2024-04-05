@@ -3,6 +3,7 @@ import 'package:wamikas/Models/user_profile_model.dart';
 import 'package:wamikas/Utils/Routes/route_name.dart';
 import 'package:wamikas/View/AuthScreens/auth_screen.dart';
 import 'package:wamikas/View/AuthScreens/signup.dart';
+import 'package:wamikas/View/Forum/forum_screeen.dart';
 import 'package:wamikas/View/Home/home.dart';
 import 'package:wamikas/View/Splash%7CWelcome/welcome_screen.dart';
 import 'package:wamikas/View/UserDetails/contact_details.dart';
@@ -34,6 +35,9 @@ class Routes {
         case RouteName.userProfile:
         return MaterialPageRoute(
             builder: (BuildContext context) => const UserProfile());
+        case RouteName.forum:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const ForumScreen());
         case RouteName.editProfile:
           if(argument is UserProfileModel){
             return MaterialPageRoute(

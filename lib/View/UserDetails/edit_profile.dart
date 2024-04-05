@@ -151,7 +151,10 @@ class _EditProfileState extends State<EditProfile> {
                                   children: [
                                     InkWell(
                                         onTap: () {
-                                          // Navigator.of(context).pop();
+                                          Navigator.of(context).pop();
+                                          BlocProvider.of<UserProfileBloc>(
+                                                  context)
+                                              .add(GetUserDataEvent());
                                         },
                                         child: SvgPicture.asset(
                                           "assets/svg/ep_back (2).svg",

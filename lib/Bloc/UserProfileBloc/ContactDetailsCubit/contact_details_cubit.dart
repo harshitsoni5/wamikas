@@ -54,5 +54,4 @@ class ContactDetailsCubit extends Cubit<ContactDetailsState> {
     }
   }
 
-
 }

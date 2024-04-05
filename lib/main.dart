@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wamikas/Bloc/AuthBloc/OtpVerficationCubit/otp_verification_cubit.dart';
 import 'package:wamikas/Bloc/AuthBloc/SignUpCubit/signup_cubit.dart';
+import 'package:wamikas/Bloc/ForumCreationBloc/forum_cubit.dart';
+import 'package:wamikas/Bloc/HomeBloc/home_bloc.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/ContactDetailsCubit/contact_details_cubit.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/CreateJobProfile/create_job_profile_cubit.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/ImageCubit/upload_image_cubit.dart';
@@ -59,6 +61,10 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) =>ContactDetailsCubit()),
         BlocProvider<JobDescriptionCubit>(
             create: (BuildContext context) =>JobDescriptionCubit()),
+        BlocProvider<ForumCubit>(
+            create: (BuildContext context) =>ForumCubit()),
+        BlocProvider<HomeBloc>(
+            create: (BuildContext context) =>HomeBloc()),
       ],
       child: ScreenUtilInit(
         child: MaterialApp(
