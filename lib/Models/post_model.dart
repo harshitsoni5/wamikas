@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Comment {
   final String uid;
   final String name;
-  final String profilePic;
-  final String time;
+  final String? profilePic;
+  final Timestamp time;
   final String commentsDesc;
   final List<dynamic> likes;
+  final String commentId;
 
   Comment({
     required this.uid,
@@ -13,6 +16,7 @@ class Comment {
     required this.time,
     required this.commentsDesc,
     required this.likes,
+    required this.commentId,
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {
@@ -22,10 +26,24 @@ class Comment {
       profilePic: json['profile_pic'],
       time: json['time'],
       commentsDesc: json['comments_desc'],
-      likes: json['likes'] ?? [], // Handle case when 'likes' is null
+      likes: json['likes'] ?? [],
+      commentId: json['comment_id'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'uid': uid,
+      'name': name,
+      'profile_pic': profilePic,
+      'time': time,
+      'comments_desc': commentsDesc,
+      'likes': likes,
+      'comment_id': commentId,
+    };
+  }
 }
+
 
 class PostModel {
   final String forumContent;

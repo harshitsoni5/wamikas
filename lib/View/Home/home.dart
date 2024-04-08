@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wamikas/Bloc/CommentsBloc/comments_bloc.dart';
 import 'package:wamikas/Bloc/CommentsBloc/comments_event.dart';
 import 'package:wamikas/Bloc/CommentsBloc/comments_state.dart';
@@ -97,6 +98,13 @@ class _HomeScreenState extends State<HomeScreen>
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
                               final data = comments[index];
+                              bool isLikeOrNot =false;
+                              if (state.comments[index]["likes"]
+                                  .contains(userData.phone)) {
+                                isLikeOrNot = true;
+                              }else{
+                                isLikeOrNot=false;
+                              }
                               return Column(
                                 children: [
                                   Row(
@@ -138,7 +146,37 @@ class _HomeScreenState extends State<HomeScreen>
                                   const SizedBox(height: 6,),
                                   Row(
                                     children: [
-                                      SvgPicture.asset("assets/svg/like_wami.svg"),
+                                      InkWell(
+                                        onTap: (){
+                                          BlocProvider.of<CommentsBloc>(context).
+                                          add(LikeAComment(
+                                              postId: postId,
+                                              comments: state.comments,
+                                              postModel: postModel,
+                                                commentModel: Comment(
+                                                    uid: state.comments[index]
+                                                        ["uid"],
+                                                    name: state.comments[index]
+                                                        ["name"],
+                                                    profilePic:
+                                                        state.comments[index]
+                                                            ["profile_pic"],
+                                                    time: state.comments[index]
+                                                        ["time"],
+                                                    commentsDesc:
+                                                        state.comments[index]
+                                                            ["comments_desc"],
+                                                    likes: state.comments[index]
+                                                        ["likes"],
+                                                    commentId:
+                                                        state.comments[index]
+                                                            ["comment_id"])));
+                                          },
+                                          child: isLikeOrNot
+                                              ? SvgPicture.asset(
+                                                  "assets/svg/like_filled.svg")
+                                              : SvgPicture.asset(
+                                                  "assets/svg/like_wami.svg")),
                                       const SizedBox(width: 5),
                                       SimpleText(text: "Like", fontSize: 10.sp),
                                       const Spacer(),

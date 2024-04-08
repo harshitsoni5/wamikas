@@ -38,3 +38,17 @@ class ReduceBottomSheetSize extends CommentsEvent {
     required this.isClicked,
   });
 }
+
+class LikeAComment extends CommentsEvent{
+  final String postId;
+  final List comments;
+  final PostModel postModel;
+  final Comment commentModel;
+  LikeAComment({
+    required this.postId,
+    required this.comments,
+    required this.postModel,
+    required this.commentModel,
+  });
+}
+
