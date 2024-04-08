@@ -7,12 +7,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wamikas/Bloc/ForumCreationBloc/forum_cubit.dart';
 import 'package:wamikas/Bloc/ForumCreationBloc/forum_state.dart';
+import 'package:wamikas/Models/user_profile_model.dart';
 import '../../Utils/Components/Buttons/round_auth_buttons.dart';
 import '../../Utils/Components/Text/simple_text.dart';
 import '../../Utils/Components/TextField/text_field_container.dart';
 
 class ForumScreen extends StatefulWidget {
-  const ForumScreen({super.key});
+  final UserProfileModel userData;
+  const ForumScreen({super.key, required this.userData});
 
   @override
   State<ForumScreen> createState() => _ForumScreenState();
@@ -86,7 +88,9 @@ class _ForumScreenState extends State<ForumScreen> {
                       borderRadius: BorderRadius.circular(40),
                       child: CircleAvatar(
                         radius: 25,
-                        child: Image.asset("assets/images/dp.png",),
+                        child:widget.userData.profilePic ==null?
+                        Image.asset("assets/images/dp.png",):
+                        Image.network(widget.userData.profilePic!),
                       ),
                     ),
                     const SizedBox(width: 10,),
@@ -94,16 +98,18 @@ class _ForumScreenState extends State<ForumScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SimpleText(text: "Abhishek Kumar Jha",
+                          SimpleText(
+                            text: widget.userData.name,
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
                           ),
+                          widget.userData.jobTitle!=null?
                           SimpleText(
-                            text:
-                            "UI/UX Designer",
+                            text:widget.userData.jobTitle!,
                             fontSize: 12.sp,
                             fontColor: const Color(0xff6C6C6C),
-                          ),
+                          ):
+                          const SizedBox(),
                         ],
                       ),
                     )
@@ -242,7 +248,10 @@ class _ForumScreenState extends State<ForumScreen> {
                                     forumTitle: postTitle.text,
                                     postId: uuid.v1(),
                                     dateAndTime: DateTime.now().toString(),
-                                    forumDescription: description.text);
+                                    forumDescription: description.text,
+                                  emailId: widget.userData.email,
+                                  name: widget.userData.name
+                                );
                               },
                               child: RoundAuthButtons(
                                   size: size, btnText: "Post Now"));

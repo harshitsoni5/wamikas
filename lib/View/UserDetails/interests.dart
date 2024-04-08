@@ -155,7 +155,7 @@ class _InterestsState extends State<Interests> {
                     const SizedBox(height: 10,),
                     InkWell(
                       onTap: (){
-                        Navigator.of(context).pushNamed(RouteName.userProfile);
+                        Navigator.of(context).pushNamed(RouteName.home);
                       },
                       child: const SimpleText(
                         text: "Skip >>",

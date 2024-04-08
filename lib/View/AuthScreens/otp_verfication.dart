@@ -188,7 +188,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                     }
                     if(state is OtpVerificationUserAlreadyExistsState){
                       Navigator.of(context).pushNamedAndRemoveUntil(
-                          RouteName.userProfile, (route) => false);
+                          RouteName.home, (route) => false);
                     }
                     if(state is OtpVerificationFailed){
                       Fluttertoast.showToast(

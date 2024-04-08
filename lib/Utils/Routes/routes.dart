@@ -36,8 +36,20 @@ class Routes {
         return MaterialPageRoute(
             builder: (BuildContext context) => const UserProfile());
         case RouteName.forum:
+      if(argument is UserProfileModel){
         return MaterialPageRoute(
-            builder: (BuildContext context) => const ForumScreen());
+            builder: (BuildContext context) =>  ForumScreen(
+              userData: argument,
+            ));
+      }else{
+        return MaterialPageRoute(builder: (_) {
+          return const Scaffold(
+            body: Center(
+              child: Text('No route defined'),
+            ),
+          );
+        });
+      }
         case RouteName.editProfile:
           if(argument is UserProfileModel){
             return MaterialPageRoute(

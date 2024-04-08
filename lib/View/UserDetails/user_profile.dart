@@ -158,7 +158,7 @@ class _UserProfileState extends State<UserProfile>
                                   children: [
                                     InkWell(
                                         onTap: () {
-                                          // Navigator.of(context).pop();
+                                          Navigator.of(context).pop();
                                         },
                                         child: SvgPicture.asset(
                                           "assets/svg/ep_back (2).svg",

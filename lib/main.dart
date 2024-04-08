@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wamikas/Bloc/AuthBloc/OtpVerficationCubit/otp_verification_cubit.dart';
 import 'package:wamikas/Bloc/AuthBloc/SignUpCubit/signup_cubit.dart';
+import 'package:wamikas/Bloc/CommentsBloc/comments_bloc.dart';
 import 'package:wamikas/Bloc/ForumCreationBloc/forum_cubit.dart';
 import 'package:wamikas/Bloc/HomeBloc/home_bloc.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/ContactDetailsCubit/contact_details_cubit.dart';
@@ -65,6 +66,8 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) =>ForumCubit()),
         BlocProvider<HomeBloc>(
             create: (BuildContext context) =>HomeBloc()),
+        BlocProvider<CommentsBloc>(
+            create: (BuildContext context) =>CommentsBloc()),
       ],
       child: ScreenUtilInit(
         child: MaterialApp(

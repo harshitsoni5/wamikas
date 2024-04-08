@@ -31,11 +31,34 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         var data = snapshot.data();
         if (data != null && data is Map<String, dynamic>) {
           QuerySnapshot querySnapshot = await postReference.get();
-          var allData = querySnapshot.docs
-              .map((doc) => PostModel.fromJson(
-              (doc.data() as Map<String, dynamic>))).toList();
+          List allData = querySnapshot.docs
+              .map((doc) => doc.data()).toList();
+          List<PostModel> listsOfPosts = [];
+          for(int i=0; i<allData.length;i++){
+            var userData = await reference.doc(allData[i]["uid"]).get();
+            if(userData.exists){
+              var postedDataProfileDetails= userData.data();
+              if(postedDataProfileDetails != null &&
+                  postedDataProfileDetails is Map<String, dynamic>){
+                listsOfPosts.add(PostModel(
+                    uid: allData[i]["uid"],
+                    forumName: allData[i]["forum_name"],
+                    forumTitle: allData[i]["forum_title"],
+                    forumContent: allData[i]["forum_content"],
+                    like: allData[i]["like"],
+                    comments: allData[i]["comments"],
+                    time: allData[i]["time"],
+                    name: postedDataProfileDetails["name"],
+                    emailId: postedDataProfileDetails["email"],
+                  id: allData[i]["id"]
+                ));
+              }
+            }else{
+              emit(HomeError());
+            }
+          }
           emit(HomeSuccess(
-              listOfAllPost: allData,
+              listOfAllPost: listsOfPosts,
               userData:UserProfileModel.fromJson(data)
           ));
         } else {
@@ -84,11 +107,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   FutureOr<void> postComment(
       HomePostCommentEvent event, Emitter<HomeState> emit) async {
-    emit(HomeLoading());
     try {
       CollectionReference reference =
       await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
-          "users");
+          "posts");
       var docId = await SharedData.getIsLoggedIn("phone");
       QuerySnapshot querySnapshot = await reference.get();
       final allData = querySnapshot.docs

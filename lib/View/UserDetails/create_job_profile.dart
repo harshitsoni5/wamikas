@@ -228,7 +228,7 @@ class _CreateJobProfileState extends State<CreateJobProfile> {
               const SizedBox(height: 10,),
               InkWell(
                 onTap: (){
-                  Navigator.of(context).pushNamed(RouteName.userProfile);
+                  Navigator.of(context).pushNamed(RouteName.home);
                 },
                 child: const SimpleText(
                   text: "Skip >>",

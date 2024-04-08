@@ -280,7 +280,7 @@ class _UploadPhotoState extends State<UploadPhoto> {
                         const SizedBox(height: 20,),
                         InkWell(
                           onTap: (){
-                            Navigator.of(context).pushNamed(RouteName.userProfile);
+                            Navigator.of(context).pushNamed(RouteName.home);
                           },
                           child: const SimpleText(
                             text: "Skip >>",

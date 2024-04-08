@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../Core/FirebaseDataBaseService/firestore_database_services.dart';
 import '../../SharedPrefernce/shared_pref.dart';
@@ -11,7 +12,10 @@ class ForumCubit extends Cubit<ForumState> {
       required String forumTitle,
       required String forumDescription,
       required String postId,
-      required String dateAndTime}) async {
+      required String dateAndTime,
+      required String name,
+      required String emailId,
+      }) async {
     emit(ForumLoading());
     try {
       if (forumName.isNotEmpty) {
@@ -28,7 +32,8 @@ class ForumCubit extends Cubit<ForumState> {
               "forum_content": forumDescription,
               "like": [],
               "comments": [],
-              "time": dateAndTime
+              "time": dateAndTime,
+              "id":postId
             });
             emit(ForumSuccess());
             emit(ForumInitial());
