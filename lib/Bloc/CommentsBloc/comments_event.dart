@@ -44,11 +44,13 @@ class LikeAComment extends CommentsEvent{
   final List comments;
   final PostModel postModel;
   final Comment commentModel;
+  final bool likeOrNot;
   LikeAComment({
     required this.postId,
     required this.comments,
     required this.postModel,
     required this.commentModel,
+    required this.likeOrNot,
   });
 }
 

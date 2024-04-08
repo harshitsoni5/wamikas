@@ -153,6 +153,7 @@ class _HomeScreenState extends State<HomeScreen>
                                               postId: postId,
                                               comments: state.comments,
                                               postModel: postModel,
+                                                likeOrNot: isLikeOrNot,
                                                 commentModel: Comment(
                                                     uid: state.comments[index]
                                                         ["uid"],

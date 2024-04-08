@@ -93,35 +93,67 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
             postData is Map) {
           List comments = event.comments;
           int index=0;
-          for (int i=0; i<comments.length;i++){
+          for (int i=0 ; i<comments.length;i++){
             if(event.commentModel.commentId == comments[i]["comment_id"]){
               break;
             }
             index++;
           }
-          comments.removeAt(index);
-          List likesAdded = event.commentModel.likes;
-          likesAdded.add(docId);
-          comments.insert(index, {
-            "comments_desc": event.commentModel.commentsDesc,
-            "likes": likesAdded,
-            "name": event.commentModel.name,
-            "profile_pic":event.commentModel.profilePic,
-            "time": event.commentModel.time,
-            "uid": event.commentModel.uid,
-            "comment_id":event.commentModel.commentId
-          });
-          FireStoreDataBaseServices.setDataToUserCollection(
-              "posts", event.postId, {
-            "comments":comments,
-            "uid": docId,
-            "forum_name": event.postModel.forumName,
-            "forum_title": event.postModel.forumTitle,
-            "forum_content": event.postModel.forumContent,
-            "like": [],
-            "time": event.postModel.time,
-            "id":event.postModel.id
-          });
+          if(event.likeOrNot==false){
+            print("here");
+            comments.removeAt(index);
+            List likesAdded = event.commentModel.likes;
+            likesAdded.add(docId);
+            comments.insert(index, {
+              "comments_desc": event.commentModel.commentsDesc,
+              "likes": likesAdded,
+              "name": event.commentModel.name,
+              "profile_pic":event.commentModel.profilePic,
+              "time": event.commentModel.time,
+              "uid": event.commentModel.uid,
+              "comment_id":event.commentModel.commentId
+            });
+            FireStoreDataBaseServices.setDataToUserCollection(
+                "posts", event.postId, {
+              "comments":comments,
+              "uid": docId,
+              "forum_name": event.postModel.forumName,
+              "forum_title": event.postModel.forumTitle,
+              "forum_content": event.postModel.forumContent,
+              "like": [],
+              "time": event.postModel.time,
+              "id":event.postModel.id
+            });
+          }
+          else{
+            comments.removeAt(index);
+            List likesAdded = event.commentModel.likes;
+            for(int i=0;i<likesAdded.length;i++){
+              if(docId == likesAdded[i]){
+                likesAdded.removeAt(i);
+              }
+            }
+            comments.insert(index, {
+              "comments_desc": event.commentModel.commentsDesc,
+              "likes": likesAdded,
+              "name": event.commentModel.name,
+              "profile_pic":event.commentModel.profilePic,
+              "time": event.commentModel.time,
+              "uid": event.commentModel.uid,
+              "comment_id":event.commentModel.commentId
+            });
+            FireStoreDataBaseServices.setDataToUserCollection(
+                "posts", event.postId, {
+              "comments":comments,
+              "uid": docId,
+              "forum_name": event.postModel.forumName,
+              "forum_title": event.postModel.forumTitle,
+              "forum_content": event.postModel.forumContent,
+              "like": [],
+              "time": event.postModel.time,
+              "id":event.postModel.id
+            });
+          }
           emit(
               CommentsSuccess(
                 comments: comments,

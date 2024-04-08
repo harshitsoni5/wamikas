@@ -93,7 +93,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               listOfAllPost: allData,
               userData:UserProfileModel.fromJson(data)
           ));
-        } else {
+        }
+        else {
           emit(HomeError());
         }
       }
