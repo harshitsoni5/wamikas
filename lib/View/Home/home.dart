@@ -1,9 +1,10 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:uuid/uuid.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wamikas/Bloc/CommentsBloc/comments_bloc.dart';
 import 'package:wamikas/Bloc/CommentsBloc/comments_event.dart';
 import 'package:wamikas/Bloc/CommentsBloc/comments_state.dart';
@@ -47,6 +48,43 @@ class _HomeScreenState extends State<HomeScreen>
     RouteName.userProfile,
     "RouteName.settings",
   ];
+
+  String getTimeAgo(String dateString) {
+    final postTime = DateTime.parse(dateString);
+    final now = DateTime.now();
+    final difference = now.difference(postTime);
+
+    if (difference.inSeconds < 60) {
+      return "${difference.inSeconds} seconds ago";
+    } else if (difference.inMinutes < 60) {
+      return "${difference.inMinutes} minutes ago";
+    } else if (difference.inHours < 24) {
+      return "${difference.inHours} hours ago";
+    } else if (difference.inDays == 1) {
+      return "Yesterday";
+    } else {
+      return "${postTime.day}/${postTime.month}/${postTime.year}";
+    }
+  }
+
+  String getTime(Timestamp timestamp) {
+    final postTime = timestamp.toDate();
+    final now = DateTime.now();
+    final difference = now.difference(postTime);
+
+    if (difference.inSeconds < 60) {
+      return "${difference.inSeconds} seconds ago";
+    } else if (difference.inMinutes < 60) {
+      return "${difference.inMinutes} minutes ago";
+    } else if (difference.inHours < 24) {
+      return "${difference.inHours} hours ago";
+    } else if (difference.inDays == 1) {
+      return "Yesterday";
+    } else {
+      return "${postTime.day}/${postTime.month}/${postTime.year}";
+    }
+  }
+
 
   void showBottomSheet({
     required Size size,
@@ -181,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen>
                                       const SizedBox(width: 5),
                                       SimpleText(text: "Like", fontSize: 10.sp),
                                       const Spacer(),
-                                      SimpleText(text: "2 hr ago", fontSize: 10.sp),
+                                      SimpleText(text: getTime(data["time"]), fontSize: 10.sp),
                                     ],
                                   ),
                                   const Divider(),
@@ -323,7 +361,9 @@ class _HomeScreenState extends State<HomeScreen>
             tabBuilder: (int index, bool isActive) {
               return InkWell(
                 onTap: (){
-                  Navigator.of(context).pushNamed(routes[index]);
+                  if(index !=0){
+                    Navigator.of(context).pushNamed(routes[index]);
+                  }
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
@@ -427,6 +467,7 @@ class _HomeScreenState extends State<HomeScreen>
                       userData.profilePic!,
                       height: 40,
                       width: 40,
+                      fit: BoxFit.cover,
                     ),
                   ),
                   Flexible(
@@ -543,298 +584,549 @@ class _HomeScreenState extends State<HomeScreen>
                           physics: const NeverScrollableScrollPhysics(),
                           controller: tabController,
                           children: [
-                            ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: posts.length,
-                                itemBuilder: (context,index){
-                                  return Column(
+                            ListView(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 5),
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 15),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Colors.white,
+                                      border: Border.all(
+                                          color: const Color(0xff544c4c33),
+                                          width: 2
+                                      )
+                                  ),
+                                  child: Row(
                                     children: [
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15, vertical: 5),
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 15),
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(8),
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                color: const Color(0xff544c4c33),
-                                                width: 2
-                                            )
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: TextField(
-                                                decoration: InputDecoration(
-                                                    border: InputBorder.none,
-                                                    hintText: "Search topics",
-                                                    hintStyle: TextStyle(
-                                                        color: const Color(0xffC8C8C8),
-                                                        fontSize: 14.sp
-                                                    )
-                                                ),
-                                              ),
-                                            ),
-                                            SvgPicture.asset("assets/svg/search.svg")
-                                          ],
+                                      Flexible(
+                                        child: TextField(
+                                          decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                              hintText: "Search topics",
+                                              hintStyle: TextStyle(
+                                                  color: const Color(0xffC8C8C8),
+                                                  fontSize: 14.sp
+                                              )
+                                          ),
                                         ),
                                       ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 15, vertical: 10),
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(8),
-                                            border: Border.all(
-                                                color: const Color(0xff544c4c33),
-                                                width: 2
-                                            )
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
+                                      SvgPicture.asset("assets/svg/search.svg")
+                                    ],
+                                  ),
+                                ),
+                                ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: posts.length,
+                                    itemBuilder: (context,index){
+                                      return Column(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 15, vertical: 10),
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(8),
+                                                border: Border.all(
+                                                    color: const Color(0xff544c4c33),
+                                                    width: 2
+                                                )
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                userData.profilePic==null?
-                                                SvgPicture.asset(
-                                                  "assets/svg/profile.svg",
-                                                  height: 40,
-                                                  width: 40,
-                                                ):
-                                                ClipRRect(
-                                                  borderRadius: BorderRadius.circular(20),
-                                                  child: Image.network(
-                                                    userData.profilePic!,
-                                                    height: 40,
-                                                    width: 40,
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                Row(
                                                   children: [
-                                                    SimpleText(
-                                                      text: posts[index].name,
-                                                      fontSize: 13.sp,
-                                                      textHeight: 0.9,
+                                                    userData.profilePic==null?
+                                                    SvgPicture.asset(
+                                                      "assets/svg/profile.svg",
+                                                      height: 40,
+                                                      width: 40,
+                                                    ):
+                                                    ClipRRect(
+                                                      borderRadius: BorderRadius.circular(20),
+                                                      child: Image.network(
+                                                        userData.profilePic!,
+                                                        height: 40,
+                                                        width: 40,
+                                                        fit: BoxFit.cover,
+                                                      ),
                                                     ),
-                                                    SimpleText(
-                                                      text: posts[index].emailId,
-                                                      fontSize: 12.sp,
-                                                      fontColor: ColorClass.textColor,
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        SimpleText(
+                                                          text: posts[index].name,
+                                                          fontSize: 13.sp,
+                                                          textHeight: 0.9,
+                                                        ),
+                                                        SimpleText(
+                                                          text: posts[index].emailId,
+                                                          fontSize: 12.sp,
+                                                          fontColor: ColorClass.textColor,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const Spacer(),
+                                                    const Icon(
+                                                        Icons.more_vert
                                                     ),
                                                   ],
                                                 ),
-                                                const Spacer(),
-                                                const Icon(
-                                                    Icons.more_vert
+                                                const SizedBox(height: 5,),
+                                                SimpleText(
+                                                  text: posts[index].forumName,
+                                                  fontSize: 9.sp,
+                                                  fontColor: const Color(0xff455A64),
                                                 ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 5,),
-                                            SimpleText(
-                                              text: posts[index].forumName,
-                                              fontSize: 9.sp,
-                                              fontColor: const Color(0xff455A64),
-                                            ),
-                                            const SizedBox(height: 5,),
-                                            SimpleText(
-                                              text: posts[index].forumTitle,
-                                              fontSize: 18.sp,
-                                              textHeight: 0.9,
-                                            ),
-                                            const SizedBox(height: 2,),
-                                            SimpleText(
-                                              text: posts[index].forumContent,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w300,
-                                              fontColor: const Color(0xff777777),
-                                            ),
-                                            const Divider(
-                                              color: Color(0xffB5B5B5),
-                                            ),
-                                            Row(
-                                              children: [
-                                                InkWell(
-                                                  onTap: (){
-                                                    showBottomSheet(
-                                                        size: size,
-                                                      postId: posts[index].id,
-                                                      userData: state.userData,
-                                                      comments: posts[index].comments,
-                                                      postModel: posts[index]
-                                                    );
-                                                  },
-                                                  child: SvgPicture.asset(
-                                                    "assets/svg/commentss.svg",
-                                                    height: 15,
-                                                    width: 15,
-                                                  ),
+                                                const SizedBox(height: 5,),
+                                                SimpleText(
+                                                  text: posts[index].forumTitle,
+                                                  fontSize: 18.sp,
+                                                  textHeight: 0.9,
                                                 ),
-                                                const SizedBox(width: 5,),
-                                                posts[index].comments.isNotEmpty?
-                                                InkWell(
-                                                  onTap: (){
-                                                    BlocProvider.of<CommentsBloc>(context)
-                                                    .add(CommentsInit(
-                                                      comments: posts[index].comments,
-                                                      userData: state.userData,
+                                                const SizedBox(height: 2,),
+                                                SimpleText(
+                                                  text: posts[index].forumContent,
+                                                  fontSize: 12.sp,
+                                                  fontWeight: FontWeight.w300,
+                                                  fontColor: const Color(0xff777777),
+                                                ),
+                                                const Divider(
+                                                  color: Color(0xffB5B5B5),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: (){
+                                                        showBottomSheet(
+                                                            size: size,
+                                                          postId: posts[index].id,
+                                                          userData: state.userData,
+                                                          comments: posts[index].comments,
+                                                          postModel: posts[index]
+                                                        );
+                                                      },
+                                                      child: SvgPicture.asset(
+                                                        "assets/svg/commentss.svg",
+                                                        height: 15,
+                                                        width: 15,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 5,),
+                                                    posts[index].comments.isNotEmpty?
+                                                    InkWell(
+                                                      onTap: (){
+                                                        BlocProvider.of<CommentsBloc>(context)
+                                                        .add(CommentsInit(
+                                                          comments: posts[index].comments,
+                                                          userData: state.userData,
 
-                                                    ));
-                                                    showBottomSheet(
-                                                      size: size,
-                                                      postId: posts[index].id,
-                                                        userData: state.userData,
-                                                      comments: posts[index].comments,
-                                                        postModel: posts[index]
-                                                    );
-                                                  },
-                                                  child:  SimpleText(
-                                                      text: "${
-                                                          posts[index]
-                                                              .comments.length
-                                                              .toString()
-                                                      } Replies",
-                                                      fontSize: 16),
-                                                ):
-                                                const SizedBox(),
-                                                const Spacer(),
-                                                const SimpleText(
-                                                    text: "1 min ago",
-                                                    fontSize: 16),
+                                                        ));
+                                                        showBottomSheet(
+                                                          size: size,
+                                                          postId: posts[index].id,
+                                                            userData: state.userData,
+                                                          comments: posts[index].comments,
+                                                            postModel: posts[index]
+                                                        );
+                                                      },
+                                                      child:  SimpleText(
+                                                          text: "${
+                                                              posts[index]
+                                                                  .comments.length
+                                                                  .toString()
+                                                          } Replies",
+                                                          fontSize: 16),
+                                                    ):
+                                                    const SizedBox(),
+                                                    const Spacer(),
+                                                    SimpleText(
+                                                        text: getTimeAgo(posts[index].time),
+                                                        fontSize: 16),
+                                                  ],
+                                                )
                                               ],
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                }),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    }),
+                              ],
+                            ),
                             Container(
                               margin: const EdgeInsets.symmetric(horizontal: 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15,vertical: 5),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        color: Colors.white,
-                                        border: Border.all(
-                                            color: const Color(0xff544c4c33),
-                                            width: 2
-                                        )
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Flexible(
-                                          child: TextField(
-                                            decoration: InputDecoration(
-                                                border: InputBorder.none,
-                                                hintText:
-                                                "concert, comedy show etc...",
-                                                hintStyle: TextStyle(
-                                                    color: const Color(0xffC8C8C8),
-                                                    fontSize: 14.sp)),
-                                          ),
-                                        ),
-                                        SvgPicture.asset("assets/svg/search.svg")
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(height: 15,),
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset("assets/svg/flame.svg",
-                                        height: 18,),
-                                      const SizedBox(width: 5,),
-                                      SimpleText(
-                                        text: "Trending Events",
-                                        fontSize: 14.sp,
-                                        fontColor: ColorClass.primaryColor,
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15,vertical: 5),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(8),
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              color: const Color(0xff544c4c33),
+                                              width: 2
+                                          )
                                       ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10,),
-                                  Container(
-                                    width: size.width*0.6,
-                                    padding: const EdgeInsets.only(bottom: 10),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.white
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Image.asset(
-                                          "assets/images/events.png",
-                                          width: size.width*0.6,
-                                          fit: BoxFit.cover,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(left: 10),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              SimpleText(
-                                                text: "The Grub Fest - Spring Fling",
-                                                fontSize: 14.sp,
-                                                fontWeight: FontWeight.w500,),
-                                              const SizedBox(height: 15,),
-                                              Row(
-                                                children: [
-                                                  SvgPicture.asset("assets/svg/calender.svg"),
-                                                  const SizedBox(width: 5,),
-                                                  SimpleText(
-                                                    text: "March 30-31st | 2PM Onwards",
-                                                    fontSize: 10.sp,
-                                                    fontColor: const Color(0xff455A64),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  SvgPicture.asset("assets/svg/map.svg"),
-                                                  const SizedBox(width: 5,),
-                                                  SimpleText(
-                                                    text: "JLN Stadium, Gate No. 14, Delhi",
-                                                    fontSize: 10.sp,
-                                                    fontColor: const Color(0xff455A64),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(height: 8,),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                            margin: const EdgeInsets.symmetric(horizontal: 10),
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.circular(10),
-                                                border: Border.all(
-                                                    color: ColorClass.primaryColor
-                                                )
+                                      child: Row(
+                                        children: [
+                                          Flexible(
+                                            child: TextField(
+                                              decoration: InputDecoration(
+                                                  border: InputBorder.none,
+                                                  hintText:
+                                                  "concert, comedy show etc...",
+                                                  hintStyle: TextStyle(
+                                                      color: const Color(0xffC8C8C8),
+                                                      fontSize: 14.sp)),
                                             ),
-                                            padding: const EdgeInsets.symmetric(vertical: 5),
-                                            child: Center(
-                                              child: SimpleText(
-                                                text: "Register Now!!",
-                                                fontColor:ColorClass.primaryColor,
-                                                fontSize: 14.sp,
-                                              ),
-                                            )
-                                        )
+                                          ),
+                                          SvgPicture.asset("assets/svg/search.svg")
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 15,),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset("assets/svg/flame.svg",
+                                          height: 18,),
+                                        const SizedBox(width: 5,),
+                                        SimpleText(
+                                          text: "Trending Events",
+                                          fontSize: 14.sp,
+                                          fontColor: ColorClass.primaryColor,
+                                        ),
                                       ],
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(height: 10,),
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Container(
+                                        color: Colors.white,
+                                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                                        child: Wrap(
+                                          spacing: 10,
+                                          runSpacing: 10,
+                                          children: state.trendingData.map((data) {
+                                            return Container(
+                                              width: size.width*0.6,
+                                              padding: const EdgeInsets.only(bottom: 10),
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  color: Colors.white
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  Image.network(
+                                                    data.eventPic,
+                                                    width: size.width*0.6,
+                                                    height: size.height*0.2,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  Container(
+                                                    padding: const EdgeInsets.only(left: 10),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        SimpleText(
+                                                          text: data.eventName,
+                                                          fontSize: 14.sp,
+                                                          fontWeight: FontWeight.w500,),
+                                                        const SizedBox(height: 15,),
+                                                        Row(
+                                                          children: [
+                                                            SvgPicture.asset("assets/svg/calender.svg"),
+                                                            const SizedBox(width: 5,),
+                                                            SimpleText(
+                                                              text: data.date,
+                                                              fontSize: 10.sp,
+                                                              fontColor: const Color(0xff455A64),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            SvgPicture.asset("assets/svg/map.svg"),
+                                                            const SizedBox(width: 5,),
+                                                            SimpleText(
+                                                              text: data.address,
+                                                              fontSize: 10.sp,
+                                                              fontColor: const Color(0xff455A64),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(height: 8,),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  InkWell(
+                                                    onTap: ()async{
+                                                      print(data.link);
+                                                      if (!await launchUrl(
+                                                      Uri.parse(data.link))) {
+                                                      throw Exception('Could not launch url');
+                                                      }
+                                                    },
+                                                    child: Container(
+                                                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius: BorderRadius.circular(10),
+                                                            border: Border.all(
+                                                                color: ColorClass.primaryColor
+                                                            )
+                                                        ),
+                                                        padding: const EdgeInsets.symmetric(vertical: 5),
+                                                        child: Center(
+                                                          child: SimpleText(
+                                                            text: "Register Now!!",
+                                                            fontColor:ColorClass.primaryColor,
+                                                            fontSize: 14.sp,
+                                                          ),
+                                                        )
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 15,),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset("assets/svg/bookmark.svg",
+                                          height: 18,),
+                                        const SizedBox(width: 5,),
+                                        SimpleText(
+                                          text: "Featured events",
+                                          fontSize: 14.sp,
+                                          fontColor: ColorClass.primaryColor,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10,),
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Container(
+                                        color: Colors.white,
+                                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                                        child: Wrap(
+                                          spacing: 10,
+                                          runSpacing: 10,
+                                          children: state.featuredData.map((data) {
+                                            return Container(
+                                              width: size.width*0.6,
+                                              padding: const EdgeInsets.only(bottom: 10),
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  color: Colors.white
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  Image.network(
+                                                    data.eventPic,
+                                                    width: size.width*0.6,
+                                                    height: size.height*0.2,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  Container(
+                                                    padding: const EdgeInsets.only(left: 10),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        SimpleText(
+                                                          text: data.eventName,
+                                                          fontSize: 14.sp,
+                                                          fontWeight: FontWeight.w500,),
+                                                        const SizedBox(height: 15,),
+                                                        Row(
+                                                          children: [
+                                                            SvgPicture.asset("assets/svg/calender.svg"),
+                                                            const SizedBox(width: 5,),
+                                                            SimpleText(
+                                                              text: data.date,
+                                                              fontSize: 10.sp,
+                                                              fontColor: const Color(0xff455A64),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            SvgPicture.asset("assets/svg/map.svg"),
+                                                            const SizedBox(width: 5,),
+                                                            SimpleText(
+                                                              text: data.address,
+                                                              fontSize: 10.sp,
+                                                              fontColor: const Color(0xff455A64),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(height: 8,),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  InkWell(
+                                                    onTap: ()async{
+                                                      print(data.link);
+                                                      if (!await launchUrl(
+                                                          Uri.parse(data.link))) {
+                                                        throw Exception('Could not launch url');
+                                                      }
+                                                    },
+                                                    child: Container(
+                                                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius: BorderRadius.circular(10),
+                                                            border: Border.all(
+                                                                color: ColorClass.primaryColor
+                                                            )
+                                                        ),
+                                                        padding: const EdgeInsets.symmetric(vertical: 5),
+                                                        child: Center(
+                                                          child: SimpleText(
+                                                            text: "Register Now!!",
+                                                            fontColor:ColorClass.primaryColor,
+                                                            fontSize: 14.sp,
+                                                          ),
+                                                        )
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 15,),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset("assets/svg/bookmark.svg",
+                                          height: 18,),
+                                        const SizedBox(width: 5,),
+                                        SimpleText(
+                                          text: "Workshops",
+                                          fontSize: 14.sp,
+                                          fontColor: ColorClass.primaryColor,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10,),
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Container(
+                                        color: Colors.white,
+                                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                                        child: Wrap(
+                                          spacing: 10,
+                                          runSpacing: 10,
+                                          children: state.workshopData.map((data) {
+                                            return Container(
+                                              width: size.width*0.6,
+                                              padding: const EdgeInsets.only(bottom: 10),
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  color: Colors.white
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  Image.network(
+                                                    data.eventPic,
+                                                    width: size.width*0.6,
+                                                    height: size.height*0.2,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  Container(
+                                                    padding: const EdgeInsets.only(left: 10),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        SimpleText(
+                                                          text: data.eventName,
+                                                          fontSize: 14.sp,
+                                                          fontWeight: FontWeight.w500,),
+                                                        const SizedBox(height: 15,),
+                                                        Row(
+                                                          children: [
+                                                            SvgPicture.asset("assets/svg/calender.svg"),
+                                                            const SizedBox(width: 5,),
+                                                            SimpleText(
+                                                              text: data.date,
+                                                              fontSize: 10.sp,
+                                                              fontColor: const Color(0xff455A64),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            SvgPicture.asset("assets/svg/map.svg"),
+                                                            const SizedBox(width: 5,),
+                                                            SimpleText(
+                                                              text: data.address,
+                                                              fontSize: 10.sp,
+                                                              fontColor: const Color(0xff455A64),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(height: 8,),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  InkWell(
+                                                    onTap: ()async{
+                                                      print(data.link);
+                                                      if (!await launchUrl(
+                                                          Uri.parse(data.link))) {
+                                                        throw Exception('Could not launch url');
+                                                      }
+                                                    },
+                                                    child: Container(
+                                                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius: BorderRadius.circular(10),
+                                                            border: Border.all(
+                                                                color: ColorClass.primaryColor
+                                                            )
+                                                        ),
+                                                        padding: const EdgeInsets.symmetric(vertical: 5),
+                                                        child: Center(
+                                                          child: SimpleText(
+                                                            text: "Register Now!!",
+                                                            fontColor:ColorClass.primaryColor,
+                                                            fontSize: 14.sp,
+                                                          ),
+                                                        )
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             Container(

@@ -23,3 +23,11 @@ class HomePostCommentEvent extends HomeEvent{
     required this.uid,
   });
 }
+
+
+class SearchTopicsEvent extends HomeEvent{
+  final String text;
+  SearchTopicsEvent({
+    required this.text,
+  });
+}

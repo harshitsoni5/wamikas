@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wamikas/Models/event_model.dart';
 import 'package:wamikas/Models/user_profile_model.dart';
 import '../../Core/FirebaseDataBaseService/firestore_database_services.dart';
 import '../../Models/post_model.dart';
@@ -13,6 +14,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeInitialEvent>(homeInitialEvent);
     on<HomePostLikeEvent>(postLikeEvent);
     on<HomePostCommentEvent>(postComment);
+    on<SearchTopicsEvent>(searchTopicsEvent);
   }
 
   FutureOr<void> homeInitialEvent(
@@ -25,11 +27,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       CollectionReference postReference =
       await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
           "posts");
+      CollectionReference events =
+      await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
+          "events");
       var docId = await SharedData.getIsLoggedIn("phone");
       var snapshot = await reference.doc(docId).get();
       if (snapshot.exists) {
         var data = snapshot.data();
         if (data != null && data is Map<String, dynamic>) {
+          //forums
           QuerySnapshot querySnapshot = await postReference.get();
           List allData = querySnapshot.docs
               .map((doc) => doc.data()).toList();
@@ -57,9 +63,30 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               emit(HomeError());
             }
           }
+
+          //events
+          QuerySnapshot eventsSnap = await events.get();
+          List allEvents = eventsSnap.docs
+              .map((doc) => doc.data()).toList();
+          List<EventModel> trendingData =[];
+          List<EventModel> featuredData =[];
+          List<EventModel> workshopData =[];
+          for (int i = 0; i < allEvents[0]["trendings"].length; i++) {
+            trendingData.add(EventModel.fromJson(allEvents[0]["trendings"][i]));
+          }
+          for (int i = 0; i < allEvents[0]["featured_events"].length; i++) {
+            featuredData
+                .add(EventModel.fromJson(allEvents[0]["featured_events"][i]));
+          }
+          for (int i = 0; i < allEvents[0]["workshops"].length; i++) {
+            workshopData.add(EventModel.fromJson(allEvents[0]["workshops"][i]));
+          }
           emit(HomeSuccess(
               listOfAllPost: listsOfPosts,
-              userData:UserProfileModel.fromJson(data)
+              userData:UserProfileModel.fromJson(data),
+            featuredData: featuredData,
+            trendingData: trendingData,
+            workshopData: workshopData
           ));
         } else {
           emit(HomeError());
@@ -69,6 +96,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(HomeError());
       }
     } catch (e) {
+      print(e.toString());
       emit(HomeError());
     }
   }
@@ -89,10 +117,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           var allData = querySnapshot.docs
               .map((doc) => PostModel.fromJson(
               (doc.data() as Map<String, dynamic>))).toList();
-          emit(HomeSuccess(
-              listOfAllPost: allData,
-              userData:UserProfileModel.fromJson(data)
-          ));
+          // emit(HomeSuccess(
+          //     listOfAllPost: allData,
+          //     userData:UserProfileModel.fromJson(data)
+          // ));
         }
         else {
           emit(HomeError());
@@ -108,6 +136,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   FutureOr<void> postComment(
       HomePostCommentEvent event, Emitter<HomeState> emit) async {
+    try {
+      CollectionReference reference =
+      await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
+          "posts");
+      var docId = await SharedData.getIsLoggedIn("phone");
+      QuerySnapshot querySnapshot = await reference.get();
+      final allData = querySnapshot.docs
+          .map((doc) => PostModel.fromJson(
+          (doc.data() as Map<String, dynamic>))).toList();
+
+    } catch (e) {
+      emit(HomeError());
+    }
+  }
+
+  FutureOr<void> searchTopicsEvent(
+      SearchTopicsEvent event, Emitter<HomeState> emit) async {
     try {
       CollectionReference reference =
       await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(

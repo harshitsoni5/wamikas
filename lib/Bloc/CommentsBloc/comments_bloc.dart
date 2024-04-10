@@ -18,7 +18,7 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
   FutureOr<void> commentsInit(
       CommentsInit event, Emitter<CommentsState> emit) async {
     emit(CommentsSuccess(
-        comments: event.comments,
+      comments: event.comments,
     ));
   }
 
@@ -26,46 +26,38 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
       PostAComment event, Emitter<CommentsState> emit) async {
     try {
       CollectionReference postReference =
-      await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
-          "posts");
+          await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
+              "posts");
       var postDetails = await postReference.doc(event.postId).get();
-      if(postDetails.exists){
+      if (postDetails.exists) {
         var docId = await SharedData.getIsLoggedIn("phone");
         var postData = postDetails.data();
         var uuid = const Uuid();
-        if (postData != null &&
-            postData is Map) {
+        if (postData != null && postData is Map) {
           List comments = event.comments;
-          comments.add(
-          {
-          "comments_desc": event.commentDesc,
-          "likes": [],
-          "name": event.userData.name,
-          "profile_pic":event.userData.profilePic,
-          "time": DateTime.now(),
-          "uid": event.uid,
-            "comment_id":uuid.v4()
-          }
-          );
+          comments.add({
+            "comments_desc": event.commentDesc,
+            "likes": [],
+            "name": event.userData.name,
+            "profile_pic": event.userData.profilePic,
+            "time": DateTime.now(),
+            "uid": event.uid,
+            "comment_id": uuid.v4()
+          });
           await FireStoreDataBaseServices.setDataToUserCollection(
-            "posts",
-            event.postId,
-            {
-              "comments":comments,
-              "uid": docId,
-              "forum_name": event.postModel.forumName,
-              "forum_title": event.postModel.forumTitle,
-              "forum_content": event.postModel.forumContent,
-              "like": [],
-              "time": event.postModel.time,
-              "id":event.postModel.id
-            }
-          );
-          emit(
-            CommentsSuccess(
-              comments: comments,
-            )
-          );
+              "posts", event.postId, {
+            "comments": comments,
+            "uid": docId,
+            "forum_name": event.postModel.forumName,
+            "forum_title": event.postModel.forumTitle,
+            "forum_content": event.postModel.forumContent,
+            "like": [],
+            "time": event.postModel.time,
+            "id": event.postModel.id
+          });
+          emit(CommentsSuccess(
+            comments: comments,
+          ));
         }
       }
     } catch (e) {
@@ -76,31 +68,30 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
   FutureOr<void> reduceBottomSheetSize(
       ReduceBottomSheetSize event, Emitter<CommentsState> emit) async {
     emit(CommentsSuccess(
-        comments: event.comments,
+      comments: event.comments,
     ));
   }
+
   FutureOr<void> likeAComment(
       LikeAComment event, Emitter<CommentsState> emit) async {
     try {
       CollectionReference postReference =
-      await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
-          "posts");
+          await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
+              "posts");
       var postDetails = await postReference.doc(event.postId).get();
-      if(postDetails.exists){
+      if (postDetails.exists) {
         var docId = await SharedData.getIsLoggedIn("phone");
         var postData = postDetails.data();
-        if (postData != null &&
-            postData is Map) {
+        if (postData != null && postData is Map) {
           List comments = event.comments;
-          int index=0;
-          for (int i=0 ; i<comments.length;i++){
-            if(event.commentModel.commentId == comments[i]["comment_id"]){
+          int index = 0;
+          for (int i = 0; i < comments.length; i++) {
+            if (event.commentModel.commentId == comments[i]["comment_id"]) {
               break;
             }
             index++;
           }
-          if(event.likeOrNot==false){
-            print("here");
+          if (event.likeOrNot == false) {
             comments.removeAt(index);
             List likesAdded = event.commentModel.likes;
             likesAdded.add(docId);
@@ -108,28 +99,27 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
               "comments_desc": event.commentModel.commentsDesc,
               "likes": likesAdded,
               "name": event.commentModel.name,
-              "profile_pic":event.commentModel.profilePic,
+              "profile_pic": event.commentModel.profilePic,
               "time": event.commentModel.time,
               "uid": event.commentModel.uid,
-              "comment_id":event.commentModel.commentId
+              "comment_id": event.commentModel.commentId
             });
             FireStoreDataBaseServices.setDataToUserCollection(
                 "posts", event.postId, {
-              "comments":comments,
+              "comments": comments,
               "uid": docId,
               "forum_name": event.postModel.forumName,
               "forum_title": event.postModel.forumTitle,
               "forum_content": event.postModel.forumContent,
               "like": [],
               "time": event.postModel.time,
-              "id":event.postModel.id
+              "id": event.postModel.id
             });
-          }
-          else{
+          } else {
             comments.removeAt(index);
             List likesAdded = event.commentModel.likes;
-            for(int i=0;i<likesAdded.length;i++){
-              if(docId == likesAdded[i]){
+            for (int i = 0; i < likesAdded.length; i++) {
+              if (docId == likesAdded[i]) {
                 likesAdded.removeAt(i);
               }
             }
@@ -137,28 +127,26 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
               "comments_desc": event.commentModel.commentsDesc,
               "likes": likesAdded,
               "name": event.commentModel.name,
-              "profile_pic":event.commentModel.profilePic,
+              "profile_pic": event.commentModel.profilePic,
               "time": event.commentModel.time,
               "uid": event.commentModel.uid,
-              "comment_id":event.commentModel.commentId
+              "comment_id": event.commentModel.commentId
             });
             FireStoreDataBaseServices.setDataToUserCollection(
                 "posts", event.postId, {
-              "comments":comments,
+              "comments": comments,
               "uid": docId,
               "forum_name": event.postModel.forumName,
               "forum_title": event.postModel.forumTitle,
               "forum_content": event.postModel.forumContent,
               "like": [],
               "time": event.postModel.time,
-              "id":event.postModel.id
+              "id": event.postModel.id
             });
           }
-          emit(
-              CommentsSuccess(
-                comments: comments,
-              )
-          );
+          emit(CommentsSuccess(
+            comments: comments,
+          ));
         }
       }
     } catch (e) {

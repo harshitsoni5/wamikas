@@ -8,6 +8,8 @@ import 'package:uuid/uuid.dart';
 import 'package:wamikas/Bloc/ForumCreationBloc/forum_cubit.dart';
 import 'package:wamikas/Bloc/ForumCreationBloc/forum_state.dart';
 import 'package:wamikas/Models/user_profile_model.dart';
+import '../../Bloc/HomeBloc/home_bloc.dart';
+import '../../Bloc/HomeBloc/home_event.dart';
 import '../../Utils/Components/Buttons/round_auth_buttons.dart';
 import '../../Utils/Components/Text/simple_text.dart';
 import '../../Utils/Components/TextField/text_field_container.dart';
@@ -64,6 +66,8 @@ class _ForumScreenState extends State<ForumScreen> {
                     InkWell(
                         onTap: () {
                           Navigator.of(context).pop();
+                          BlocProvider.of<HomeBloc>(context).add(
+                              HomeInitialEvent());
                         },
                         child: SvgPicture.asset(
                           "assets/svg/ep_back (2).svg",
