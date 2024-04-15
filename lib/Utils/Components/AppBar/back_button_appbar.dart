@@ -11,8 +11,9 @@ class BackButtonAppBar extends StatelessWidget {
     super.key,
     required this.size,
     required this.title,
+    required this.topPadding,
   });
-
+  final double topPadding;
   final Size size;
 
   @override
@@ -24,8 +25,8 @@ class BackButtonAppBar extends StatelessWidget {
           height: size.height * 0.15,
         ),
         Container(
-          margin: const EdgeInsets.symmetric(horizontal: 15),
-          padding: EdgeInsets.only(top: size.height*0.04),
+          margin: const EdgeInsets.only(left: 15,right: 15,top: 10),
+          padding: EdgeInsets.only(top: topPadding),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -46,7 +47,7 @@ class BackButtonAppBar extends StatelessWidget {
                   ),
                   SimpleText(
                     text: title,
-                    fontSize: 24,
+                    fontSize:  size.width <400? 17:20,
                     fontColor: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
@@ -54,7 +55,7 @@ class BackButtonAppBar extends StatelessWidget {
               ),
               SvgPicture.asset(
                 "assets/svg/w-logo.svg",
-                height: 40,
+                height:  size.width <400? 35:40,
               ),
             ],
           ),

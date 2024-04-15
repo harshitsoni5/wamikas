@@ -25,6 +25,7 @@ class UserProfileModel {
   final String? profilePic;
   final String? skills;
   final String? state;
+  final String? fcmToken;
 
   UserProfileModel({
     required this.address,
@@ -45,10 +46,12 @@ class UserProfileModel {
     required this.profilePic,
     required this.skills,
     required this.state,
+    required this.fcmToken
   });
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
       UserProfileModel(
+        fcmToken: json["fcm_token"],
         address: json["address"],
         apartment: json["apartment"],
         city: json["city"],
@@ -93,5 +96,6 @@ class UserProfileModel {
         "profile_pic": profilePic,
         "skills": skills,
         "state": state,
+    "fcm_token":fcmToken
       };
 }

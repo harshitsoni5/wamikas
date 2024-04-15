@@ -45,9 +45,9 @@ class _SignInState extends State<SignIn> {
                 onTap: () {
                   Navigator.of(context).pushNamed(RouteName.register);
                 },
-                child:  SimpleText(
-                  text: "Signup",
-                  fontSize: 10.sp,
+                child:  const SimpleText(
+                  text: "SIGNUP",
+                  fontSize: 12,
                   fontColor:ColorClass.textColor,
                   fontWeight: FontWeight.bold,
                 ),
@@ -77,9 +77,9 @@ class _SignInState extends State<SignIn> {
                Column(
                  children: [
                    SvgPicture.asset(
-                     "assets/svg/w-logo.svg",
-                     height: 100,width: 170,),
-                   const SizedBox(height: 10,),
+                     "assets/svg/logo.svg",
+                     height: 140,width: 170,),
+                   const SizedBox(height: 25,),
                     SimpleText(
                      text: "Sign in your account",
                      fontSize: 20.sp,
@@ -87,7 +87,7 @@ class _SignInState extends State<SignIn> {
                    ),
                  ],
                ),
-               const SizedBox(height: 80,),
+               const SizedBox(height: 25,),
                Container(
                  margin: const EdgeInsets.symmetric(horizontal: 25),
                  padding: const EdgeInsets.symmetric(horizontal: 10),

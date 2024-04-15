@@ -38,14 +38,14 @@ class OnBoardingText extends StatelessWidget {
             textAlign: TextAlign.center,
             text: title,
             fontColor: const Color(0xFF0E0D0D),
-            fontSize: 18.sp,
+            fontSize: 18,
             fontFamily: 'Poppins',
             fontWeight: FontWeight.w700,),
           SimpleText(
             text:subTitle,
             textAlign: TextAlign.center,
             fontColor: const Color(0xFF606060),
-            fontSize: 18.sp,
+            fontSize: 18,
             fontFamily: 'Poppins',
             fontWeight: FontWeight.w400,),
           const SizedBox(height: 25,),
@@ -87,9 +87,9 @@ class OnBoardingText extends StatelessWidget {
                       SharedData.setIsOnboardDone(true);
                       Navigator.pushNamed(context, RouteName.auth);
                     },
-                    child:  SimpleText(
+                    child:  const SimpleText(
                       text: 'Next',
-                      fontSize: 18.sp,
+                      fontSize: 18,
                       fontColor: ColorClass.textColor,
                       fontWeight: FontWeight.bold,
                     ),
@@ -105,10 +105,10 @@ class OnBoardingText extends StatelessWidget {
                       SharedData.setIsOnboardDone(true);
                       Navigator.pushNamed(context, RouteName.auth);
                     },
-                    child:  SimpleText(
+                    child:  const SimpleText(
                       text: "Skip",
                       fontColor: Colors.white,
-                      fontSize: 18.sp,
+                      fontSize: 18,
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.w400,
                     ),
@@ -134,9 +134,9 @@ class OnBoardingText extends StatelessWidget {
                           duration: const Duration(microseconds: 500),
                           curve: Curves.easeInOut);
                     },
-                    child:  SimpleText(
+                    child:  const SimpleText(
                       text: 'Next',
-                      fontSize: 18.sp,
+                      fontSize: 18,
                       fontColor: ColorClass.textColor,
                       fontWeight: FontWeight.bold,
                     ),

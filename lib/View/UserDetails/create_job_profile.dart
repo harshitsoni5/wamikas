@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -95,150 +97,165 @@ class _CreateJobProfileState extends State<CreateJobProfile> {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const BackButtonWithLogo(),
-              const SimpleText(
-                text: "Create Job Profile",
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const SimpleText(
-                text:
-                "Please provide your educational and \n Professional information",
-                fontSize: 15,
-                textAlign: TextAlign.center,
-                fontWeight: FontWeight.w600,
-              ),
-              const SizedBox(height: 20,),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 30),
-                child: Column(
-                  children: [
-                    TextFieldContainer(
-                      hintText: "Designation",
-                      titleBox: "Job Title",
-                      controller: jobTitle,
-                    ),
-                    TextFieldContainer(
-                      hintText: "ex. Amazon",
-                      titleBox: "Company Name",
-                      controller: companyName,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: SimpleText(
-                          text: "Industry",
-                          fontSize: 15,
-                          fontColor: Colors.black,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 2,),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      width: size.width,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                            color: const Color(0xffE8E8E8)
-                        )
-                      ),
-                      child: DropdownButtonFormField<String>(
-                        icon: SvgPicture.asset("assets/svg/down_arrow.svg"),
-                        value: industry.text.isEmpty
-                            ? null
-                            : industry.text,
-                        onChanged: (String? newValue) {
-                          if (newValue != null) {
-                            industry.text = newValue;
-                          }
-                        },
-                        items: sectors
-                            .map<DropdownMenuItem<String>>(
-                              (String value) => DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          ),
-                        ).toList(),
-                        decoration: InputDecoration(
-                          hintText: "Select Industry",
-                          border: InputBorder.none,
-                            hintStyle: GoogleFonts.poppins(
-                              color: const Color(0xff888888),
-                              fontSize: 13.sp,
-                            )
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10,),
-                    TextFieldContainer(
-                      hintText: "Describe your Job",
-                      titleBox: "Job Description",
-                      controller: jobDesc,
-                      maxLines: 5,
-                    ),
-                  ],
-                ),
-              ),
-                BlocConsumer<CreateJobProfileCubit, CreateJobProfileState>(
-                  listenWhen: (previous, current) => current is CreateJobProfileActionState,
-                  buildWhen: (previous, current) => current is! CreateJobProfileActionState,
-                  listener: (context, state) {
-                   if(state is CreateJobProfileSuccess){
-                     Navigator.of(context).pushNamed(RouteName.interests);
-                   }
-                   if(state is CreateJobProfileFormNotFilledState){
-                     Fluttertoast.showToast(
-                         msg: "Please fill out the details properly",
-                         toastLength: Toast.LENGTH_SHORT,
-                         gravity: ToastGravity.CENTER,
-                         timeInSecForIosWeb: 1,
-                         textColor: Colors.black,
-                         fontSize: 15.0
-                     );
-                   }
-                  },
-                  builder: (context, state) {
-                    if(state is CreateJobProfileLoading){
-                      return const Center(child: CircularProgressIndicator(),);
-                    }
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 40),
-                      child: InkWell(
-                      onTap: (){
-                        BlocProvider.of<CreateJobProfileCubit>(context).
-                        createJobProfile(
-                            jobTitle.text,
-                            companyName.text,
-                            industry.text,
-                            jobDesc.text);
-                      },
-                      child: RoundAuthButtons(size: size, btnText: "Next"))
-              );
-              },
-            ),
-              const SizedBox(height: 10,),
-              InkWell(
-                onTap: (){
-                  Navigator.of(context).pushNamed(RouteName.home);
-                },
-                child: const SimpleText(
-                  text: "Skip >>",
-                  fontSize: 15,
-                  fontColor: ColorClass.primaryColor,
-                  fontWeight: FontWeight.w500,
-                ),
-              )
-            ],
-          ),
+        body: Column(
+          children: [
+            const BackButtonWithLogo(),
+           Expanded(
+             child: SingleChildScrollView(
+               child: Column(
+                 children: [
+                   const SimpleText(
+                     text: "Create Job Profile",
+                     fontSize: 18,
+                     fontWeight: FontWeight.bold,
+                   ),
+                   const SizedBox(
+                     height: 10,
+                   ),
+                   const SimpleText(
+                     text:
+                     "Please provide your educational and \n Professional information",
+                     fontSize: 15,
+                     textAlign: TextAlign.center,
+                     fontWeight: FontWeight.w600,
+                   ),
+                   const SizedBox(height: 20,),
+                   Container(
+                     margin: const EdgeInsets.symmetric(horizontal: 25),
+                     child: Column(
+                       children: [
+                         TextFieldContainer(
+                           hintText: "Designation",
+                           titleBox: "Job Title",
+                           controller: jobTitle,
+                         ),
+                         TextFieldContainer(
+                           hintText: "ex. Amazon",
+                           titleBox: "Company Name",
+                           controller: companyName,
+                         ),
+                         const Padding(
+                           padding: EdgeInsets.only(left: 10),
+                           child: Align(
+                             alignment: Alignment.topLeft,
+                             child: SimpleText(
+                               text: "Industry",
+                               fontSize: 14,
+                               fontColor: Colors.black,
+                               fontWeight: FontWeight.w500,
+                             ),
+                           ),
+                         ),
+                         const SizedBox(height: 2,),
+                         Container(
+                           width: size.width,
+                           padding: const EdgeInsets.only(right: 10,left: 10),
+                           decoration: BoxDecoration(
+                               borderRadius: BorderRadius.circular(10),
+                               border: Border.all(
+                                   color: const Color(0xffE8E8E8)
+                               )
+                           ),
+                           child: Row(
+                             children: [
+                               Flexible(
+                                 child: DropdownButtonFormField<String>(
+                                    icon: const Visibility(
+                                        visible: false,
+                                        child: Icon(Icons.arrow_downward)),
+                                    value: industry.text.isEmpty
+                                       ? null
+                                       : industry.text,
+                                   onChanged: (String? newValue) {
+                                     if (newValue != null) {
+                                       industry.text = newValue;
+                                     }
+                                   },
+                                   items: sectors
+                                       .map<DropdownMenuItem<String>>(
+                                         (String value) => DropdownMenuItem<String>(
+                                       value: value,
+                                       child: Text(value),
+                                     ),
+                                   ).toList(),
+                                   decoration: InputDecoration(
+                                       hintText: "Select Industry",
+                                       border: InputBorder.none,
+                                       hintStyle: GoogleFonts.poppins(
+                                         color: const Color(0xff888888),
+                                         fontSize: 14,
+                                       )
+                                   ),
+                                 ),
+                               ),
+                               SvgPicture.asset("assets/svg/down_arrow.svg")
+                             ],
+                           ),
+                         ),
+                         const SizedBox(height: 10,),
+                         TextFieldContainer(
+                           hintText: "Describe your Job",
+                           titleBox: "Job Description",
+                           controller: jobDesc,
+                           maxLines: 5,
+                         ),
+                       ],
+                     ),
+                   ),
+                   BlocConsumer<CreateJobProfileCubit, CreateJobProfileState>(
+                     listenWhen: (previous, current) => current is CreateJobProfileActionState,
+                     buildWhen: (previous, current) => current is! CreateJobProfileActionState,
+                     listener: (context, state) {
+                       if(state is CreateJobProfileSuccess){
+                         Navigator.of(context).pushNamed(RouteName.interests);
+                       }
+                       if(state is CreateJobProfileFormNotFilledState){
+                         Fluttertoast.showToast(
+                             msg: "Please fill out the details properly",
+                             toastLength: Toast.LENGTH_SHORT,
+                             gravity: ToastGravity.CENTER,
+                             timeInSecForIosWeb: 1,
+                             textColor: Colors.black,
+                             fontSize: 15.0
+                         );
+                       }
+                     },
+                     builder: (context, state) {
+                       if(state is CreateJobProfileLoading){
+                         return const Center(child: CircularProgressIndicator(),);
+                       }
+                       return Container(
+                           margin: const EdgeInsets.symmetric(horizontal: 40),
+                           child: InkWell(
+                               onTap: (){
+                                 BlocProvider.of<CreateJobProfileCubit>(context).
+                                 createJobProfile(
+                                     jobTitle.text,
+                                     companyName.text,
+                                     industry.text,
+                                     jobDesc.text);
+                               },
+                               child: RoundAuthButtons(size: size, btnText: "Next"))
+                       );
+                     },
+                   ),
+                   const SizedBox(height: 10,),
+                   InkWell(
+                     onTap: (){
+                       Navigator.of(context).pushNamed(RouteName.bottomBar);
+                     },
+                     child: const SimpleText(
+                       text: "Skip >>",
+                       fontSize: 15,
+                       fontColor: ColorClass.primaryColor,
+                       fontWeight: FontWeight.w500,
+                     ),
+                   )
+                 ],
+               ),
+             ),
+           )
+          ],
         ),
       ),
     );

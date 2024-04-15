@@ -16,4 +16,7 @@ class RouteName {
   static const String jobDescription = 'job_description';
   static const String interestAndPref = 'interest_preferences';
   static const String forum = 'forum';
+  static const String search = 'search';
+  static const String more = 'more';
+  static const String bottomBar = 'bottom_nav_bar';
 }

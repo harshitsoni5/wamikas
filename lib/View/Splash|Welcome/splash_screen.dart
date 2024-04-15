@@ -26,18 +26,16 @@ class _SplashScreenState extends State<SplashScreen>with SingleTickerProviderSta
     });
     controller.repeat();
     Timer(
-        const Duration(seconds: 5),
+        const Duration(seconds: 2),
             () {
-          SharedData.getIsLoggedIn('IsOnboardDone').then((value) {
+          SharedData.getIsLoggedIn('IsOnboardDone').then((value) async {
             if (value == true) {
-              SharedData.getIsLoggedIn('IsLoggedIn').then((value1) {
-                if (value1 == true) {
-                  Navigator.pushReplacementNamed(context, RouteName.signIn);
-                }
-                else {
-                  Navigator.pushReplacementNamed(context, RouteName.signIn);
-                }
-              });
+              String? docId= await SharedData.getIsLoggedIn("phone");
+              if(docId != null && docId.isNotEmpty){
+                Navigator.pushReplacementNamed(context, RouteName.bottomBar);
+              }else{
+                Navigator.pushReplacementNamed(context, RouteName.signIn);
+              }
             }
             else {
               Navigator.pushReplacementNamed(context, RouteName.welcome);
@@ -80,24 +78,24 @@ class _SplashScreenState extends State<SplashScreen>with SingleTickerProviderSta
                   height:  size.height*0.4,
                   child: SvgPicture.asset(
                       "assets/svg/logo.svg")),
-              Container(
-                width: size.width*0.3,
-                margin: const EdgeInsets.symmetric(horizontal: 50),
-                child: LinearProgressIndicator(
-                  borderRadius: BorderRadius.circular(40),
-                  color: ColorClass.textColor,
-                  value: controller.value,
-                  semanticsLabel: 'Linear progress indicator',
-                ),
-              ),
-              const SimpleText(
-                text: 'LOADING....',
-                textAlign: TextAlign.center,
-                fontColor: Colors.black,
-                fontSize: 10,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w500,
-              ),
+              // Container(
+              //   width: size.width*0.3,
+              //   margin: const EdgeInsets.symmetric(horizontal: 50),
+              //   child: LinearProgressIndicator(
+              //     borderRadius: BorderRadius.circular(40),
+              //     color: ColorClass.textColor,
+              //     value: controller.value,
+              //     semanticsLabel: 'Linear progress indicator',
+              //   ),
+              // ),
+              // const SimpleText(
+              //   text: 'LOADING....',
+              //   textAlign: TextAlign.center,
+              //   fontColor: Colors.black,
+              //   fontSize: 10,
+              //   fontFamily: 'Poppins',
+              //   fontWeight: FontWeight.w500,
+              // ),
             ],
           ),
         ),

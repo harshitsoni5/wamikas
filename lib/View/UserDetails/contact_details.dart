@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -158,359 +160,362 @@ class _ContactDetailsState extends State<ContactDetails> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final EdgeInsets safeAreaInsets = MediaQuery.of(context).padding;
+    final double topPadding = safeAreaInsets.top;
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                SvgPicture.asset(
-                  "assets/svg/rectangle_design.svg",
-                  height: size.height >850 ?size.height*0.3 :size.height*0.35,
-                ),
-                Container(
-                  padding:  EdgeInsets.only(top:size.height*0.04),
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).pop();
-                                      BlocProvider.of<UserProfileBloc>(context).
-                                      add(GetUserDataEvent());
-                                    },
-                                    child: SvgPicture.asset(
-                                      "assets/svg/ep_back (2).svg",
-                                      height: 35,
-                                    ),
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                const SimpleText(
-                                  text: "Edit Profile",
-                                  fontSize: 24,
-                                  fontColor: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ],
-                            ),
-                            SvgPicture.asset(
-                              "assets/svg/w-logo.svg",
-                              height: 40,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          children: [
-                            Stack(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(bottom: 20),
-                                  height: size.height >850 ?180:160,
-                                  width: size.height >850 ?180:160,
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                      BorderRadius.circular(size.height >850 ?90:80),
-                                      border: Border.all(
-                                          color: const Color(0xffFF9CEA),
-                                          width: 12)),
-                                  child: BlocBuilder<UploadImageCubit,
-                                      UploadImageState>(
-                                    builder: (context, state) {
-                                      if (state is UploadImageLoading) {
-                                        return const Center(
-                                          child:
-                                          CircularProgressIndicator(),
-                                        );
-                                      } else if (state
-                                      is UploadImageSuccess) {
-                                        return Center(
-                                          child: ClipRRect(
-                                            borderRadius:
-                                            BorderRadius.circular(
-                                                size.height >850 ?90:80),
-                                            child: Image.file(
-                                              File(state.path!),
-                                              fit: BoxFit.cover,
-                                              height: size.height >850 ?180:160,
-                                              width: size.height >850 ?180:160,
-                                            ),
-                                          ),
-                                        );
-                                      } else {
-                                        return widget.userData.profilePic == null
-                                            ? Center(
-                                          child: ClipRRect(
-                                            borderRadius:
-                                            BorderRadius.circular(
-                                                size.height >850 ?90:80),
-                                            child: SvgPicture.asset(
-                                              "assets/svg/profile.svg",
-                                            ),
-                                          ),
-                                        )
-                                            : Center(
-                                          child: ClipRRect(
-                                              borderRadius:
-                                              BorderRadius
-                                                  .circular(80),
-                                              child: Image.network(
-                                                widget.userData.profilePic!,
-                                                fit: BoxFit.cover,
-                                                height: size.height >850 ?180:160,
-                                                width: size.height >850 ?180:160,
-                                              )),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 5,
-                                  left: size.height >850 ?55:50,
-                                  child: InkWell(
-                                    onTap: () {
-                                      _pickedImage();
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.all(12),
-                                      height: 60,
-                                      width: 60,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                          BorderRadius.circular(30),
-                                          color: ColorClass.primaryColor,
-                                          border: Border.all(
-                                              color:
-                                              const Color(0xffFF9CEA),
-                                              width: 6)),
-                                      child: SvgPicture.asset(
-                                        "assets/svg/plus_profile.svg",
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            Container(
-                              padding: const EdgeInsets.only(left: 15),
-                              child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-                                  SimpleText(
-                                    text: username,
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                  Row(
-                                    children: [
-                                      widget.userData.jobTitle != null
-                                          ? SimpleText(
-                                        text: widget.userData.jobTitle!,
-                                        fontSize: 16.sp,
-                                        fontColor:
-                                        const Color(0xff6C6C6C),
-                                        fontWeight: FontWeight.w300,
-                                      )
-                                          : SimpleText(
-                                        text: "Not Specified",
-                                        fontSize: 16.sp,
-                                        fontColor:
-                                        const Color(0xff6C6C6C),
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      InkWell(
-                                          onTap: (){
-                                            Navigator.of(context).pushNamed(
-                                                RouteName.jobDescription,
-                                                arguments: widget.userData);
-                                          },
-                                          child: const Icon(Icons.edit)),
-                                    ],
-                                  ),
-                                  SimpleText(
-                                    text: widget.userData.phone,
-                                    fontSize: 15,
-                                    fontColor: const Color(0xff6C6C6C),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  SimpleText(
-                                    text:emailId,
-                                    fontSize: 15,
-                                    fontColor: const Color(0xff6C6C6C),
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ],
+      body: Column(
+        children: [
+          Stack(
+            children: [
+              SvgPicture.asset(
+                "assets/svg/rectangle_design.svg",
+                height: size.height >850 ?size.height*0.3 :size.height*0.35,
+              ),
+              Container(
+                padding:  EdgeInsets.only(top:topPadding),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 15,right: 15,top: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                    BlocProvider.of<UserProfileBloc>(
+                                        context)
+                                        .add(GetUserDataEvent());
+                                  },
+                                  child: SvgPicture.asset(
+                                    "assets/svg/ep_back (2).svg",
+                                    height: 35,
+                                  )),
+                              const SizedBox(
+                                width: 10,
                               ),
+                               SimpleText(
+                                text: "Edit Profile",
+                                fontSize:  size.width <400? 18:22,
+                                fontColor: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ],
+                          ),
+                          SvgPicture.asset(
+                            "assets/svg/w-logo.svg",
+                            height: size.width <390? 35:40,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          Stack(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(bottom: 20),
+                                height: size.height >850 ?150:size.height<600? 115:140,
+                                width: size.height >850 ?150:size.height<600? 115:140,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                    BorderRadius.circular(size.height >850 ?90:80),
+                                    border: Border.all(
+                                        color: const Color(0xffFF9CEA),
+                                        width: 12)),
+                                child: BlocBuilder<UploadImageCubit,
+                                    UploadImageState>(
+                                  builder: (context, state) {
+                                    if (state is UploadImageLoading) {
+                                      return const Center(
+                                        child:
+                                        CircularProgressIndicator(),
+                                      );
+                                    } else if (state
+                                    is UploadImageSuccess) {
+                                      return Center(
+                                        child: ClipRRect(
+                                          borderRadius:
+                                          BorderRadius.circular(size.height >850 ?90:80),
+                                          child: Image.file(
+                                            File(state.path!),
+                                            fit: BoxFit.cover,
+                                            height: size.height >850 ?150:size.height<600? 115:140,
+                                            width: size.height >850 ?150:size.height<600? 115:140,
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      return widget.userData.profilePic == null
+                                          ? Center(
+                                        child: ClipRRect(
+                                          borderRadius:
+                                          BorderRadius.circular(
+                                              size.height >850 ?90:80),
+                                          child: SvgPicture.asset(
+                                            "assets/svg/profile.svg",
+                                          ),
+                                        ),
+                                      )
+                                          : Center(
+                                        child: ClipRRect(
+                                            borderRadius:
+                                            BorderRadius
+                                                .circular(80),
+                                            child: Image.network(
+                                              widget.userData.profilePic!,
+                                              fit: BoxFit.cover,
+                                              height: size.height >850 ?150:size.height<600? 115:140,
+                                              width: size.height >850 ?150:size.height<600? 115:140,
+                                            )),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 5,
+                                left: size.height >850 ?50:size.height<600? 40:50,
+                                child: InkWell(
+                                  onTap: () {
+                                    _pickedImage();
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    height:size.height >850? 50:45,
+                                    width:size.height >850? 50:45,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                        BorderRadius.circular(30),
+                                        color: ColorClass.primaryColor,
+                                        border: Border.all(
+                                            color:
+                                            const Color(0xffFF9CEA),
+                                            width: 6)),
+                                    child: SvgPicture.asset(
+                                      "assets/svg/plus_profile.svg",
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          Container(
+                            padding: const EdgeInsets.only(left: 15),
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                SimpleText(
+                                  text: username,
+                                  fontSize:  size.width <390? 16.sp:18.sp,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                                Row(
+                                  children: [
+                                    widget.userData.jobTitle != null
+                                        ? SimpleText(
+                                      text: widget.userData.jobTitle!,
+                                      fontSize: size.width <390? 13:15,
+                                      fontColor:
+                                      const Color(0xff6C6C6C),
+                                      fontWeight: FontWeight.w300,
+                                    )
+                                        : const SimpleText(
+                                      text: "Not Specified",
+                                      fontSize:15,
+                                      fontColor:
+                                      Color(0xff6C6C6C),
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    InkWell(
+                                        onTap: (){
+                                          Navigator.of(context).pushNamed(
+                                              RouteName.jobDescription,
+                                              arguments: widget.userData);
+                                        },
+                                        child: const Icon(Icons.edit)),
+                                  ],
+                                ),
+                                SimpleText(
+                                  text: widget.userData.phone,
+                                  fontSize: size.width <390?13:14,
+                                  fontColor: const Color(0xff6C6C6C),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                SimpleText(
+                                  text:emailId,
+                                  fontSize: size.width <390?11:13,
+                                  fontColor: const Color(0xff6C6C6C),
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-           Container(
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+         Expanded(
+           child: Container(
              margin: const EdgeInsets.symmetric(horizontal: 30),
-             child: Column(
-               children: [
-                 TextFieldContainer(
-                   hintText: "Username",
-                   titleBox: "Name",
-                   controller: name,
-                   maxLength: 32,
-                 ),
-                 TextFieldContainer(
-                   hintText: "Enter email",
-                   titleBox: "Email",
-                   controller: email,
-                   maxLength: 32,
-                 ),
-                 TextFieldContainer(
-                   hintText: "Enter phone number",
-                   titleBox: "Phone",
-                   controller: phone,
-                   readOnlyTrue: true,
-                   maxLength: 10,
-                 ),
-                 TextFieldContainer(
-                   hintText: "Country",
-                   titleBox: "Country",
-                   controller: country,
-                   maxLength: 32,
-                 ),
-                 TextFieldContainer(
-                   hintText: "State",
-                   titleBox: "State",
-                   controller: userState,
-                   maxLength: 32,
-                 ),
-                 TextFieldContainer(
-                   hintText: "City",
-                   titleBox: "City",
-                   controller: city,
-                 ),
-                 TextFieldContainer(
-                   titleBox: "Apartment's/House no.",
-                   hintText: "House no.",
-                   controller: apartment,
-                 ),
-                 TextFieldContainer(
-                   hintText: "Address",
-                   titleBox: "Full Address",
-                   controller: fullAddress,
-                 ),
-                 const SizedBox(height: 20,),
-                 Container(
-                      margin: const EdgeInsets.only(bottom: 40),
-                      child: BlocConsumer<ContactDetailsCubit,
-                          ContactDetailsState>(
-                        listenWhen: (previous, current) =>
-                            current is ContactDetailsActionState,
-                        buildWhen: (previous, current) =>
-                            current is! ContactDetailsActionState,
-                        listener: (context, state) {
-                       if(state is NameEmpty){
-                         Fluttertoast.showToast(
-                             msg: "User name field should not be empty",
-                             toastLength: Toast.LENGTH_SHORT,
-                             gravity: ToastGravity.CENTER,
-                             timeInSecForIosWeb: 1,
-                             textColor: Colors.black,
-                             fontSize: 15.0
-                         );
-                       }
-                       else if(state is EmailEmpty){
-                         Fluttertoast.showToast(
-                             msg: "Phone number field should not be empty",
-                             toastLength: Toast.LENGTH_LONG,
-                             gravity: ToastGravity.CENTER,
-                             timeInSecForIosWeb: 1,
-                             textColor: Colors.black,
-                             fontSize: 15.0
-                         );
-                       }
-                      else if(state is EmailInvalidState){
-                         Fluttertoast.showToast(
-                             msg: "Please enter a valid email",
-                             toastLength: Toast.LENGTH_SHORT,
-                             gravity: ToastGravity.CENTER,
-                             timeInSecForIosWeb: 1,
-                             textColor: Colors.black,
-                             fontSize: 15.0
-                         );
-                       }
-                       else if(state is ContactDetailsSuccess){
-                         setState(() {
-                           emailId = email.text;
-                           username = name.text;
-                         });
-                         Fluttertoast.showToast(
-                             msg: "Profile successfully updated",
-                             toastLength: Toast.LENGTH_LONG,
-                             gravity: ToastGravity.CENTER,
-                             timeInSecForIosWeb: 1,
-                             textColor: Colors.black,
-                             fontSize: 15.0
-                         );
-                       }
-                       else{
-                         Fluttertoast.showToast(
-                             msg: "Oops something went wrong",
-                             toastLength: Toast.LENGTH_LONG,
-                             gravity: ToastGravity.CENTER,
-                             timeInSecForIosWeb: 1,
-                             textColor: Colors.black,
-                             fontSize: 15.0
-                         );
-                       }
-                      },
-                      builder: (context, state) {
-                        if(state is ContactDetailsLoading){
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                        return InkWell(
-                         onTap: (){
-                           BlocProvider.of<ContactDetailsCubit>(context).
-                           updateProfile(
-                               name: name.text,
-                               email: email.text,
-                               country: country.text,
-                               city: city.text,
-                               state: userState.text,
-                               fullAddress: fullAddress.text,
-                               apartment: apartment.text);
-                         },
-                         child: RoundAuthButtons(
-                             size: size, btnText: "Update"));
+             child: SingleChildScrollView(
+               child: Column(
+                 children: [
+                   TextFieldContainer(
+                     hintText: "Username",
+                     titleBox: "Name",
+                     controller: name,
+                     maxLength: 32,
+                   ),
+                   TextFieldContainer(
+                     hintText: "Enter email",
+                     titleBox: "Email",
+                     controller: email,
+                     maxLength: 32,
+                   ),
+                   TextFieldContainer(
+                     hintText: "Enter phone number",
+                     titleBox: "Phone",
+                     controller: phone,
+                     readOnlyTrue: true,
+                     maxLength: 10,
+                   ),
+                   TextFieldContainer(
+                     hintText: "Country",
+                     titleBox: "Country",
+                     controller: country,
+                     maxLength: 32,
+                   ),
+                   TextFieldContainer(
+                     hintText: "State",
+                     titleBox: "State",
+                     controller: userState,
+                     maxLength: 32,
+                   ),
+                   TextFieldContainer(
+                     hintText: "City",
+                     titleBox: "City",
+                     controller: city,
+                   ),
+                   TextFieldContainer(
+                     titleBox: "Apartment's/House no.",
+                     hintText: "House no.",
+                     controller: apartment,
+                   ),
+                   TextFieldContainer(
+                     hintText: "Address",
+                     titleBox: "Full Address",
+                     controller: fullAddress,
+                   ),
+                   const SizedBox(height: 20,),
+                   Container(
+                        margin: const EdgeInsets.only(bottom: 40),
+                        child: BlocConsumer<ContactDetailsCubit,
+                            ContactDetailsState>(
+                          listenWhen: (previous, current) =>
+                              current is ContactDetailsActionState,
+                          buildWhen: (previous, current) =>
+                              current is! ContactDetailsActionState,
+                          listener: (context, state) {
+                         if(state is NameEmpty){
+                           Fluttertoast.showToast(
+                               msg: "User name field should not be empty",
+                               toastLength: Toast.LENGTH_SHORT,
+                               gravity: ToastGravity.CENTER,
+                               timeInSecForIosWeb: 1,
+                               textColor: Colors.black,
+                               fontSize: 15.0
+                           );
+                         }
+                         else if(state is EmailEmpty){
+                           Fluttertoast.showToast(
+                               msg: "Phone number field should not be empty",
+                               toastLength: Toast.LENGTH_LONG,
+                               gravity: ToastGravity.CENTER,
+                               timeInSecForIosWeb: 1,
+                               textColor: Colors.black,
+                               fontSize: 15.0
+                           );
+                         }
+                        else if(state is EmailInvalidState){
+                           Fluttertoast.showToast(
+                               msg: "Please enter a valid email",
+                               toastLength: Toast.LENGTH_SHORT,
+                               gravity: ToastGravity.CENTER,
+                               timeInSecForIosWeb: 1,
+                               textColor: Colors.black,
+                               fontSize: 15.0
+                           );
+                         }
+                         else if(state is ContactDetailsSuccess){
+                           setState(() {
+                             emailId = email.text;
+                             username = name.text;
+                           });
+                           Fluttertoast.showToast(
+                               msg: "Profile successfully updated",
+                               toastLength: Toast.LENGTH_LONG,
+                               gravity: ToastGravity.CENTER,
+                               timeInSecForIosWeb: 1,
+                               textColor: Colors.black,
+                               fontSize: 15.0
+                           );
+                         }
+                         else{
+                           Fluttertoast.showToast(
+                               msg: "Oops something went wrong",
+                               toastLength: Toast.LENGTH_LONG,
+                               gravity: ToastGravity.CENTER,
+                               timeInSecForIosWeb: 1,
+                               textColor: Colors.black,
+                               fontSize: 15.0
+                           );
+                         }
                         },
-                      )
-                 )
-               ],
+                        builder: (context, state) {
+                          if(state is ContactDetailsLoading){
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          return InkWell(
+                           onTap: (){
+                             BlocProvider.of<ContactDetailsCubit>(context).
+                             updateProfile(
+                                 name: name.text,
+                                 email: email.text,
+                                 country: country.text,
+                                 city: city.text,
+                                 state: userState.text,
+                                 fullAddress: fullAddress.text,
+                                 apartment: apartment.text);
+                           },
+                           child: RoundAuthButtons(
+                               size: size, btnText: "Update"));
+                          },
+                        )
+                   )
+                 ],
+               ),
              ),
-           )
-          ],
-        ),
+           ),
+         )
+        ],
       ),
     );
   }

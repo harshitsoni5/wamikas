@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -59,227 +61,230 @@ class _InterestAndPreferencesState extends State<InterestAndPreferences> {
 
   @override
   Widget build(BuildContext context) {
+    final EdgeInsets safeAreaInsets = MediaQuery.of(context).padding;
+    final double topPadding = safeAreaInsets.top;
     Size size = MediaQuery
         .of(context)
         .size;
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            BackButtonAppBar(
-              size: size,
-              title: "Interest & Preferences",
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: interests.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      if (selectedInterests.contains(interests[index])) {
-                        selectedInterests.removeWhere(
-                                (element) => element == interests[index]);
-                        setState(() {});
-                      } else {
-                        selectedInterests.add(interests[index]);
-                        setState(() {});
-                      }
-                    },
-                    child: selectedInterests.contains(interests[index])
-                        ? Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          color: const Color(0xffE12799),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                              color: const Color(0xffFFC8F5), width: 2)),
-                      child: Row(
-                        children: [
-                          Flexible(
-                              child: SimpleText(
-                                text: interests[index],
-                                fontSize: 14,
-                              )),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          SvgPicture.asset(
-                            "assets/svg/minus.svg",
-                            height: 40,
-                          ),
-                        ],
-                      ),
-                    )
-                        : Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border:
-                          Border.all(color: const Color(0xffE9E9E9))),
-                      child: Row(
-                        children: [
-                          Flexible(
-                              child: SimpleText(
-                                text: interests[index],
-                                fontSize: 14,
-                              )),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          SvgPicture.asset(
-                            "assets/svg/plus.svg",
-                            height: 40,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 5,
-                    crossAxisSpacing: 5,
-                    childAspectRatio: 3),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 35.0, right: 30),
+      body: Column(
+        children: [
+          BackButtonAppBar(
+            size: size,
+            title: "Interest & Preferences",
+            topPadding: topPadding,
+          ),
+          Expanded(
+            child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SimpleText(
-                    text: "What are you looking for",
-                    fontSize: 16.sp,
-                    fontColor: Colors.black,
-                    fontWeight: FontWeight.bold,
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    child: GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: interests.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            if (selectedInterests.contains(interests[index])) {
+                              selectedInterests.removeWhere(
+                                      (element) => element == interests[index]);
+                              setState(() {});
+                            } else {
+                              selectedInterests.add(interests[index]);
+                              setState(() {});
+                            }
+                          },
+                          child: selectedInterests.contains(interests[index])
+                              ? Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: const Color(0xffE12799),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: const Color(0xffFFC8F5), width: 2)),
+                            child: Row(
+                              children: [
+                                Flexible(
+                                    child: SimpleText(
+                                      text: interests[index],
+                                      fontSize:  size.width <390? 11:13,
+                                    )),
+                                const Spacer(),
+                                SvgPicture.asset(
+                                  "assets/svg/minus.svg",
+                                  height: size.width <390? 35:40,
+                                ),
+                              ],
+                            ),
+                          )
+                              : Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border:
+                                Border.all(color: const Color(0xffE9E9E9))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                    child: SimpleText(
+                                      text: interests[index],
+                                      fontSize: size.width <390? 11:13,
+                                    )),
+                                SvgPicture.asset(
+                                  "assets/svg/plus.svg",
+                                  height: size.width <390? 35:40,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 5,
+                          crossAxisSpacing: 5,
+                          childAspectRatio: 3),
+                    ),
                   ),
-                  SimpleText(
-                    text:
-                    "Select at least one preference for future events and group recommendations.",
-                    fontSize: 14.sp,
-                    fontColor: Colors.black,
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 35.0, right: 30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SimpleText(
+                          text: "What are you looking for",
+                          fontSize: 16.sp,
+                          fontColor: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        SimpleText(
+                          text:
+                          "Select at least one preference for future events and group recommendations.",
+                          fontSize: 14.sp,
+                          fontColor: Colors.black,
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 30),
+                    child: ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: eventsOrGroupRec.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  if (selectedEventAndRec
+                                      .contains(eventsOrGroupRec[index])) {
+                                    selectedEventAndRec.removeWhere(
+                                            (element) =>
+                                        element == eventsOrGroupRec[index]);
+                                    setState(() {});
+                                  } else {
+                                    selectedEventAndRec.add(eventsOrGroupRec[index]);
+                                    setState(() {});
+                                  }
+                                },
+                                child: Container(
+                                  width: size.width,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 5),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: const Color(0xffE9E9E9),
+                                      )),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SimpleText(
+                                        text: eventsOrGroupRec[index],
+                                        fontSize: 14,
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.all(3),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(8),
+                                            border: Border.all(
+                                                color: selectedEventAndRec
+                                                    .contains(eventsOrGroupRec[index])
+                                                    ? ColorClass.userColor
+                                                    : const Color(0xffCFCFCF))),
+                                        child: selectedEventAndRec
+                                            .contains(eventsOrGroupRec[index])
+                                            ? const Icon(
+                                          Icons.check,
+                                          color: ColorClass.userColor,
+                                          size: 20,
+                                        )
+                                            : const SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10,),
+                            ],
+                          );
+                        }),
+                  ),
+                  const SizedBox(height: 15,),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 30),
+                    padding: const EdgeInsets.only(bottom: 40),
+                    child: BlocConsumer<InterestsCubit, InterestsState>(
+                      listener: (context, state) {
+                        if(state is InterestsSuccess){
+                          Fluttertoast.showToast(
+                              msg: "Interests updated successfully",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              textColor: Colors.black,
+                              fontSize: 15.0
+                          );
+                        }
+                        if(state is InterestsNotSelected){
+                          Fluttertoast.showToast(
+                              msg: "Please select at least one interest",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              textColor: Colors.black,
+                              fontSize: 15.0
+                          );
+                        }
+                      },
+                      builder: (context, state) {
+                        if(state is InterestsLoading){
+                          return const Center(child: CircularProgressIndicator(),);
+                        }
+                        return InkWell(
+                            onTap: () {
+                              BlocProvider.of<InterestsCubit>(context).
+                              updateInterests(selectedInterests, selectedEventAndRec);
+                            },
+                            child: RoundAuthButtons(size: size, btnText: "Update"));
+                      },
+                    ),
                   )
                 ],
               ),
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 30),
-              child: ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: eventsOrGroupRec.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            if (selectedEventAndRec
-                                .contains(eventsOrGroupRec[index])) {
-                              selectedEventAndRec.removeWhere(
-                                      (element) =>
-                                  element == eventsOrGroupRec[index]);
-                              setState(() {});
-                            } else {
-                              selectedEventAndRec.add(eventsOrGroupRec[index]);
-                              setState(() {});
-                            }
-                          },
-                          child: Container(
-                            width: size.width,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 5),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: const Color(0xffE9E9E9),
-                                )),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SimpleText(
-                                  text: eventsOrGroupRec[index],
-                                  fontSize: 15.sp,
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(
-                                          color: selectedEventAndRec
-                                              .contains(eventsOrGroupRec[index])
-                                              ? ColorClass.userColor
-                                              : const Color(0xffCFCFCF))),
-                                  child: selectedEventAndRec
-                                      .contains(eventsOrGroupRec[index])
-                                      ? const Icon(
-                                    Icons.check,
-                                    color: ColorClass.userColor,
-                                  )
-                                      : const SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10,),
-                      ],
-                    );
-                  }),
-            ),
-            const SizedBox(height: 15,),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 30),
-              padding: const EdgeInsets.only(bottom: 40),
-              child: BlocConsumer<InterestsCubit, InterestsState>(
-                listener: (context, state) {
-                  if(state is InterestsSuccess){
-                    Fluttertoast.showToast(
-                        msg: "Interests updated successfully",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 1,
-                        textColor: Colors.black,
-                        fontSize: 15.0
-                    );
-                  }
-                  if(state is InterestsNotSelected){
-                    Fluttertoast.showToast(
-                        msg: "Please select at least one interest",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 1,
-                        textColor: Colors.black,
-                        fontSize: 15.0
-                    );
-                  }
-                },
-                builder: (context, state) {
-                  if(state is InterestsLoading){
-                    return const Center(child: CircularProgressIndicator(),);
-                  }
-                  return InkWell(
-                      onTap: () {
-                        BlocProvider.of<InterestsCubit>(context).
-                        updateInterests(selectedInterests, selectedEventAndRec);
-                      },
-                      child: RoundAuthButtons(size: size, btnText: "Update"));
-                },
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }

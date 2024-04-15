@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 import '../../Core/FirebaseDataBaseService/firestore_database_services.dart';
+import '../../Repository/PushNotificationRepo/push_notify_repo.dart';
 import '../../SharedPrefernce/shared_pref.dart';
 import 'comments_event.dart';
 import 'comments_state.dart';
@@ -28,6 +29,9 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
       CollectionReference postReference =
           await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
               "posts");
+      CollectionReference usersReference =
+      await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
+          "users");
       var postDetails = await postReference.doc(event.postId).get();
       if (postDetails.exists) {
         var docId = await SharedData.getIsLoggedIn("phone");
@@ -44,6 +48,9 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
             "uid": event.uid,
             "comment_id": uuid.v4()
           });
+          emit(CommentsSuccess(
+            comments: comments,
+          ));
           await FireStoreDataBaseServices.setDataToUserCollection(
               "posts", event.postId, {
             "comments": comments,
@@ -55,9 +62,47 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
             "time": event.postModel.time,
             "id": event.postModel.id
           });
-          emit(CommentsSuccess(
-            comments: comments,
-          ));
+          var usersRef = await usersReference.doc(event.uid).get();
+            var usersData = usersRef.data();
+            if(usersData != null && usersData is Map && event.uid != usersData["uid"]){
+              print("hrew");
+              print(event.userData.fcmToken);
+              await PushNotification.sendPushNotification("New comment",
+                  "${usersData["name"]} post a comment on your forum",
+                  event.userData.fcmToken.toString());
+              String documentId = await SharedData.getIsLoggedIn("phone");
+              CollectionReference notificationListReference =
+              await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
+                  "notifications");
+              var notiList = await notificationListReference.doc("phone").get();
+              if(notiList.exists){
+                var notiData = notiList.data();
+                if(notiData!= null && notiData is Map){
+                  var localNotiData = notiData;
+                  localNotiData["notifications"].add({
+                    "uid_of_User": documentId,
+                    "title": "${usersData["name"]} commented on a post",
+                    "time": DateTime.now(),
+                    "id":event.postId
+                  });
+                  await FireStoreDataBaseServices.setDataToUserCollection(
+                      "notifications", docId,{
+                   "notifications":localNotiData["notifications"]
+                  });
+                }
+              }
+              await FireStoreDataBaseServices.setDataToUserCollection(
+                  "notifications", docId,{
+                    "notifications":[
+                     {
+                       "uid_of_User": documentId,
+                       "title": "${usersData["name"]} commented on a post",
+                       "time": DateTime.now(),
+                       "id":event.postId
+                     }
+                    ]
+              });
+            }
         }
       }
     } catch (e) {

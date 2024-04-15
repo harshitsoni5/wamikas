@@ -217,7 +217,7 @@ class _LocationDetailsState extends State<LocationDetails> {
                   const SizedBox(height: 10,),
                   InkWell(
                     onTap: (){
-                      Navigator.of(context).pushNamed(RouteName.home);
+                      Navigator.of(context).pushNamed(RouteName.bottomBar);
                     },
                     child: const SimpleText(
                       text: "Skip >>",

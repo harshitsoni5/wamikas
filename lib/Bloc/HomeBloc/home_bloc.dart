@@ -88,7 +88,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             trendingData: trendingData,
             workshopData: workshopData
           ));
-        } else {
+        }
+        else {
           emit(HomeError());
         }
       }

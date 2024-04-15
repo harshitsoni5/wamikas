@@ -6,11 +6,6 @@ class SharedData {
     return preferences.get(key);
   }
 
-  static Future setIsLoggedIn(bool value) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setBool("IsLoggedIn", value);
-  }
-
   static Future setPhone(String phone) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("phone", phone);
@@ -36,7 +31,24 @@ class SharedData {
     preferences.setString("profile", imageUrl);
   }
 
-  static Future clearPref() async {
+  static Future clearPref(key) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.remove(key);
+  }
+}
+
+class SharedFcmToken {
+  static Future getFcmToken(String key) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.get(key);
+  }
+
+  static Future setFcmToken(String token) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("fcmToken", token);
+  }
+
+  static Future removeFcmToken() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.clear();
   }

@@ -24,16 +24,18 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> {
       );
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithCredential(credential);
+      String? fcmToken = await SharedFcmToken.getFcmToken("fcmToken");
+      CollectionReference collectionReference = FireStoreDataBaseServices.
+      createNewCollectionOrAddToExisting("users");
       if (userCredential.additionalUserInfo!.isNewUser) {
         SharedData.setUid(userCredential.user!.uid);
         SharedData.setPhone(phoneNumber);
-        CollectionReference collectionReference = FireStoreDataBaseServices.
-        createNewCollectionOrAddToExisting("users");
         collectionReference.doc(phoneNumber).
         set({
           "name":username,
           "phone":phoneNumber,
-          "email":email
+          "email":email,
+          "fcm_token": fcmToken
         });
         emit(OtpVerificationSuccess());
         emit(OtpVerificationInitial());
@@ -41,6 +43,19 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> {
       else {
         SharedData.setUid(userCredential.user!.uid);
         SharedData.setPhone(phoneNumber);
+        var userData = await collectionReference.doc(phoneNumber).get();
+        if(userData.exists){
+          var userInfo = userData.data();
+          if(userInfo != null && userInfo is Map){
+            collectionReference.doc(phoneNumber).
+            update({
+              "name":userInfo["name"],
+              "phone":phoneNumber,
+              "email":userInfo["email"],
+              "fcm_token": fcmToken,
+            });
+          }
+        }
         emit(OtpVerificationUserAlreadyExistsState());
         emit(OtpVerificationInitial());
       }

@@ -4,7 +4,9 @@ import 'package:wamikas/Utils/Routes/route_name.dart';
 import 'package:wamikas/View/AuthScreens/auth_screen.dart';
 import 'package:wamikas/View/AuthScreens/signup.dart';
 import 'package:wamikas/View/Forum/forum_screeen.dart';
+import 'package:wamikas/View/Home/bottom_navigation_bar.dart';
 import 'package:wamikas/View/Home/home.dart';
+import 'package:wamikas/View/More/more.dart';
 import 'package:wamikas/View/Splash%7CWelcome/welcome_screen.dart';
 import 'package:wamikas/View/UserDetails/contact_details.dart';
 import 'package:wamikas/View/UserDetails/create_job_profile.dart';
@@ -17,6 +19,7 @@ import 'package:wamikas/View/UserDetails/upload_photo.dart';
 import 'package:wamikas/View/UserDetails/user_profile.dart';
 import '../../View/AuthScreens/otp_verfication.dart';
 import '../../View/AuthScreens/signin.dart';
+import '../../View/Serach/search.dart';
 import '../../View/Splash|Welcome/splash_screen.dart';
 
 class Routes {
@@ -26,6 +29,15 @@ class Routes {
       case RouteName.home:
         return MaterialPageRoute(
             builder: (BuildContext context) => const HomeScreen());
+        case RouteName.bottomBar:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const MainScreen());
+        case RouteName.search:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const Search());
+        case RouteName.more:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const More());
         case RouteName.register:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SignUp());

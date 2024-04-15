@@ -8,7 +8,7 @@ class EmailInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    final regExp = RegExp(r'^[\w@\s.]*$'); // Include . to allow dot character
+    final regExp = RegExp(r'^[\w@\s.]*$');
     if (regExp.hasMatch(newValue.text)) {
       return newValue;
     } else {
@@ -80,13 +80,13 @@ class TextFieldContainer extends StatelessWidget {
                 hintText: hintText,
                 hintStyle: GoogleFonts.poppins(
                   color: const Color(0xff888888),
-                  fontSize: 13.sp,
+                  fontSize: 14,
                 )
             ),
             inputFormatters: [EmailInputFormatter()], // Apply EmailInputFormatter
           ),
         ),
-        const SizedBox(height: 10,)
+        const SizedBox(height: 15,)
       ],
     );
   }

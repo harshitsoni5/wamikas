@@ -122,6 +122,8 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final EdgeInsets safeAreaInsets = MediaQuery.of(context).padding;
+    final double topPadding = safeAreaInsets.top;
     return Scaffold(
       body: BlocBuilder<UserProfileBloc, UserProfileState>(
         builder: (context, state) {
@@ -139,11 +141,11 @@ class _EditProfileState extends State<EditProfile> {
                       height: size.height >850 ?size.height*0.3 :size.height*0.35,
                     ),
                     Container(
-                      padding:  EdgeInsets.only(top: size.height*0.04),
+                      padding:  EdgeInsets.only(top: topPadding),
                       child: Column(
                         children: [
                           Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 15),
+                            margin: const EdgeInsets.only(left: 15,right: 15,top: 10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -161,11 +163,11 @@ class _EditProfileState extends State<EditProfile> {
                                           height: 35,
                                         )),
                                     const SizedBox(
-                                      width: 15,
+                                      width: 10,
                                     ),
-                                    const SimpleText(
+                                     SimpleText(
                                       text: "Edit Profile",
-                                      fontSize: 24,
+                                      fontSize:  size.width <400? 18:22,
                                       fontColor: Colors.black,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -173,7 +175,7 @@ class _EditProfileState extends State<EditProfile> {
                                 ),
                                 SvgPicture.asset(
                                   "assets/svg/w-logo.svg",
-                                  height: 40,
+                                  height: size.width <390? 35:40,
                                 ),
                               ],
                             ),
@@ -189,8 +191,8 @@ class _EditProfileState extends State<EditProfile> {
                                   children: [
                                     Container(
                                       margin: const EdgeInsets.only(bottom: 20),
-                                      height: size.height >850 ?180:160,
-                                      width: size.height >850 ?180:160,
+                                      height: size.height >850 ?150:size.height<600? 115:140,
+                                      width: size.height >850 ?150:size.height<600? 115:140,
                                       decoration: BoxDecoration(
                                           borderRadius:
                                           BorderRadius.circular(size.height >850 ?90:80),
@@ -214,8 +216,8 @@ class _EditProfileState extends State<EditProfile> {
                                                 child: Image.file(
                                                   File(state.path!),
                                                   fit: BoxFit.cover,
-                                                  height: size.height >850 ?180:160,
-                                                  width: size.height >850 ?180:160,
+                                                  height: size.height >850 ?150:size.height<600? 115:140,
+                                                  width: size.height >850 ?150:size.height<600? 115:140,
                                                 ),
                                               ),
                                             );
@@ -239,8 +241,8 @@ class _EditProfileState extends State<EditProfile> {
                                                   child: Image.network(
                                                     data.profilePic!,
                                                     fit: BoxFit.cover,
-                                                    height: size.height >850 ?180:160,
-                                                    width: size.height >850 ?180:160,
+                                                    height: size.height >850 ?150:size.height<600? 115:140,
+                                                    width: size.height >850 ?150:size.height<600? 115:140,
                                                   )),
                                             );
                                           }
@@ -249,15 +251,15 @@ class _EditProfileState extends State<EditProfile> {
                                     ),
                                     Positioned(
                                       bottom: 5,
-                                      left: size.height >850 ?55:50,
+                                      left: size.height >850 ?50:size.height<600? 40:50,
                                       child: InkWell(
                                         onTap: () {
                                           _pickedImage();
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.all(12),
-                                          height: 60,
-                                          width: 60,
+                                          height:size.height >850? 50:45,
+                                          width:size.height >850? 50:45,
                                           decoration: BoxDecoration(
                                               borderRadius:
                                               BorderRadius.circular(30),
@@ -282,7 +284,7 @@ class _EditProfileState extends State<EditProfile> {
                                     children: [
                                       SimpleText(
                                         text: data.name,
-                                        fontSize: 20.sp,
+                                        fontSize: size.width <390? 16.sp:18.sp,
                                         fontWeight: FontWeight.w800,
                                       ),
                                       Row(
@@ -290,20 +292,20 @@ class _EditProfileState extends State<EditProfile> {
                                           data.jobTitle != null
                                               ? SimpleText(
                                             text: data.jobTitle!,
-                                            fontSize: 16.sp,
+                                            fontSize:size.width <390? 13:15,
                                             fontColor:
                                             const Color(0xff6C6C6C),
                                             fontWeight: FontWeight.w300,
                                           )
                                               : SimpleText(
                                             text: "Not Specified",
-                                            fontSize: 16.sp,
+                                            fontSize:size.width <390? 14:16,
                                             fontColor:
                                             const Color(0xff6C6C6C),
                                             fontWeight: FontWeight.w300,
                                           ),
                                           const SizedBox(
-                                            width: 5,
+                                            width: 3,
                                           ),
                                           InkWell(
                                               onTap: (){
@@ -311,18 +313,22 @@ class _EditProfileState extends State<EditProfile> {
                                                     RouteName.jobDescription,
                                                     arguments: data);
                                               },
-                                              child: const Icon(Icons.edit)),
+                                              child:  Icon(
+                                                Icons.edit,
+                                                color: const Color(0xff6C6C6C),
+                                                size: size.width <390? 18:20,
+                                              )),
                                         ],
                                       ),
                                       SimpleText(
                                         text: data.phone,
-                                        fontSize: 15,
+                                        fontSize:size.width <390? 13:14,
                                         fontColor: const Color(0xff6C6C6C),
                                         fontWeight: FontWeight.w500,
                                       ),
                                       SimpleText(
                                         text: data.email,
-                                        fontSize: 15,
+                                        fontSize: size.width <390?11:13,
                                         fontColor: const Color(0xff6C6C6C),
                                         fontWeight: FontWeight.w300,
                                       ),
@@ -346,20 +352,21 @@ class _EditProfileState extends State<EditProfile> {
                   child: Row(
                     children: [
                       Container(
-                        height: size.height * 0.1,
+                        height:size.height>850?size.height * 0.1 :size.height * 0.12,
                         width: 4,
                         color: ColorClass.primaryColor,
                       ),
                       Flexible(
                         child: Container(
+                          height:size.height>850?size.height * 0.1 :size.height * 0.12,
                           color: const Color(0xffFFF0FA),
                           padding: const EdgeInsets.only(left: 10, right: 2),
                           child:  Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const SimpleText(
+                              SimpleText(
                                 text: 'Attention',
-                                fontSize: 16,
+                                fontSize:size.width >390? 13:16,
                                 fontColor: ColorClass.primaryColor,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -368,7 +375,7 @@ class _EditProfileState extends State<EditProfile> {
                                     "Please update missing information to ensure"
                                     " that your profile is fully optimized"
                                     " and performs well",
-                                fontSize: 14,
+                                fontSize:size.width <390? 10:13,
                                 fontColor: ColorClass.primaryColor,
                               )
                             ],
@@ -424,7 +431,9 @@ class _EditProfileState extends State<EditProfile> {
                 EditProfileTiles(
                   tileName: "Logout",
                   onPressed: () {
-                    SharedData.clearPref();
+                    SharedData.clearPref("phone");
+                    SharedData.clearPref("uid");
+                    SharedData.clearPref("profile");
                     Navigator.of(context).pushNamedAndRemoveUntil(
                         RouteName.signIn, (route) => false);
                   },

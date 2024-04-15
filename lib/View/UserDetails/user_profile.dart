@@ -80,14 +80,14 @@ class _UserProfileState extends State<UserProfile>
           ElevatedButton(
             child: const Text('Camera'),
             onPressed: () async {
-              Permission permission = Permission.camera;
-              if (await permission.isGranted) {
+              PermissionStatus permission = await Permission.camera.status;
+              if (permission.isGranted) {
                 Navigator.of(context).pop();
                 BlocProvider.of<UploadImageCubit>(context)
                     .uploadPhotoEvent(true);
-              } else if (await permission.isDenied) {
-                permission = Permission.camera;
-                if (await permission.isGranted) {
+              } else if (permission.isDenied) {
+                permission =await Permission.camera.status;
+                if (permission.isGranted) {
                   Navigator.of(context).pop();
                   BlocProvider.of<UploadImageCubit>(context)
                       .uploadPhotoEvent(true);
@@ -390,525 +390,573 @@ class _UserProfileState extends State<UserProfile>
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: BlocConsumer<UserProfileBloc, UserProfileState>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          if (state is UserProfileLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is UserProfileSuccess) {
-            final UserProfileModel data = state.userData;
-            final List<PostModel> posts= state.listOfForums;
-            return Column(
-              children: [
-                Stack(
-                  children: [
-                    SvgPicture.asset(
-                      "assets/svg/rectangle_design.svg",
-                      height: size.height >850 ?size.height*0.3 :size.height*0.35,
-                    ),
-                    Container(
-                      padding:  EdgeInsets.only(top: size.height*0.04),
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    InkWell(
-                                        onTap: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: SvgPicture.asset(
-                                          "assets/svg/ep_back (2).svg",
-                                          height: 35,
-                                        )),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    const SimpleText(
-                                      text: "My Profile",
-                                      fontSize: 24,
-                                      fontColor: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ],
-                                ),
-                                SvgPicture.asset(
-                                  "assets/svg/w-logo.svg",
-                                  height: 40,
-                                ),
-                              ],
-                            ),
+    final EdgeInsets safeAreaInsets = MediaQuery.of(context).padding;
+    final double topPadding = safeAreaInsets.top;
+    return BlocConsumer<UserProfileBloc, UserProfileState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        if (state is UserProfileLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is UserProfileSuccess) {
+          final UserProfileModel data = state.userData;
+          final List<PostModel> posts= state.listOfForums;
+          return Column(
+            children: [
+              Stack(
+                children: [
+                  SvgPicture.asset(
+                    "assets/svg/rectangle_design.svg",
+                    height: size.height >850 ?size.height*0.28 :size.height*0.35,
+                  ),
+                  Container(
+                    padding:  EdgeInsets.only(top: topPadding),
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(left: 15,right: 15,top: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                   SimpleText(
+                                    text: "My Profile",
+                                    fontSize: size.width <400? 20:22,
+                                    fontColor: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ],
+                              ),
+                              SvgPicture.asset(
+                                "assets/svg/w-logo.svg",
+                                height: size.width <390? 35:40,
+                              ),
+                            ],
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Row(
-                              children: [
-                                Stack(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(bottom: 20),
-                                      height: size.height >850 ?180:160,
-                                      width: size.height >850 ?180:160,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            children: [
+                              Stack(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(bottom: 20),
+                                    height: size.height >850 ?150:size.height<600? 115:140,
+                                    width: size.height >850 ?150:size.height<600? 115:140,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                        BorderRadius.circular(size.height >850 ?90:80),
+                                        border: Border.all(
+                                            color: const Color(0xffFF9CEA),
+                                            width: 12)),
+                                    child: BlocBuilder<UploadImageCubit,
+                                        UploadImageState>(
+                                      builder: (context, state) {
+                                        if (state is UploadImageLoading) {
+                                          return const Center(
+                                            child:
+                                            CircularProgressIndicator(),
+                                          );
+                                        } else if (state
+                                        is UploadImageSuccess) {
+                                          return Center(
+                                            child: ClipRRect(
+                                              borderRadius:
                                               BorderRadius.circular(size.height >850 ?90:80),
-                                          border: Border.all(
-                                              color: const Color(0xffFF9CEA),
-                                              width: 12)),
-                                      child: BlocBuilder<UploadImageCubit,
-                                          UploadImageState>(
-                                        builder: (context, state) {
-                                          if (state is UploadImageLoading) {
-                                            return const Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            );
-                                          } else if (state
-                                              is UploadImageSuccess) {
-                                            return Center(
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(size.height >850 ?90:80),
-                                                child: Image.file(
-                                                  File(state.path!),
-                                                  fit: BoxFit.cover,
-                                                  height: size.height >850 ?180:160,
-                                                  width: size.height >850 ?180:160,
-                                                ),
+                                              child: Image.file(
+                                                File(state.path!),
+                                                fit: BoxFit.cover,
+                                                height: size.height >850 ?150:size.height<600? 115:140,
+                                                width: size.height >850 ?150:size.height<600? 115:140,
                                               ),
-                                            );
-                                          } else {
-                                            return data.profilePic == null
-                                                ? Center(
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              size.height >850 ?90:80),
-                                                      child: SvgPicture.asset(
-                                                        "assets/svg/profile.svg",
-                                                      ),
-                                                    ),
-                                                  )
-                                                : Center(
-                                                    child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(80),
-                                                        child: Image.network(
-                                                          data.profilePic!,
-                                                          fit: BoxFit.cover,
-                                                          height: size.height >850 ?180:160,
-                                                          width: size.height >850 ?180:160,
-                                                        )),
-                                                  );
-                                          }
-                                        },
+                                            ),
+                                          );
+                                        } else {
+                                          return data.profilePic == null
+                                              ? Center(
+                                            child: ClipRRect(
+                                              borderRadius:
+                                              BorderRadius.circular(
+                                                  size.height >850 ?90:80),
+                                              child: SvgPicture.asset(
+                                                "assets/svg/profile.svg",
+                                                height:size.height >850 ?60:50,
+                                              ),
+                                            ),
+                                          )
+                                              : Center(
+                                            child: ClipRRect(
+                                                borderRadius:
+                                                BorderRadius
+                                                    .circular(80),
+                                                child: Image.network(
+                                                  data.profilePic!,
+                                                  fit: BoxFit.cover,
+                                                  height: size.height >850 ?150:size.height<600? 115:140,
+                                                  width: size.height >850 ?150:size.height<600? 115:140,
+                                                )),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 5,
+                                    left: size.height >850 ?50:size.height<600? 40:50,
+                                    child: InkWell(
+                                      onTap: () {
+                                        _pickedImage();
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(12),
+                                        height:size.height >850? 50:45,
+                                        width:size.height >850? 50:45,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(30),
+                                            color: ColorClass.primaryColor,
+                                            border: Border.all(
+                                                color:
+                                                const Color(0xffFF9CEA),
+                                                width: 6)),
+                                        child: SvgPicture.asset(
+                                          "assets/svg/plus_profile.svg",
+                                        ),
                                       ),
                                     ),
-                                    Positioned(
-                                      bottom: 5,
-                                      left: size.height >850 ?55:50,
-                                      child: InkWell(
-                                        onTap: () {
-                                          _pickedImage();
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.all(12),
-                                          height: 60,
-                                          width: 60,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
-                                              color: ColorClass.primaryColor,
-                                              border: Border.all(
-                                                  color:
-                                                      const Color(0xffFF9CEA),
-                                                  width: 6)),
-                                          child: SvgPicture.asset(
-                                            "assets/svg/plus_profile.svg",
+                                  )
+                                ],
+                              ),
+                              Container(
+                                padding: const EdgeInsets.only(left: 15),
+                                child: Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: [
+                                    SimpleText(
+                                      text: data.name,
+                                      fontSize:size.width <390? 16.sp:18.sp,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                    Row(
+                                      children: [
+                                        data.jobTitle != null
+                                            ? SimpleText(
+                                          text: data.jobTitle!,
+                                          fontSize:size.width <390? 13:15,
+                                          fontColor:
+                                          const Color(0xff6C6C6C),
+                                          fontWeight: FontWeight.w300,
+                                        )
+                                            : SimpleText(
+                                          text: "Not Specified",
+                                          fontSize:size.width <390? 14:16,
+                                          fontColor:
+                                          const Color(0xff6C6C6C),
+                                          fontWeight: FontWeight.w300,
+                                        ),
+                                        const SizedBox(
+                                          width: 3,
+                                        ),
+                                        InkWell(
+                                            onTap: (){
+                                              Navigator.of(context).pushNamed(
+                                                  RouteName.jobDescription,
+                                                  arguments: data);
+                                            },
+                                            child:  Icon(
+                                              Icons.edit,
+                                              color: const Color(0xff6C6C6C),
+                                              size: size.width <390? 18:20,
+                                            )),
+                                      ],
+                                    ),
+                                    SimpleText(
+                                      text: data.phone,
+                                      fontSize:size.width >390? 13:14,
+                                      fontColor: const Color(0xff6C6C6C),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    SimpleText(
+                                      text: data.email,
+                                      fontSize:size.width <390? 11:13,
+                                      fontColor: const Color(0xff6C6C6C),
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).pushNamed(
+                                            RouteName.editProfile,
+                                            arguments: data
+                                        );
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: ColorClass.primaryColor,
+                                            borderRadius:
+                                            BorderRadius.circular(20)),
+                                        padding:  EdgeInsets.symmetric(
+                                            horizontal:size.width <390? 25:30, vertical: 5),
+                                        child: const Center(
+                                          child: SimpleText(
+                                            text: 'Edit Profile',
+                                            fontSize: 16,
+                                            fontColor: Colors.white,
                                           ),
                                         ),
                                       ),
                                     )
                                   ],
                                 ),
-                                Container(
-                                  padding: const EdgeInsets.only(left: 15),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SimpleText(
-                                        text: data.name,
-                                        fontSize: 20.sp,
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                      Row(
-                                        children: [
-                                          data.jobTitle != null
-                                              ? SimpleText(
-                                                  text: data.jobTitle!,
-                                                  fontSize: 16.sp,
-                                                  fontColor:
-                                                      const Color(0xff6C6C6C),
-                                                  fontWeight: FontWeight.w300,
-                                                )
-                                              : SimpleText(
-                                                  text: "Not Specified",
-                                                  fontSize: 16.sp,
-                                                  fontColor:
-                                                      const Color(0xff6C6C6C),
-                                                  fontWeight: FontWeight.w300,
-                                                ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                           InkWell(
-                                            onTap: (){
-                                              Navigator.of(context).pushNamed(
-                                                  RouteName.jobDescription,
-                                                  arguments: data);
-                                            },
-                                              child: const Icon(Icons.edit)),
-                                        ],
-                                      ),
-                                      SimpleText(
-                                        text: data.phone,
-                                        fontSize: 15,
-                                        fontColor: const Color(0xff6C6C6C),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      SimpleText(
-                                        text: data.email,
-                                        fontSize: 15,
-                                        fontColor: const Color(0xff6C6C6C),
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          Navigator.of(context).pushNamed(
-                                              RouteName.editProfile,
-                                              arguments: data
-                                          );
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: ColorClass.primaryColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 30, vertical: 5),
-                                          child: const Center(
-                                            child: SimpleText(
-                                              text: 'Edit Profile',
-                                              fontSize: 16,
-                                              fontColor: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                state.profilePercentage == 100 ?
-                const SizedBox():Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Row(
-                    children: [
-                      Container(
-                        height:size.height>850?size.height * 0.1 :size.height * 0.12,
-                        width: 4,
-                        color: ColorClass.primaryColor,
-                      ),
-                      Flexible(
-                        child: Container(
-                          height:size.height>850?size.height * 0.1 :size.height * 0.12,
-                          color: const Color(0xffFFF0FA),
-                          padding: const EdgeInsets.only(left: 10, right: 2),
-                          child:  Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SimpleText(
-                                text: 'Attention',
-                                fontSize: 16,
-                                fontColor: ColorClass.primaryColor,
-                                fontWeight: FontWeight.bold,
                               ),
-                              SimpleText(
-                                text: "Your profile is currently ${state.profilePercentage}% complete. "
-                                    "Please update missing information to ensure"
-                                    " that your profile is fully optimized"
-                                    " and performs well",
-                                fontSize: 14,
-                                fontColor: ColorClass.primaryColor,
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TabBar(
-                  controller: tabController,
-                  indicatorColor: ColorClass.textColor,
-                  labelStyle: const TextStyle(color: ColorClass.textColor),
-                  unselectedLabelColor: const Color(0xffB5B5B5),
-                  tabs: <Widget>[
-                    Tab(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          tabIndex ==0 ?
-                          SvgPicture.asset("assets/svg/forum.svg"):
-                          SvgPicture.asset("assets/svg/forum.svg",
-                            color: const Color(0xffB5B5B5),),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          SimpleText(
-                            text: 'Forum',
-                            fontSize: 12.sp,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Tab(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          tabIndex ==2 ?
-                          SvgPicture.asset("assets/svg/resources.svg",
-                            color: ColorClass.textColor,)
-                              :SvgPicture.asset("assets/svg/resources.svg"),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          SimpleText(
-                            text: 'Resources',
-                            fontSize: 12.sp,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                DefaultTabController(
-                  length: 1,
-                  child: Expanded(
-                    child: TabBarView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      controller: tabController,
-                      children: [
-                        ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: posts.length,
-                            itemBuilder: (context,index){
-                              return Column(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 10),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(
-                                            color: const Color(0xff544c4c33),
-                                            width: 2
-                                        )
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            data.profilePic==null?
-                                            SvgPicture.asset(
-                                              "assets/svg/profile.svg",
-                                              height: 40,
-                                              width: 40,
-                                            ):
-                                            ClipRRect(
-                                              borderRadius: BorderRadius.circular(30),
-                                              child: Image.network(
-                                                data.profilePic!,
-                                                height: 40,
-                                                width: 40,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                SimpleText(
-                                                  text: posts[index].name,
-                                                  fontSize: 13.sp,
-                                                  textHeight: 0.9,
-                                                ),
-                                                SimpleText(
-                                                  text: posts[index].emailId,
-                                                  fontSize: 12.sp,
-                                                  fontColor: ColorClass.textColor,
-                                                ),
-                                              ],
-                                            ),
-                                            const Spacer(),
-                                            const Icon(
-                                                Icons.more_vert
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 5,),
-                                        SimpleText(
-                                          text: posts[index].forumName,
-                                          fontSize: 9.sp,
-                                          fontColor: const Color(0xff455A64),
-                                        ),
-                                        const SizedBox(height: 5,),
-                                        SimpleText(
-                                          text: posts[index].forumTitle,
-                                          fontSize: 18.sp,
-                                          textHeight: 0.9,
-                                        ),
-                                        const SizedBox(height: 2,),
-                                        SimpleText(
-                                          text: posts[index].forumContent,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w300,
-                                          fontColor: const Color(0xff777777),
-                                        ),
-                                        const Divider(
-                                          color: Color(0xffB5B5B5),
-                                        ),
-                                        Row(
-                                          children: [
-                                            InkWell(
-                                              onTap: (){
-                                                showBottomSheet(
-                                                    size: size,
-                                                    postId: posts[index].id,
-                                                    userData: state.userData,
-                                                    comments: posts[index].comments,
-                                                    postModel: posts[index]
-                                                );
-                                              },
-                                              child: SvgPicture.asset(
-                                                "assets/svg/commentss.svg",
-                                                height: 15,
-                                                width: 15,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 5,),
-                                            posts[index].comments.isNotEmpty?
-                                            InkWell(
-                                              onTap: (){
-                                                BlocProvider.of<CommentsBloc>(context)
-                                                    .add(CommentsInit(
-                                                  comments: posts[index].comments,
-                                                  userData: state.userData,
-
-                                                ));
-                                                showBottomSheet(
-                                                    size: size,
-                                                    postId: posts[index].id,
-                                                    userData: state.userData,
-                                                    comments: posts[index].comments,
-                                                    postModel: posts[index]
-                                                );
-                                              },
-                                              child:  SimpleText(
-                                                  text: "${
-                                                      posts[index]
-                                                          .comments.length
-                                                          .toString()
-                                                  } Replies",
-                                                  fontSize: 16),
-                                            ):
-                                            const SizedBox(),
-                                            const Spacer(),
-                                            SimpleText(
-                                                text: getTimeAgo(posts[index].time),
-                                                fontSize: 16),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }),
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    "assets/svg/profile.svg",
-                                    height: 20,
-                                    width: 20,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  SimpleText(
-                                    text: "w/graphic_design",
-                                    fontSize: 14.sp,
-                                    fontColor: ColorClass.userColor,
-                                  )
-                                ],
-                              )
                             ],
                           ),
                         )
                       ],
                     ),
-                  ),
-                )
-              ],
-            );
-          } else {
-            return Center(
-              child: SimpleText(
-                text: 'Oops something went wrong',
-                fontSize: 16.sp,
-                fontColor: Colors.black,
+                  )
+                ],
               ),
-            );
-          }
-        },
-      ),
+              const SizedBox(
+                height: 15,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    state.profilePercentage == 100 ?
+                    const SizedBox():Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 25),
+                      child: Row(
+                        children: [
+                          Container(
+                            height:size.height>850?size.height * 0.1 :size.height * 0.12,
+                            width: 4,
+                            color: ColorClass.primaryColor,
+                          ),
+                          Flexible(
+                            child: Container(
+                              height:size.height>850?size.height * 0.1 :size.height * 0.12,
+                              color: const Color(0xffFFF0FA),
+                              padding: const EdgeInsets.only(left: 10, right: 2),
+                              child:  Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                   SimpleText(
+                                    text: 'Attention',
+                                    fontSize:size.width >390? 13:16,
+                                    fontColor: ColorClass.primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  SimpleText(
+                                    text: "Your profile is currently ${state.profilePercentage}% complete. "
+                                        "Please update missing information to ensure"
+                                        " that your profile is fully optimized"
+                                        " and performs well",
+                                    fontSize:size.width <390? 10:13,
+                                    fontColor: ColorClass.primaryColor,
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TabBar(
+                      controller: tabController,
+                      indicatorColor: ColorClass.textColor,
+                      labelStyle: const TextStyle(color: ColorClass.textColor),
+                      unselectedLabelColor: const Color(0xffB5B5B5),
+                      tabs: <Widget>[
+                        Tab(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              tabIndex ==0 ?
+                              SvgPicture.asset("assets/svg/forum.svg"):
+                              SvgPicture.asset("assets/svg/forum.svg",
+                                color: const Color(0xffB5B5B5),),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              SimpleText(
+                                text: 'Forum',
+                                fontSize: 12.sp,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Tab(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              tabIndex ==2 ?
+                              SvgPicture.asset("assets/svg/resources.svg",
+                                color: ColorClass.textColor,)
+                                  :SvgPicture.asset("assets/svg/resources.svg"),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              SimpleText(
+                                text: 'Resources',
+                                fontSize: 12.sp,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    DefaultTabController(
+                      length: 1,
+                      child: Expanded(
+                        child: TabBarView(
+                          physics: const NeverScrollableScrollPhysics(),
+                          controller: tabController,
+                          children: [
+                           posts.isEmpty?
+                           Column(
+                             mainAxisAlignment: MainAxisAlignment.center,
+                             children: [
+                               SvgPicture.asset("assets/svg/ghost.svg"),
+                               const SimpleText(
+                                 text:
+                                 "Agh! It’s lonely here \nYou have not created any forum.",
+                                 fontSize: 16,
+                                 fontColor: Colors.black,
+                                 textAlign: TextAlign.center,
+                               ),
+                               const SizedBox(height: 10,),
+                               InkWell(
+                                 onTap: (){
+                                   Navigator.of(context).pushNamed(
+                                     RouteName.forum,
+                                     arguments: data,
+                                   );
+                                 },
+                                 child: Container(
+                                   width: size.width/2,
+                                   margin:
+                                   const EdgeInsets.symmetric(horizontal: 10),
+                                   decoration: BoxDecoration(
+                                     color: const Color(0xff9B1065),
+                                     borderRadius: BorderRadius.circular(20),
+                                     border: Border.all(
+                                       color: ColorClass.primaryColor,
+                                     ),
+                                   ),
+                                   padding:
+                                   const EdgeInsets.symmetric(vertical: 5),
+                                   child: Center(
+                                     child: SimpleText(
+                                       text: "Create a forum",
+                                       fontColor: Colors.white,
+                                       fontSize: 14.sp,
+                                     ),
+                                   ),
+                                 ),
+                               )
+                             ],
+                           ) :
+                           ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: posts.length,
+                                itemBuilder: (context,index){
+                                  return Column(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 10),
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(8),
+                                            border: Border.all(
+                                                color: const Color(0xff544c4c33),
+                                                width: 2
+                                            )
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                data.profilePic==null?
+                                                SvgPicture.asset(
+                                                  "assets/svg/profile.svg",
+                                                  height: 40,
+                                                  width: 40,
+                                                ):
+                                                ClipRRect(
+                                                  borderRadius: BorderRadius.circular(30),
+                                                  child: Image.network(
+                                                    data.profilePic!,
+                                                    height: 40,
+                                                    width: 40,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    SimpleText(
+                                                      text: posts[index].name,
+                                                      fontSize: 13.sp,
+                                                      textHeight: 0.9,
+                                                    ),
+                                                    SimpleText(
+                                                      text: posts[index].emailId,
+                                                      fontSize: 12.sp,
+                                                      fontColor: ColorClass.textColor,
+                                                    ),
+                                                  ],
+                                                ),
+                                                const Spacer(),
+                                                const Icon(
+                                                    Icons.more_vert
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 5,),
+                                            SimpleText(
+                                              text: posts[index].forumName,
+                                              fontSize: 9.sp,
+                                              fontColor: const Color(0xff455A64),
+                                            ),
+                                            const SizedBox(height: 5,),
+                                            SimpleText(
+                                              text: posts[index].forumTitle,
+                                              fontSize: 18.sp,
+                                              textHeight: 0.9,
+                                            ),
+                                            const SizedBox(height: 2,),
+                                            SimpleText(
+                                              text: posts[index].forumContent,
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.w300,
+                                              fontColor: const Color(0xff777777),
+                                            ),
+                                            const Divider(
+                                              color: Color(0xffB5B5B5),
+                                            ),
+                                            Row(
+                                              children: [
+                                                InkWell(
+                                                  onTap: (){
+                                                    showBottomSheet(
+                                                        size: size,
+                                                        postId: posts[index].id,
+                                                        userData: state.userData,
+                                                        comments: posts[index].comments,
+                                                        postModel: posts[index]
+                                                    );
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                    "assets/svg/commentss.svg",
+                                                    height: 15,
+                                                    width: 15,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 5,),
+                                                posts[index].comments.isNotEmpty?
+                                                InkWell(
+                                                  onTap: (){
+                                                    BlocProvider.of<CommentsBloc>(context)
+                                                        .add(CommentsInit(
+                                                      comments: posts[index].comments,
+                                                      userData: state.userData,
+
+                                                    ));
+                                                    showBottomSheet(
+                                                        size: size,
+                                                        postId: posts[index].id,
+                                                        userData: state.userData,
+                                                        comments: posts[index].comments,
+                                                        postModel: posts[index]
+                                                    );
+                                                  },
+                                                  child:  SimpleText(
+                                                      text: "${
+                                                          posts[index]
+                                                              .comments.length
+                                                              .toString()
+                                                      } Replies",
+                                                      fontSize: 16),
+                                                ):
+                                                const SizedBox(),
+                                                const Spacer(),
+                                                SimpleText(
+                                                    text: getTimeAgo(posts[index].time),
+                                                    fontSize: 16),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }),
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 20),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        "assets/svg/profile.svg",
+                                        height: 20,
+                                        width: 20,
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      SimpleText(
+                                        text: "w/graphic_design",
+                                        fontSize: 14.sp,
+                                        fontColor: ColorClass.userColor,
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          );
+        } else {
+          return Center(
+            child: SimpleText(
+              text: 'Oops something went wrong',
+              fontSize: 16.sp,
+              fontColor: Colors.black,
+            ),
+          );
+        }
+      },
     );
   }
 }
