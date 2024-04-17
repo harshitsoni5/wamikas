@@ -198,7 +198,7 @@ class _ContactDetailsState extends State<ContactDetails> {
                               ),
                                SimpleText(
                                 text: "Edit Profile",
-                                fontSize:  size.width <400? 18:22,
+                                fontSize:  size.width <400? 20:22,
                                 fontColor: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -289,8 +289,8 @@ class _ContactDetailsState extends State<ContactDetails> {
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.all(12),
-                                    height:size.height >850? 50:45,
-                                    width:size.height >850? 50:45,
+                                    height:size.height >850? 50:47,
+                                    width:size.height >850? 50:47,
                                     decoration: BoxDecoration(
                                         borderRadius:
                                         BorderRadius.circular(30),

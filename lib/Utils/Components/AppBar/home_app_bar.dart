@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wamikas/Models/user_profile_model.dart';
+import 'package:wamikas/Utils/Routes/route_name.dart';
 import '../Text/simple_text.dart';
 
 class HomeAppBar extends StatelessWidget {
@@ -70,8 +71,15 @@ class HomeAppBar extends StatelessWidget {
                     const SizedBox(
                       width: 10,
                     ),
-                    SvgPicture.asset(
-                      "assets/svg/notification.svg",
+                    InkWell(
+                      onTap: (){
+                        Navigator.of(context).pushNamed(
+                          RouteName.notification
+                        );
+                      },
+                      child: SvgPicture.asset(
+                        "assets/svg/notification.svg",
+                      ),
                     ),
                   ],
                 ),

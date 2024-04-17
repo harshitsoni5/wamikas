@@ -30,6 +30,7 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> {
       if (userCredential.additionalUserInfo!.isNewUser) {
         SharedData.setUid(userCredential.user!.uid);
         SharedData.setPhone(phoneNumber);
+        SharedData.setName(username!);
         collectionReference.doc(phoneNumber).
         set({
           "name":username,
@@ -47,6 +48,7 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> {
         if(userData.exists){
           var userInfo = userData.data();
           if(userInfo != null && userInfo is Map){
+            SharedData.setName(userInfo["name"]);
             collectionReference.doc(phoneNumber).
             update({
               "name":userInfo["name"],

@@ -9,6 +9,7 @@ import 'package:wamikas/Bloc/AuthBloc/OtpVerficationCubit/otp_verification_cubit
 import 'package:wamikas/Bloc/AuthBloc/SignUpCubit/signup_cubit.dart';
 import 'package:wamikas/Bloc/CommentsBloc/comments_bloc.dart';
 import 'package:wamikas/Bloc/ForumCreationBloc/forum_cubit.dart';
+import 'package:wamikas/Bloc/ForumUserCubit/forum_user_cubit.dart';
 import 'package:wamikas/Bloc/HomeBloc/home_bloc.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/ContactDetailsCubit/contact_details_cubit.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/CreateJobProfile/create_job_profile_cubit.dart';
@@ -17,6 +18,8 @@ import 'package:wamikas/Bloc/UserProfileBloc/JobDescriptionCubit/job_description
 import 'package:wamikas/Bloc/UserProfileBloc/LocationCubit/location_cubit.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/UserProfileBloc/user_profile_bloc.dart';
 import 'package:wamikas/firebase_options.dart';
+import 'Bloc/NotficationPost/notification_post_cubit.dart';
+import 'Bloc/NotificationBloc/notification_cubit.dart';
 import 'Bloc/UserProfileBloc/InterestsCubit/interests_cubit.dart';
 import 'Core/FirebasePushNotificationService/firebase_push_notificatioin_services.dart';
 import 'Utils/Routes/route_name.dart';
@@ -53,22 +56,21 @@ void main() async{
       onDidReceiveNotificationResponse: _handleNotificationResponse);
   PushNotificationServices.incomingMessage();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage){
-    // navigatorKey.currentState?.restorablePushNamed(
-    //     RouteName.notificationPost,
-    //     arguments: {
-    //       "postId" :remoteMessage.data["post_id"]
-    //     });
-  });
-  FirebaseMessaging.instance.getInitialMessage().then((message) {
-    // if (message != null) {
-    //   navigatorKey.currentState?.restorablePushNamed(
-    //       RouteName.splash,arguments: {
-    //     "fromBackground":true,
-    //     "postId":message.data["post_id"]
-    //   });
-    // }
-  });
+  // FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage){
+  //   print(remoteMessage);
+  //   navigatorKey.currentState?.restorablePushNamed(
+  //       RouteName.notificationPost,
+  //       arguments:remoteMessage.data["post_id"]);
+  // });
+  // FirebaseMessaging.instance.getInitialMessage().then((message) {
+  //   if (message != null) {
+  //     navigatorKey.currentState?.restorablePushNamed(
+  //         RouteName.splash,arguments: {
+  //       "fromBackground":true,
+  //       "postId":message.data["post_id"]
+  //     });
+  //   }
+  // });
   runApp(const MyApp());
 }
 
@@ -103,6 +105,12 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) =>HomeBloc()),
         BlocProvider<CommentsBloc>(
             create: (BuildContext context) =>CommentsBloc()),
+        BlocProvider<NotificationCubit>(
+            create: (BuildContext context) =>NotificationCubit()),
+        BlocProvider<ForumUserCubit>(
+            create: (BuildContext context) =>ForumUserCubit()),
+        BlocProvider<NotificationPostCubit>(
+            create: (BuildContext context) =>NotificationPostCubit()),
       ],
       child: ScreenUtilInit(
         child: MaterialApp(

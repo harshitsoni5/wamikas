@@ -56,6 +56,7 @@ class PostModel {
   final String emailId;
   final String name;
   final String id;
+  final String? profilePic;
 
   PostModel({
     required this.forumContent,
@@ -68,6 +69,7 @@ class PostModel {
     required this.emailId,
     required this.name,
     required this.id,
+    required this.profilePic,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
@@ -90,7 +92,8 @@ class PostModel {
       like: json['like'] ?? [],
       name: json['name'] ?? '',
       emailId: json['email'] ?? '',
-      id: json["id"]
+      id: json["id"],
+      profilePic: json["profile_pic"]
     );
   }
 }

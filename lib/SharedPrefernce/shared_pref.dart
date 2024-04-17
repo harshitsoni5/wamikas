@@ -30,6 +30,10 @@ class SharedData {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("profile", imageUrl);
   }
+  static Future setName(String name) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("name", name);
+  }
 
   static Future clearPref(key) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

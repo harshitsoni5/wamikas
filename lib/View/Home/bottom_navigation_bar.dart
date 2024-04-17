@@ -55,10 +55,9 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       floatingActionButton:InkWell(
         onTap: () {
-          // Navigator.of(context).pushNamed(
-          //   RouteName.forum,
-          //   arguments: userData,
-          // );
+          Navigator.of(context).pushNamed(
+            RouteName.forum,
+          );
         },
         child: const CircleAvatar(
           backgroundColor: ColorClass.textColor,

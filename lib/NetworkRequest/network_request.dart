@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
-import '../SharedPrefernce/shared_pref.dart';
 import 'app_exception.dart';
 
 class NetworkRequest {
@@ -91,14 +90,12 @@ class NetworkRequest {
   }
 
   Future postNotificationToFireBase(
-      String api, String title, String body,String fcmToken) async {
+      String api, String title, String body,String fcmToken,String postId) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
-      "Authorization":
-          "AAAAUYjM-a8:APA91bH4rDCQROxVyQPUoAh3X_E6uuds37Sy4Tyhv_MsugO6XIpknzGkioLIfullud1esnwGBL0hV9Z1txTOJ6o4xOKNobEk2sETeBQTPAXzzUuj82DWlCI9mutT3zwGeFvG1fwxdYw8"
+      "Authorization": "key=AAAAUYjM-a8:APA91bH4rDCQROxVyQPUoAh3X_E6uuds37Sy4Tyhv_MsugO6XIpknzGkioLIfullud1esnwGBL0hV9Z1txTOJ6o4xOKNobEk2sETeBQTPAXzzUuj82DWlCI9mutT3zwGeFvG1fwxdYw8"
     };
     try {
-      print(fcmToken);
       http.Request request = http.Request('POST', Uri.parse(api));
       request.body = json.encode({
         "priority": "high",
@@ -107,17 +104,19 @@ class NetworkRequest {
           "title": title,
           "body": body,
           "sound": "Tri-tone",
-          "android_channel_id": "notifications-youtube"
+          "android_channel_id": "notifications-wamikas"
         },
         "data": {
           "click_action": "FLUTTER_NOTIFICATION_CLICK",
           "status": "done",
           "title": title,
           "body": body,
+          // "post_id": postId
         }
       });
       request.headers.addAll(headers);
       http.StreamedResponse response = await request.send();
+      print(response.stream);
       return _processResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection', api.toString());

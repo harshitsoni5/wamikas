@@ -83,19 +83,25 @@ class _UserProfileState extends State<UserProfile>
               PermissionStatus permission = await Permission.camera.status;
               if (permission.isGranted) {
                 Navigator.of(context).pop();
-                BlocProvider.of<UploadImageCubit>(context)
-                    .uploadPhotoEvent(true);
+                BlocProvider.of<UploadImageCubit>(context).uploadPhotoEvent(true);
               } else if (permission.isDenied) {
-                permission =await Permission.camera.status;
+                // If permission is denied, request permission again
+                permission = await Permission.camera.request();
                 if (permission.isGranted) {
                   Navigator.of(context).pop();
-                  BlocProvider.of<UploadImageCubit>(context)
-                      .uploadPhotoEvent(true);
+                  BlocProvider.of<UploadImageCubit>(context).uploadPhotoEvent(true);
                 } else {
                   showPermissionDeniedDialog('Camera');
                 }
               } else {
-                showPermissionDeniedDialog('Camera');
+                // If permission is neither granted nor denied, request permission
+                permission = await Permission.camera.request();
+                if (permission.isGranted) {
+                  Navigator.of(context).pop();
+                  BlocProvider.of<UploadImageCubit>(context).uploadPhotoEvent(true);
+                } else {
+                  showPermissionDeniedDialog('Camera');
+                }
               }
             },
           ),
@@ -426,7 +432,7 @@ class _UserProfileState extends State<UserProfile>
                                   ),
                                    SimpleText(
                                     text: "My Profile",
-                                    fontSize: size.width <400? 20:22,
+                                    fontSize: size.width <390? 20:22,
                                     fontColor: Colors.black,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -518,8 +524,8 @@ class _UserProfileState extends State<UserProfile>
                                       },
                                       child: Container(
                                         padding: const EdgeInsets.all(12),
-                                        height:size.height >850? 50:45,
-                                        width:size.height >850? 50:45,
+                                        height:size.height >850? 50:47,
+                                        width:size.height >850? 50:47,
                                         decoration: BoxDecoration(
                                             borderRadius:
                                             BorderRadius.circular(30),
@@ -917,24 +923,65 @@ class _UserProfileState extends State<UserProfile>
                             Container(
                               margin: const EdgeInsets.symmetric(horizontal: 20),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        "assets/svg/profile.svg",
-                                        height: 20,
-                                        width: 20,
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      SimpleText(
-                                        text: "w/graphic_design",
-                                        fontSize: 14.sp,
-                                        fontColor: ColorClass.userColor,
-                                      )
-                                    ],
-                                  )
+                                  const SizedBox(height: 15,),
+                                  const SimpleText(
+                                    text: "Personal Finance",
+                                    fontSize: 14,
+                                    fontColor: Color(0xff570035),
+                                  ),
+                                  const SizedBox(height: 5,),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color: const Color(0xffCFCFCF),
+                                        )
+                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 70,
+                                          width: 70,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(10),
+                                            child: Image.asset("assets/images/fianance.png",
+                                              fit: BoxFit.cover,),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10,),
+                                        Flexible(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              const SimpleText(
+                                                  text: "Debt management, and building credit.",
+                                                  fontSize: 14),
+                                              Row(
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    "assets/svg/ph_video-light.svg",
+                                                    height: 15,
+                                                    width: 20,
+                                                  ),
+                                                  const SizedBox(width: 6,),
+                                                  const SimpleText(
+                                                    text: "By- Shruti Hasan",
+                                                    fontSize: 14,
+                                                    fontColor: Color(0xffE52A9C),
+                                                  )
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             )

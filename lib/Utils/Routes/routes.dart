@@ -7,6 +7,8 @@ import 'package:wamikas/View/Forum/forum_screeen.dart';
 import 'package:wamikas/View/Home/bottom_navigation_bar.dart';
 import 'package:wamikas/View/Home/home.dart';
 import 'package:wamikas/View/More/more.dart';
+import 'package:wamikas/View/Notification/notification.dart';
+import 'package:wamikas/View/Notification/notification_post.dart';
 import 'package:wamikas/View/Splash%7CWelcome/welcome_screen.dart';
 import 'package:wamikas/View/UserDetails/contact_details.dart';
 import 'package:wamikas/View/UserDetails/create_job_profile.dart';
@@ -35,6 +37,20 @@ class Routes {
         case RouteName.search:
         return MaterialPageRoute(
             builder: (BuildContext context) => const Search());
+        case RouteName.notification:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const NotificationScreen());
+        case RouteName.notificationPost:
+       if(argument is String){
+         return MaterialPageRoute(
+             builder: (BuildContext context) => NotificationPost(
+               postId: argument,
+             ));
+       }else{
+         return MaterialPageRoute(
+             builder: (BuildContext context) => const NotificationPost(postId: '',
+             ));
+       }
         case RouteName.more:
         return MaterialPageRoute(
             builder: (BuildContext context) => const More());
@@ -54,13 +70,10 @@ class Routes {
               userData: argument,
             ));
       }else{
-        return MaterialPageRoute(builder: (_) {
-          return const Scaffold(
-            body: Center(
-              child: Text('No route defined'),
-            ),
-          );
-        });
+        return MaterialPageRoute(
+            builder: (BuildContext context) =>  const ForumScreen(
+              userData: null,
+            ));
       }
         case RouteName.editProfile:
           if(argument is UserProfileModel){

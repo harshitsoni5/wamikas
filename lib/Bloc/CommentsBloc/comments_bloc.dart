@@ -32,9 +32,9 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
       CollectionReference usersReference =
       await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
           "users");
+      var docId = await SharedData.getIsLoggedIn("phone");
       var postDetails = await postReference.doc(event.postId).get();
       if (postDetails.exists) {
-        var docId = await SharedData.getIsLoggedIn("phone");
         var postData = postDetails.data();
         var uuid = const Uuid();
         if (postData != null && postData is Map) {
@@ -54,7 +54,7 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
           await FireStoreDataBaseServices.setDataToUserCollection(
               "posts", event.postId, {
             "comments": comments,
-            "uid": docId,
+            "uid": postData["uid"],
             "forum_name": event.postModel.forumName,
             "forum_title": event.postModel.forumTitle,
             "forum_content": event.postModel.forumContent,
@@ -62,46 +62,54 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
             "time": event.postModel.time,
             "id": event.postModel.id
           });
+          //event uid h ki jo uss post par comment mar raha h
+          //post["uid"] ki jo actual post jisne bnaya h
           var usersRef = await usersReference.doc(event.uid).get();
-            var usersData = usersRef.data();
-            if(usersData != null && usersData is Map && event.uid != usersData["uid"]){
-              print("hrew");
-              print(event.userData.fcmToken);
-              await PushNotification.sendPushNotification("New comment",
+          var actualPostRefUser =
+              await usersReference.doc(postData["uid"]).get();
+          var usersData = usersRef.data();
+          var postUserData = actualPostRefUser.data();
+          if (postUserData != null &&
+              postUserData is Map &&
+              usersData != null &&
+              usersData is Map &&
+              event.uid != event.postModel.uid) {
+            await PushNotification.sendPushNotification("New comment",
                   "${usersData["name"]} post a comment on your forum",
-                  event.userData.fcmToken.toString());
+                  postUserData["fcm_token"],event.postId);
               String documentId = await SharedData.getIsLoggedIn("phone");
               CollectionReference notificationListReference =
               await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
                   "notifications");
-              var notiList = await notificationListReference.doc("phone").get();
+              var notiList = await notificationListReference.doc(docId).get();
               if(notiList.exists){
                 var notiData = notiList.data();
                 if(notiData!= null && notiData is Map){
                   var localNotiData = notiData;
                   localNotiData["notifications"].add({
                     "uid_of_User": documentId,
-                    "title": "${usersData["name"]} commented on a post",
+                    "title": event.commentDesc,
                     "time": DateTime.now(),
                     "id":event.postId
                   });
                   await FireStoreDataBaseServices.setDataToUserCollection(
-                      "notifications", docId,{
+                      "notifications", event.postModel.uid,{
                    "notifications":localNotiData["notifications"]
                   });
                 }
+              }else{
+                await FireStoreDataBaseServices.setDataToUserCollection(
+                    "notifications",event.postModel.uid,{
+                  "notifications":[
+                    {
+                      "uid_of_User": documentId,
+                      "title": event.commentDesc,
+                      "time": DateTime.now(),
+                      "id":event.postId
+                    }
+                  ]
+                });
               }
-              await FireStoreDataBaseServices.setDataToUserCollection(
-                  "notifications", docId,{
-                    "notifications":[
-                     {
-                       "uid_of_User": documentId,
-                       "title": "${usersData["name"]} commented on a post",
-                       "time": DateTime.now(),
-                       "id":event.postId
-                     }
-                    ]
-              });
             }
         }
       }

@@ -7,6 +7,7 @@ import 'package:wamikas/Models/user_profile_model.dart';
 import 'package:wamikas/SharedPrefernce/shared_pref.dart';
 import '../../../Core/FirebaseDataBaseService/firestore_database_services.dart';
 import '../../../Models/post_model.dart';
+import '../../../Models/resources_model.dart';
 
 class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   UserProfileBloc() : super(UserProfileInitial()) {
@@ -23,6 +24,9 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
       CollectionReference postReference =
       await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
           "posts");
+      CollectionReference resources =
+      await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
+          "resources");
       var docId = await SharedData.getIsLoggedIn("phone");
       var snapshot = await reference.doc(docId).get();
       if (snapshot.exists) {
@@ -44,9 +48,21 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
                   time: allData[i]["time"],
                   name: data["name"],
                   emailId: data["email"],
-                  id: allData[i]["id"]
+                  id: allData[i]["id"],
+                profilePic: data["profile_pic"]
               ));
             }
+          }
+          QuerySnapshot resourcesSnap = await resources.get();
+          List allResources = resourcesSnap.docs
+              .map((doc) => doc.data()).toList();
+          List<ResourcesModel> personalFinance =[];
+          List<ResourcesModel> personalGrowth =[];
+          for (int i = 0; i < allResources[0]["personal_financee"].length; i++) {
+            personalFinance.add(ResourcesModel.fromJson(allResources[0]["personal_financee"][i]));
+          }
+          for (int i = 0; i < allResources[0]["professional_growth"].length; i++) {
+            personalGrowth.add(ResourcesModel.fromJson(allResources[0]["professional_growth"][i]));
           }
           int profilePercentage = 0;
           if (data.containsKey("state")) {
@@ -66,7 +82,9 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
           emit(UserProfileSuccess(
               userData: UserProfileModel.fromJson(data),
               profilePercentage: profilePercentage,
-              listOfForums: listsOfPosts
+              listOfForums: listsOfPosts,
+            personalGrowth: personalGrowth,
+            personalFinance: personalFinance
           ));
         } else {
           emit(UserProfileError());

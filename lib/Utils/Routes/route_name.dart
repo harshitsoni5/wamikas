@@ -19,4 +19,6 @@ class RouteName {
   static const String search = 'search';
   static const String more = 'more';
   static const String bottomBar = 'bottom_nav_bar';
+  static const String notification = 'notification';
+  static const String notificationPost = 'notification_post';
 }

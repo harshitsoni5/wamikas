@@ -466,7 +466,7 @@ class _ForumCardState extends State<ForumCard> {
                       children: [
                         Row(
                           children: [
-                            widget.userData.profilePic==null?
+                            widget.posts[index].profilePic==null?
                             SvgPicture.asset(
                               "assets/svg/profile.svg",
                               height: 40,
@@ -475,7 +475,7 @@ class _ForumCardState extends State<ForumCard> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: Image.network(
-                                widget.userData.profilePic!,
+                                widget.posts[index].profilePic!,
                                 height: 40,
                                 width: 40,
                                 fit: BoxFit.cover,

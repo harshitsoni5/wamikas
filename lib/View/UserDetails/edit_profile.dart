@@ -167,7 +167,7 @@ class _EditProfileState extends State<EditProfile> {
                                     ),
                                      SimpleText(
                                       text: "Edit Profile",
-                                      fontSize:  size.width <400? 18:22,
+                                       fontSize:  size.width <400? 20:22,
                                       fontColor: Colors.black,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -258,8 +258,8 @@ class _EditProfileState extends State<EditProfile> {
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.all(12),
-                                          height:size.height >850? 50:45,
-                                          width:size.height >850? 50:45,
+                                          height:size.height >850? 50:47,
+                                          width:size.height >850? 50:47,
                                           decoration: BoxDecoration(
                                               borderRadius:
                                               BorderRadius.circular(30),
@@ -434,6 +434,7 @@ class _EditProfileState extends State<EditProfile> {
                     SharedData.clearPref("phone");
                     SharedData.clearPref("uid");
                     SharedData.clearPref("profile");
+                    SharedData.clearPref("name");
                     Navigator.of(context).pushNamedAndRemoveUntil(
                         RouteName.signIn, (route) => false);
                   },
