@@ -32,6 +32,7 @@ class UploadImageCubit extends Cubit<UploadImageState> {
               "profile_pic":imageURL
             }
         );
+        SharedData.setImageUrl(imageURL);
         emit(UploadImageSuccess(path: image.path));
       }
       else{

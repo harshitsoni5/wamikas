@@ -12,7 +12,6 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
   CommentsBloc() : super(CommentsInitial()) {
     on<CommentsInit>(commentsInit);
     on<PostAComment>(postAComment);
-    on<ReduceBottomSheetSize>(reduceBottomSheetSize);
     on<LikeAComment>(likeAComment);
   }
 
@@ -25,7 +24,6 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
 
   FutureOr<void> postAComment(
       PostAComment event, Emitter<CommentsState> emit) async {
-    try {
       CollectionReference postReference =
           await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
               "posts");
@@ -113,18 +111,7 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
             }
         }
       }
-    } catch (e) {
-      emit(CommentsError());
-    }
   }
-
-  FutureOr<void> reduceBottomSheetSize(
-      ReduceBottomSheetSize event, Emitter<CommentsState> emit) async {
-    emit(CommentsSuccess(
-      comments: event.comments,
-    ));
-  }
-
   FutureOr<void> likeAComment(
       LikeAComment event, Emitter<CommentsState> emit) async {
     try {

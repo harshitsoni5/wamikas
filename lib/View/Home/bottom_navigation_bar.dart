@@ -1,8 +1,9 @@
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:wamikas/View/Events/event.dart';
+import 'package:wamikas/View/Forum/forum_screeen.dart';
 import 'package:wamikas/View/More/more.dart';
-import 'package:wamikas/View/Serach/search.dart';
-import 'package:wamikas/View/UserDetails/user_profile.dart';
+import 'package:wamikas/View/Resources/resources.dart';
 import '../../Utils/Color/colors.dart';
 import '../../Utils/Routes/route_name.dart';
 import '../../my_flutter_app_icons.dart';
@@ -18,8 +19,9 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final _selectedPage = [
     const HomeScreen(),
-    const Search(),
-    const UserProfile(),
+    const Events(),
+    const ForumScreen(userData: null),
+    const Resources(),
     const More(),
   ];
   int _bottomNavIndex = 0;
@@ -38,13 +40,6 @@ class _MainScreenState extends State<MainScreen> {
     "More",
   ];
 
-  List routes= [
-    RouteName.home,
-    "RouteName.search",
-    RouteName.userProfile,
-    "RouteName.settings",
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -52,119 +47,131 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size =MediaQuery.of(context).size;
     return Scaffold(
-      floatingActionButton:InkWell(
-        onTap: () {
-          Navigator.of(context).pushNamed(
-            RouteName.forum,
-          );
-        },
-        child: const CircleAvatar(
-          backgroundColor: ColorClass.textColor,
-          radius: 35,
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 30,
-          ),
-        ),
-      ),
-      floatingActionButtonLocation:
-      FloatingActionButtonLocation.miniCenterDocked,
-      backgroundColor: Colors.white,
-      bottomNavigationBar: Container(
-        color: const Color(0xffF0F0F0),
-        child: AnimatedBottomNavigationBar.builder(
-          itemCount: iconList.length,
-          tabBuilder: (int index, bool isActive) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    iconList[index],
-                    size: 24,
-                    color: isActive
-                        ? ColorClass.textColor
-                        : const Color(0xff9DB2CE),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    iconsName[index],
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: isActive
-                          ? ColorClass.textColor
-                          : const Color(0xff9DB2CE),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-          activeIndex: _bottomNavIndex,
-          gapLocation: GapLocation.center,
-          notchMargin: 8,
-          notchSmoothness: NotchSmoothness.verySmoothEdge,
-          onTap: (index) => setState(() => _bottomNavIndex = index),
-          backgroundColor: Colors.white,
-        ),
-      ),
-      // bottomNavigationBar: Container(
-      //   decoration: BoxDecoration(
-      //     boxShadow: [
-      //       BoxShadow(
-      //         color: Colors.black
-      //             .withOpacity(0.2), // Color and opacity of the shadow
-      //         spreadRadius: 5, // Spread radius of the shadow
-      //         blurRadius: 10, // Blur radius of the shadow
-      //         offset: const Offset(
-      //             0, -3), // Offset of the shadow (you can adjust the values)
-      //       ),
-      //     ],
-      //   ),
-      //   child: ClipRRect(
-      //     clipBehavior: Clip.hardEdge,
-      //     borderRadius: const BorderRadius.only(
-      //       topLeft: Radius.circular(30.0),
-      //       topRight: Radius.circular(30.0),
-      //     ),
-      //     child: BottomNavigationBar(
-      //       type: BottomNavigationBarType.fixed,
-      //       backgroundColor:
-      //       darkTheme.darkTheme ? Colors.black38 : Colors.white,
-      //       selectedItemColor: ColorClass.redColor,
-      //       unselectedItemColor: Colors.grey,
-      //       currentIndex: pageIndex,
-      //       showSelectedLabels: false,
-      //       showUnselectedLabels: false,
-      //       items: const [
-      //         BottomNavigationBarItem(
-      //           icon: Icon(FontAwesomeIcons.house),
-      //           label: "Home",
-      //         ),
-      //         BottomNavigationBarItem(
-      //           icon: Icon(Icons.favorite),
-      //           label: "Wishlist",
-      //         ),
-      //         BottomNavigationBarItem(
-      //           icon: Icon(FontAwesomeIcons.bagShopping),
-      //           label: "My Orders",
-      //         ),
-      //         BottomNavigationBarItem(
-      //           icon: Icon(FontAwesomeIcons.solidUser),
-      //           label: "Profile",
-      //         )
-      //       ],
-      //       onTap: (value) {
-      //         setState(() {
-      //           pageIndex = value;
-      //         });
-      //       },
+      // floatingActionButton:InkWell(
+      //   onTap: () {
+      //     Navigator.of(context).pushNamed(
+      //       RouteName.forum,
+      //     );
+      //   },
+      //   child: const CircleAvatar(
+      //     backgroundColor: ColorClass.textColor,
+      //     radius: 35,
+      //     child: Icon(
+      //       Icons.add,
+      //       color: Colors.white,
+      //       size: 30,
       //     ),
       //   ),
       // ),
+      // floatingActionButtonLocation:
+      // FloatingActionButtonLocation.miniCenterDocked,
+      // backgroundColor: Colors.white,
+      // bottomNavigationBar: Container(
+      //   color: const Color(0xffF0F0F0),
+      //   child: AnimatedBottomNavigationBar.builder(
+      //     itemCount: iconList.length,
+      //     tabBuilder: (int index, bool isActive) {
+      //       return Padding(
+      //         padding: const EdgeInsets.only(top: 8.0),
+      //         child: Column(
+      //           mainAxisSize: MainAxisSize.min,
+      //           children: [
+      //             Icon(
+      //               iconList[index],
+      //               size: 24,
+      //               color: isActive
+      //                   ? ColorClass.textColor
+      //                   : const Color(0xff9DB2CE),
+      //             ),
+      //             const SizedBox(height: 2),
+      //             Text(
+      //               iconsName[index],
+      //               style: TextStyle(
+      //                 fontSize: 12,
+      //                 color: isActive
+      //                     ? ColorClass.textColor
+      //                     : const Color(0xff9DB2CE),
+      //               ),
+      //             ),
+      //           ],
+      //         ),
+      //       );
+      //     },
+      //     activeIndex: _bottomNavIndex,
+      //     gapLocation: GapLocation.center,
+      //     notchMargin: 8,
+      //     notchSmoothness: NotchSmoothness.verySmoothEdge,
+      //     onTap: (index) => setState(() => _bottomNavIndex = index),
+      //     backgroundColor: Colors.white,
+      //   ),
+      // ),
+      bottomNavigationBar: SizedBox(
+        height: size.height<595?size.height*0.12:size.height*0.085,
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor:Colors.white,
+          selectedItemColor: ColorClass.textColor,
+          unselectedItemColor: Colors.grey,
+          currentIndex: _bottomNavIndex,
+          showSelectedLabels: true,
+          showUnselectedLabels: true,
+          selectedFontSize: 10,
+          items: [
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset("assets/svg/clarity_home-line.svg",
+              color: _bottomNavIndex==0?ColorClass.textColor: Colors.grey,
+                height: 25,),
+              label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset("assets/svg/carbon_event.svg",
+                color: _bottomNavIndex==1?ColorClass.textColor:null,
+                height: 25,),
+              label: "Events",
+            ),
+            const BottomNavigationBarItem(
+              icon: Padding(
+                padding: EdgeInsets.all(5.0),
+                child: CircleAvatar(
+                  backgroundColor: ColorClass.textColor,
+                  radius: 18,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                ),
+              ),
+              label: "",
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset("assets/svg/icon-park-outline_medical-files.svg",
+                color: _bottomNavIndex==3?ColorClass.textColor:null,
+              height: 25,),
+              label: "Resources",
+            ),
+            BottomNavigationBarItem(
+              icon:  SvgPicture.asset("assets/svg/icon-park-outline_more-app.svg",
+                color: _bottomNavIndex==4?ColorClass.textColor:null,
+                height: 25,),
+              label: "More",
+            )
+          ],
+          onTap: (value) {
+            setState(() {
+              if(value==2){
+                Navigator.of(context).pushNamed(
+                  RouteName.forum,
+                );
+              }else{
+                _bottomNavIndex = value;
+              }
+            });
+          },
+        ),
+      ),
       body: _selectedPage[_bottomNavIndex],
     );
   }

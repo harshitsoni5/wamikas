@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -99,7 +97,7 @@ class _CreateJobProfileState extends State<CreateJobProfile> {
       child: Scaffold(
         body: Column(
           children: [
-            const BackButtonWithLogo(),
+            BackButtonWithLogo(),
            Expanded(
              child: SingleChildScrollView(
                child: Column(
@@ -171,6 +169,7 @@ class _CreateJobProfileState extends State<CreateJobProfile> {
                                        industry.text = newValue;
                                      }
                                    },
+                                   menuMaxHeight: size.height * 0.3,
                                    items: sectors
                                        .map<DropdownMenuItem<String>>(
                                          (String value) => DropdownMenuItem<String>(
@@ -213,9 +212,10 @@ class _CreateJobProfileState extends State<CreateJobProfile> {
                          Fluttertoast.showToast(
                              msg: "Please fill out the details properly",
                              toastLength: Toast.LENGTH_SHORT,
-                             gravity: ToastGravity.CENTER,
+                             gravity: ToastGravity.SNACKBAR,
                              timeInSecForIosWeb: 1,
                              textColor: Colors.black,
+                             backgroundColor: CupertinoColors.white,
                              fontSize: 15.0
                          );
                        }

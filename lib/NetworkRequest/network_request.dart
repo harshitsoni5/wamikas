@@ -7,9 +7,6 @@ import 'app_exception.dart';
 
 class NetworkRequest {
   static const int timeOutDuration = 20;
-
-
-
   //original
   Future postMethodRequest(Map body, String api) async {
     Map<String, String> headers = {
@@ -111,12 +108,11 @@ class NetworkRequest {
           "status": "done",
           "title": title,
           "body": body,
-          // "post_id": postId
+          "post_id": postId
         }
       });
       request.headers.addAll(headers);
       http.StreamedResponse response = await request.send();
-      print(response.stream);
       return _processResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection', api.toString());

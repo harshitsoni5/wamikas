@@ -7,11 +7,13 @@ import '../Text/simple_text.dart';
 
 class BackButtonAppBar extends StatelessWidget {
   final String title;
+  final bool isUpdated;
   const BackButtonAppBar({
     super.key,
     required this.size,
     required this.title,
     required this.topPadding,
+    required this.isUpdated,
   });
   final double topPadding;
   final Size size;
@@ -34,9 +36,17 @@ class BackButtonAppBar extends StatelessWidget {
                 children: [
                   InkWell(
                       onTap: () {
+                        print(isUpdated);
+                        if(isUpdated){
+                          BlocProvider.of<UserProfileBloc>(
+                              context)
+                              .add(GetUserDataEvent());
+                        }else{
+                          BlocProvider.of<UserProfileBloc>(
+                              context)
+                              .add(GetUserDataWithoutLoading());
+                        }
                         Navigator.of(context).pop();
-                        BlocProvider.of<UserProfileBloc>(context).
-                        add(GetUserDataEvent());
                       },
                       child: SvgPicture.asset(
                         "assets/svg/ep_back (2).svg",
@@ -47,7 +57,7 @@ class BackButtonAppBar extends StatelessWidget {
                   ),
                   SimpleText(
                     text: title,
-                    fontSize:  size.width <400? 17:20,
+                    fontSize:  size.width <400? 20:22,
                     fontColor: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),

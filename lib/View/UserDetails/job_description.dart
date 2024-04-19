@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,6 +32,8 @@ class _JobProfileDescriptionState extends State<JobProfileDescription> {
   final TextEditingController skills = TextEditingController();
   final TextEditingController education = TextEditingController();
   final TextEditingController location = TextEditingController();
+  bool isUpdated =false;
+
   List<String> sectors = [
     'Agriculture and Farming',
     'Automotive',
@@ -130,6 +131,7 @@ class _JobProfileDescriptionState extends State<JobProfileDescription> {
             size: size,
             title: "Job Profile",
             topPadding: topPadding,
+            isUpdated: isUpdated,
           ),
           const SizedBox(height: 15,),
           Expanded(
@@ -185,6 +187,7 @@ class _JobProfileDescriptionState extends State<JobProfileDescription> {
                                   selectIndustry.text = newValue;
                                 }
                               },
+                              menuMaxHeight: size.height * 0.3,
                               items: sectors
                                   .map<DropdownMenuItem<String>>(
                                     (String value) => DropdownMenuItem<String>(
@@ -238,19 +241,24 @@ class _JobProfileDescriptionState extends State<JobProfileDescription> {
                             Fluttertoast.showToast(
                                 msg: "Please fill out all the details properly",
                                 toastLength: Toast.LENGTH_LONG,
-                                gravity: ToastGravity.CENTER,
+                                gravity: ToastGravity.SNACKBAR,
                                 timeInSecForIosWeb: 1,
                                 textColor: Colors.black,
+                                backgroundColor: CupertinoColors.white,
                                 fontSize: 15.0
                             );
                           }
                           if(state is JobDescSuccessState){
+                            setState(() {
+                              isUpdated=true;
+                            });
                             Fluttertoast.showToast(
                                 msg: "Job profile updated successfully",
                                 toastLength: Toast.LENGTH_LONG,
-                                gravity: ToastGravity.CENTER,
+                                gravity: ToastGravity.SNACKBAR,
                                 timeInSecForIosWeb: 1,
                                 textColor: Colors.black,
+                                backgroundColor: CupertinoColors.white,
                                 fontSize: 15.0
                             );
                           }
@@ -258,9 +266,10 @@ class _JobProfileDescriptionState extends State<JobProfileDescription> {
                             Fluttertoast.showToast(
                                 msg: "Oops something went wrong please try again later",
                                 toastLength: Toast.LENGTH_LONG,
-                                gravity: ToastGravity.CENTER,
+                                gravity: ToastGravity.SNACKBAR,
                                 timeInSecForIosWeb: 1,
                                 textColor: Colors.black,
+                                backgroundColor: CupertinoColors.white,
                                 fontSize: 15.0
                             );
                           }

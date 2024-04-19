@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -84,9 +85,10 @@ class _ForumScreenState extends State<ForumScreen> {
                     Fluttertoast.showToast(
                         msg: "Forum created successfully",
                         toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
+                        gravity: ToastGravity.SNACKBAR,
                         timeInSecForIosWeb: 1,
                         textColor: Colors.black,
+                        backgroundColor: CupertinoColors.white,
                         fontSize: 15.0
                     );
                     postTitle.clear();
@@ -158,37 +160,41 @@ class _ForumScreenState extends State<ForumScreen> {
                           ),
                           const SizedBox(height: 20,),
                           Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(40),
                                 child: CircleAvatar(
                                   radius: 25,
-                                  child:widget.userData?.profilePic ==null?
-                                  Image.asset("assets/images/dp.png",):
+                                  child:state.profilePic ==null?
+                                  SvgPicture.asset("assets/svg/profile.svg",):
                                   Image.network(state.profilePic!),
                                 ),
                               ),
                               const SizedBox(width: 10,),
-                              Flexible(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SimpleText(
-                                      text: state.name,
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    // widget.userData?.jobTitle!=null?
-                                    // SimpleText(
-                                    //   text:state.jobTitle!,
-                                    //   fontSize: 12.sp,
-                                    //   fontColor: const Color(0xff6C6C6C),
-                                    // ):
-                                    // const SizedBox(),
-                                  ],
-                                ),
-                              )
+                              SimpleText(
+                                text: state.name,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              // Flexible(
+                              //   child: Column(
+                              //     crossAxisAlignment: CrossAxisAlignment.start,
+                              //     children: [
+                              //       SimpleText(
+                              //         text: state.name,
+                              //         fontSize: 14.sp,
+                              //         fontWeight: FontWeight.w600,
+                              //       ),
+                              //       // widget.userData?.jobTitle!=null?
+                              //       // SimpleText(
+                              //       //   text:state.jobTitle!,
+                              //       //   fontSize: 12.sp,
+                              //       //   fontColor: const Color(0xff6C6C6C),
+                              //       // ):
+                              //       // const SizedBox(),
+                              //     ],
+                              //   ),
+                              // )
                             ],
                           ),
                           const SizedBox(height: 15,),

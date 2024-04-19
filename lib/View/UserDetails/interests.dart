@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -130,9 +131,10 @@ class _InterestsState extends State<Interests> {
                         Fluttertoast.showToast(
                             msg: "Please select at least one interest",
                             toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
+                            gravity: ToastGravity.SNACKBAR,
                             timeInSecForIosWeb: 1,
                             textColor: Colors.black,
+                            backgroundColor: CupertinoColors.white,
                             fontSize: 15.0
                         );
                       }

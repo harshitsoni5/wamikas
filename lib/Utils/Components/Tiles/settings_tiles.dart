@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -29,7 +30,7 @@ class SettingsTiles extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          InkWell(
+          GestureDetector(
             onTap: onPressed,
             child: Row(
               children: [
@@ -37,7 +38,7 @@ class SettingsTiles extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: SvgPicture.asset(assetName)
                 ),
-                const SizedBox(width: 15,),
+                const SizedBox(width: 10,),
                 SimpleText(
                   text: tileName,
                   fontSize: 14.5.sp,

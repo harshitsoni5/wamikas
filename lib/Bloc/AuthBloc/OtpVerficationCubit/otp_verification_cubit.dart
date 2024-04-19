@@ -49,6 +49,7 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> {
           var userInfo = userData.data();
           if(userInfo != null && userInfo is Map){
             SharedData.setName(userInfo["name"]);
+            SharedData.setImageUrl(userInfo["profile_pic"]);
             collectionReference.doc(phoneNumber).
             update({
               "name":userInfo["name"],

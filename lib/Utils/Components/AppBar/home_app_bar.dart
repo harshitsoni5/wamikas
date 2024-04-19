@@ -54,18 +54,28 @@ class HomeAppBar extends StatelessWidget {
                 child: Row(
                   children: [
                     userData.profilePic==null?
-                    SvgPicture.asset(
-                      "assets/svg/profile.svg",
-                      height: 40,
-                      width: 40,
+                    InkWell(
+                      onTap: (){
+                        Navigator.of(context).pushNamed(RouteName.userProfile);
+                      },
+                      child: SvgPicture.asset(
+                        "assets/svg/profile.svg",
+                        height: 35,
+                        width: 35,
+                      ),
                     ):
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.network(
-                        userData.profilePic!,
-                        height: 40,
-                        width: 40,
-                        fit: BoxFit.cover,
+                    InkWell(
+                      onTap: (){
+                        Navigator.of(context).pushNamed(RouteName.userProfile);
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.network(
+                          userData.profilePic!,
+                          height: 35,
+                          width: 35,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -79,6 +89,7 @@ class HomeAppBar extends StatelessWidget {
                       },
                       child: SvgPicture.asset(
                         "assets/svg/notification.svg",
+
                       ),
                     ),
                   ],

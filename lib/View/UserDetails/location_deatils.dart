@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -187,9 +188,10 @@ class _LocationDetailsState extends State<LocationDetails> {
                      Fluttertoast.showToast(
                          msg: "Please fill out the details properly",
                          toastLength: Toast.LENGTH_SHORT,
-                         gravity: ToastGravity.CENTER,
+                         gravity: ToastGravity.SNACKBAR,
                          timeInSecForIosWeb: 1,
                          textColor: Colors.black,
+                         backgroundColor: CupertinoColors.white,
                          fontSize: 15.0
                      );
                    }

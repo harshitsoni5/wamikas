@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -70,215 +71,218 @@ class _NotificationPostState extends State<NotificationPost> {
               if (isLiked.isEmpty) {
                 isLiked = List.generate(postData.comments.length, (index) => false);
               }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 15,),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: Row(
-                      children: [
-                        InkWell(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: SvgPicture.asset("assets/svg/ep_back (2).svg")),
-                        const SizedBox(width: 15,),
-                        const SimpleText(
-                          text: "Recent Comment's",
-                          fontSize: 22,
-                          fontColor: Colors.black,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20,),
-                  Container(
-                    width: size.width,
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 15,),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Row(
                         children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                "assets/svg/profile.svg",
-                                height: 40,
-                                width: 40,
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SimpleText(
-                                    text: postData.name,
-                                    fontSize: 13.sp,
-                                    textHeight: 0.9,
-                                  ),
-                                  SimpleText(
-                                    text: postData.emailId,
-                                    fontSize: 12.sp,
-                                    fontColor: ColorClass.textColor,
-                                  ),
-                                ],
-                              ),
-                              const Spacer(),
-                              const Icon(
-                                  Icons.more_vert
-                              ),
-                            ],
+                          InkWell(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: SvgPicture.asset("assets/svg/ep_back (2).svg")),
+                          const SizedBox(width: 15,),
+                          const SimpleText(
+                            text: "Recent Comment's",
+                            fontSize: 22,
+                            fontColor: Colors.black,
+                            fontWeight: FontWeight.w500,
                           ),
-                          const SizedBox(height: 5,),
-                          SimpleText(
-                            text: postData.forumName,
-                            fontSize: 9.sp,
-                            fontColor: const Color(0xff455A64),
-                          ),
-                          const SizedBox(height: 5,),
-                          SimpleText(
-                            text: postData.forumTitle,
-                            fontSize: 18.sp,
-                            textHeight: 0.9,
-                          ),
-                          const SizedBox(height: 2,),
-                          SimpleText(
-                            text: postData.forumContent,
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w300,
-                            fontColor: const Color(0xff777777),
-                          ),
-                          const Divider(
-                            color: Color(0xffB5B5B5),
-                          ),
-                          Row(
-                            children: [
-                              InkWell(
-                                onTap:(){
-                                },
-                                child: Row(
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20,),
+                    Container(
+                      width: size.width,
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/svg/profile.svg",
+                                  height: 40,
+                                  width: 40,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    SvgPicture.asset(
-                                      "assets/svg/commentss.svg",
-                                      height: 15,
-                                      width: 15,
-                                    ),
-                                    const SizedBox(width: 5,),
-                                    postData.comments.isNotEmpty?
                                     SimpleText(
-                                        text: "${
-                                            postData.comments.length.toString()
-                                        } Replies",
-                                        fontSize: 16):
-                                    const SizedBox(),
+                                      text: postData.name,
+                                      fontSize: 13.sp,
+                                      textHeight: 0.9,
+                                    ),
+                                    SimpleText(
+                                      text: postData.emailId,
+                                      fontSize: 12.sp,
+                                      fontColor: ColorClass.textColor,
+                                    ),
                                   ],
                                 ),
-                              ),
-                              const Spacer(),
-                              SimpleText(
-                                  text: getTime(postData.time),
-                                  fontSize: 16),
-                            ],
-                          ),
-                          const Divider(),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: postData.comments.length,
-                              itemBuilder: (context,index){
-                                final commentData= postData.comments[index];
-                            return SizedBox(
-                              width: size.width,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                const Spacer(),
+                                const Icon(
+                                    Icons.more_vert
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 5,),
+                            SimpleText(
+                              text: postData.forumName,
+                              fontSize: 9.sp,
+                              fontColor: const Color(0xff455A64),
+                            ),
+                            const SizedBox(height: 5,),
+                            SimpleText(
+                              text: postData.forumTitle,
+                              fontSize: 18.sp,
+                              textHeight: 0.9,
+                            ),
+                            const SizedBox(height: 2,),
+                            SimpleText(
+                              text: postData.forumContent,
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w300,
+                              fontColor: const Color(0xff777777),
+                            ),
+                            const Divider(
+                              color: Color(0xffB5B5B5),
+                            ),
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap:(){
+                                  },
+                                  child: Row(
                                     children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(40),
-                                        child: CircleAvatar(
-                                          radius: 20,
-                                          child:commentData["profile_pic"] == null?
-                                          Image.asset("assets/images/dp.png"):
-                                          Image.network(
-                                            commentData["profile_pic"],
-                                            fit: BoxFit.fill,
+                                      SvgPicture.asset(
+                                        "assets/svg/commentss.svg",
+                                        height: 15,
+                                        width: 15,
+                                      ),
+                                      const SizedBox(width: 5,),
+                                      postData.comments.isNotEmpty?
+                                      SimpleText(
+                                          text: "${
+                                              postData.comments.length.toString()
+                                          } Replies",
+                                          fontSize: 16):
+                                      const SizedBox(),
+                                    ],
+                                  ),
+                                ),
+                                const Spacer(),
+                                SimpleText(
+                                    text: getTime(postData.time),
+                                    fontSize: 16),
+                              ],
+                            ),
+                            const Divider(),
+                            ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: postData.comments.length,
+                                itemBuilder: (context,index){
+                                  final commentData= postData.comments[index];
+                              return SizedBox(
+                                width: size.width,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(40),
+                                          child: CircleAvatar(
+                                            radius: 20,
+                                            child:commentData["profile_pic"] == null?
+                                            Image.asset("assets/images/dp.png"):
+                                            Image.network(
+                                              commentData["profile_pic"],
+                                              fit: BoxFit.fill,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Flexible(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            SimpleText(
-                                              text: commentData["name"],
-                                              fontSize: 11.sp,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                            SimpleText(
-                                              text:
-                                              commentData["comments_desc"],
-                                              fontSize: 11.sp,
-                                              fontColor: const Color(0xff696969),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(height: 6,),
-                                  Row(
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            isLiked[index] = !isLiked[index];
-                                          });
-                                          BlocProvider.of<CommentsBloc>(context).add(
-                                            LikeAComment(
-                                              postId: widget.postId,
-                                              comments: postData.comments,
-                                              postModel:postData,
-                                              likeOrNot: isLiked[index], // Pass the like/dislike state
-                                              commentModel: Comment(
-                                                uid: commentData["uid"],
-                                                name: commentData["name"],
-                                                profilePic: commentData["profile_pic"],
-                                                time: commentData["time"],
-                                                commentsDesc: commentData["comments_desc"],
-                                                likes: commentData["likes"],
-                                                commentId: commentData["comment_id"],
+                                        const SizedBox(width: 10),
+                                        Flexible(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              SimpleText(
+                                                text: commentData["name"],
+                                                fontSize: 11.sp,
+                                                fontWeight: FontWeight.w500,
                                               ),
-                                            ),
-                                          );
-                                        },
-                                        child: SvgPicture.asset(
-                                          isLiked[index]
-                                              ? "assets/svg/like_filled.svg"
-                                              : "assets/svg/like_wami.svg",
+                                              SimpleText(
+                                                text:
+                                                commentData["comments_desc"],
+                                                fontSize: 11.sp,
+                                                fontColor: const Color(0xff696969),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(height: 6,),
+                                    Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              isLiked[index] = !isLiked[index];
+                                            });
+                                            BlocProvider.of<CommentsBloc>(context).add(
+                                              LikeAComment(
+                                                postId: widget.postId,
+                                                comments: postData.comments,
+                                                postModel:postData,
+                                                likeOrNot: isLiked[index], // Pass the like/dislike state
+                                                commentModel: Comment(
+                                                  uid: commentData["uid"],
+                                                  name: commentData["name"],
+                                                  profilePic: commentData["profile_pic"],
+                                                  time: commentData["time"],
+                                                  commentsDesc: commentData["comments_desc"],
+                                                  likes: commentData["likes"],
+                                                  commentId: commentData["comment_id"],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: SvgPicture.asset(
+                                            isLiked[index]
+                                                ? "assets/svg/like_filled.svg"
+                                                : "assets/svg/like_wami.svg",
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 5),
-                                      SimpleText(text: "Like", fontSize: 10.sp),
-                                      const Spacer(),
-                                      SimpleText(
-                                        text: getTime(commentData["time"]),
-                                        fontSize: 10.sp,
-                                      ),
-                                    ],
-                                  ),
-                                  const Divider(),
-                                ],
-                              ),
-                            );
-                          })
-                        ],
-                      )
-                  ),
-                ],
+                                        const SizedBox(width: 5),
+                                        SimpleText(text: "Like", fontSize: 10.sp),
+                                        const Spacer(),
+                                        SimpleText(
+                                          text: getTime(commentData["time"]),
+                                          fontSize: 10.sp,
+                                        ),
+                                      ],
+                                    ),
+                                    const Divider(),
+                                  ],
+                                ),
+                              );
+                            })
+                          ],
+                        )
+                    ),
+                  ],
+                ),
               );
             } else {
               return const Center(

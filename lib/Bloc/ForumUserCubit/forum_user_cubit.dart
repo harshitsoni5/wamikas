@@ -14,6 +14,7 @@ class ForumUserCubit extends Cubit<ForumUserState> {
     }else{
       String name = await SharedData.getIsLoggedIn("name");
       String? profilePic = await SharedData.getIsLoggedIn("profile");
+      print(profilePic);
       String uid = await SharedData.getIsLoggedIn("uid");
       emit(
           ForumUserSuccess(name: name, profilePic: profilePic, uid: uid)

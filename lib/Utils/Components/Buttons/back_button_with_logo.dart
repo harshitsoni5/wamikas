@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+
 class BackButtonWithLogo extends StatelessWidget {
   const BackButtonWithLogo({
     super.key,
@@ -15,7 +16,7 @@ class BackButtonWithLogo extends StatelessWidget {
         children: [
           InkWell(
               onTap: (){
-                Navigator.of(context).pop();
+                  Navigator.of(context).pop();
               },
               child: SvgPicture.asset("assets/svg/ep_back.svg")),
           SvgPicture.asset("assets/svg/w-logo.svg",height: 40,),

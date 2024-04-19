@@ -88,7 +88,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                         ),
                         const SizedBox(height: 5,),
                         const SimpleText(
-                          text: "We have just sent ant OTP to your\n phone number",
+                          text: "Please enter OTP sent to your \nregistered mobile number",
                           fontSize: 16,
                           textAlign: TextAlign.center,
                           fontColor: Colors.black,
@@ -104,19 +104,21 @@ class _OtpVerificationState extends State<OtpVerification> {
                         const SizedBox(
                           height: 10,
                         ),
-                        InkWell(
-                          onTap: (){
-                            Navigator.of(context).pop();
-                          },
-                          child: const SimpleText(
-                            text: "Change Phone number",
-                            fontSize: 14,
-                            textDecoration: TextDecoration.underline,
-                            fontColor: ColorClass.textColor,
-                            decorationStyle: ColorClass.textColor,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                        widget.fromLogin!=true
+                            ? InkWell(
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const SimpleText(
+                                  text: "Change Phone number",
+                                  fontSize: 14,
+                                  textDecoration: TextDecoration.underline,
+                                  fontColor: ColorClass.textColor,
+                                  decorationStyle: ColorClass.textColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )
+                            : const SizedBox(),
                         const SizedBox(height: 15,),
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 15),
@@ -144,8 +146,10 @@ class _OtpVerificationState extends State<OtpVerification> {
                                   borderRadius: BorderRadius.circular(15),
                                   border: Border.all(
                                       color: isValidate == true
-                                          ? const Color(0xff4EB3CA)
-                                          : const Color(0xffE8E8E8)),
+                                          ? ColorClass.textColor
+                                          : Colors.black26,
+                                    width: 2
+                                  ),
                                 ),
                                 textStyle: const TextStyle(
                                   fontSize: 20,
@@ -159,7 +163,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const SimpleText(text: "Didn’t Received OTP ",
+                            const SimpleText(text: "Didn't receive OTP ",
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               fontColor: Colors.black,
@@ -171,7 +175,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                                 Fluttertoast.showToast(
                                     msg: "Otp has been send successfully",
                                     toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.CENTER,
+                                    gravity: ToastGravity.SNACKBAR,
                                     timeInSecForIosWeb: 1,
                                     textColor: Colors.black,
                                     fontSize: 15.0
@@ -214,9 +218,10 @@ class _OtpVerificationState extends State<OtpVerification> {
                               Fluttertoast.showToast(
                                   msg: "Otp does not match",
                                   toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
+                                  gravity: ToastGravity.SNACKBAR,
                                   timeInSecForIosWeb: 1,
                                   textColor: Colors.black,
+                                  backgroundColor: CupertinoColors.white,
                                   fontSize: 15.0
                               );
                             }

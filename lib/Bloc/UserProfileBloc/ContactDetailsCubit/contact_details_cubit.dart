@@ -36,6 +36,7 @@ class ContactDetailsCubit extends Cubit<ContactDetailsState> {
                 "email":email
               }
           );
+          SharedData.setName(name);
           emit(ContactDetailsSuccess());
           emit(ContactDetailsInitial());
         }else{

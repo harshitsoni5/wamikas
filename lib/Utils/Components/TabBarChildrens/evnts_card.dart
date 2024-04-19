@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -10,7 +9,7 @@ import '../Text/simple_text.dart';
 class EventsCard extends StatelessWidget {
   final List<EventModel> eventsData;
   final String titleName;
-  final String svg;
+  final String? svg;
 
   const EventsCard({
     super.key,
@@ -29,8 +28,9 @@ class EventsCard extends StatelessWidget {
       children: [
         Row(
           children: [
-            SvgPicture.asset(
-              svg,
+            svg == null ?
+            const SizedBox():SvgPicture.asset(
+              svg!,
               height: 18,
             ),
             const SizedBox(width: 5),
@@ -47,13 +47,18 @@ class EventsCard extends StatelessWidget {
           child: Container(
             color: Colors.white,
             child: Wrap(
+              spacing: 20,
               children: eventsData.map((data) {
                 return Container(
+                  height: 270,
                   width: eventsData.length ==1 ? size.width:size.width * 0.75,
                   padding: const EdgeInsets.only(bottom: 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white,
+                      border: Border.all(
+                          color: const Color(0xffE8E8E8)
+                      )
                   ),
                   child: Column(
                     children: [
@@ -65,72 +70,78 @@ class EventsCard extends StatelessWidget {
                           fit: BoxFit.fill,
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            SimpleText(
-                              text: data.eventName,
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            const SizedBox(height: 15),
-                            Row(
+                      Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
                               children: [
-                                SvgPicture.asset("assets/svg/calender.svg"),
-                                const SizedBox(width: 5),
                                 SimpleText(
-                                  text: data.date,
-                                  fontSize: 10.sp,
-                                  fontColor: const Color(0xff455A64),
+                                  text: data.eventName,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
                                 ),
+                                const SizedBox(height: 15),
+                                Row(
+                                  children: [
+                                    SvgPicture.asset("assets/svg/calender.svg"),
+                                    const SizedBox(width: 5),
+                                    SimpleText(
+                                      text: data.date,
+                                      fontSize: 10.sp,
+                                      fontColor: const Color(0xff455A64),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    SvgPicture.asset("assets/svg/map.svg"),
+                                    const SizedBox(width: 5),
+                                    SimpleText(
+                                      text: data.address,
+                                      fontSize: 10.sp,
+                                      fontColor: const Color(0xff455A64),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
                               ],
                             ),
-                            Row(
-                              children: [
-                                SvgPicture.asset("assets/svg/map.svg"),
-                                const SizedBox(width: 5),
-                                SimpleText(
-                                  text: data.address,
-                                  fontSize: 10.sp,
-                                  fontColor: const Color(0xff455A64),
+                          ),
+                          InkWell(
+                            onTap: () async {
+                              if (!await launch(
+                                  Uri.parse(data.link).toString())) {
+                                throw Exception('Could not launch url');
+                              }
+                            },
+                            child: Container(
+                              margin:
+                              const EdgeInsets.symmetric(horizontal: 10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: ColorClass.primaryColor,
                                 ),
-                              ],
+                              ),
+                              padding:
+                              const EdgeInsets.symmetric(vertical: 5),
+                              child: Center(
+                                child: SimpleText(
+                                  text: "Register Now!!",
+                                  fontColor: ColorClass.primaryColor,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
                             ),
-                            const SizedBox(height: 8),
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () async {
-                          if (!await launch(
-                              Uri.parse(data.link).toString())) {
-                            throw Exception('Could not launch url');
-                          }
-                        },
-                        child: Container(
-                          margin:
-                          const EdgeInsets.symmetric(horizontal: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: ColorClass.primaryColor,
-                            ),
-                          ),
-                          padding:
-                          const EdgeInsets.symmetric(vertical: 5),
-                          child: Center(
-                            child: SimpleText(
-                              text: "Register Now!!",
-                              fontColor: ColorClass.primaryColor,
-                              fontSize: 14.sp,
-                            ),
-                          ),
-                        ),
-                      )
+                          )
+                        ],
+                      ))
                     ],
                   ),
                 );

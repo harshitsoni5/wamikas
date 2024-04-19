@@ -1,4 +1,3 @@
-import '../../Models/user_profile_model.dart';
 
 abstract class HomeEvent {}
 
@@ -29,5 +28,14 @@ class SearchTopicsEvent extends HomeEvent{
   final String text;
   SearchTopicsEvent({
     required this.text,
+  });
+}
+
+class BookmarkResources extends HomeEvent{
+  final String id;
+  final bool bookmarkOrNot;
+  BookmarkResources({
+    required this.id,
+    required this.bookmarkOrNot
   });
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -160,9 +161,10 @@ class _SignInState extends State<SignIn> {
                     Fluttertoast.showToast(
                         msg: "oops something went wrong",
                         toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
+                        gravity: ToastGravity.SNACKBAR,
                         timeInSecForIosWeb: 1,
                         textColor: Colors.black,
+                        backgroundColor: CupertinoColors.white,
                         fontSize: 15.0
                     );
                   }
@@ -170,9 +172,10 @@ class _SignInState extends State<SignIn> {
                     Fluttertoast.showToast(
                         msg: "User not exists",
                         toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
+                        gravity: ToastGravity.SNACKBAR,
                         timeInSecForIosWeb: 1,
                         textColor: Colors.black,
+                        backgroundColor: CupertinoColors.white,
                         fontSize: 15.0
                     );
                   }
@@ -181,9 +184,10 @@ class _SignInState extends State<SignIn> {
                     Fluttertoast.showToast(
                         msg: "Mobile number is invalid",
                         toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
+                        gravity: ToastGravity.SNACKBAR,
                         timeInSecForIosWeb: 1,
                         textColor: Colors.black,
+                        backgroundColor: CupertinoColors.white,
                         fontSize: 15.0
                     );
                   }
@@ -191,18 +195,20 @@ class _SignInState extends State<SignIn> {
                       Fluttertoast.showToast(
                           msg: "Phone number field should not be empty",
                           toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.CENTER,
+                          gravity: ToastGravity.SNACKBAR,
                           timeInSecForIosWeb: 1,
                           textColor: Colors.black,
+                          backgroundColor: CupertinoColors.white,
                           fontSize: 15.0);
                     }
                     if (state is PhoneInvalid) {
                       Fluttertoast.showToast(
                           msg: "Please enter a valid phone number",
                           toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.CENTER,
+                          gravity: ToastGravity.SNACKBAR,
                           timeInSecForIosWeb: 1,
                           textColor: Colors.black,
+                          backgroundColor: CupertinoColors.white,
                           fontSize: 15.0);
                     }
                   },

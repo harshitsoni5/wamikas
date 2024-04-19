@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -41,6 +40,7 @@ class _InterestAndPreferencesState extends State<InterestAndPreferences> {
   ];
   List selectedInterests = [];
   List selectedEventAndRec = [];
+  bool isUpdated=false;
 
   @override
   void initState() {
@@ -72,7 +72,7 @@ class _InterestAndPreferencesState extends State<InterestAndPreferences> {
           BackButtonAppBar(
             size: size,
             title: "Interest & Preferences",
-            topPadding: topPadding,
+            topPadding: topPadding, isUpdated: isUpdated,
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -105,13 +105,14 @@ class _InterestAndPreferencesState extends State<InterestAndPreferences> {
                                 border: Border.all(
                                     color: const Color(0xffFFC8F5), width: 2)),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Flexible(
                                     child: SimpleText(
                                       text: interests[index],
-                                      fontSize:  size.width <390? 11:13,
+                                      fontSize: size.width <390? 11:13,
+                                      fontColor: Colors.white,
                                     )),
-                                const Spacer(),
                                 SvgPicture.asset(
                                   "assets/svg/minus.svg",
                                   height: size.width <390? 35:40,
@@ -181,36 +182,36 @@ class _InterestAndPreferencesState extends State<InterestAndPreferences> {
                         itemBuilder: (context, index) {
                           return Column(
                             children: [
-                              InkWell(
-                                onTap: () {
-                                  if (selectedEventAndRec
-                                      .contains(eventsOrGroupRec[index])) {
-                                    selectedEventAndRec.removeWhere(
-                                            (element) =>
-                                        element == eventsOrGroupRec[index]);
-                                    setState(() {});
-                                  } else {
-                                    selectedEventAndRec.add(eventsOrGroupRec[index]);
-                                    setState(() {});
-                                  }
-                                },
-                                child: Container(
-                                  width: size.width,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 5),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                        color: const Color(0xffE9E9E9),
-                                      )),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SimpleText(
-                                        text: eventsOrGroupRec[index],
-                                        fontSize: 14,
-                                      ),
-                                      Container(
+                              Container(
+                                width: size.width,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 5),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: const Color(0xffE9E9E9),
+                                    )),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SimpleText(
+                                      text: eventsOrGroupRec[index],
+                                      fontSize: 14,
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        if (selectedEventAndRec
+                                            .contains(eventsOrGroupRec[index])) {
+                                          selectedEventAndRec.removeWhere(
+                                                  (element) =>
+                                              element == eventsOrGroupRec[index]);
+                                          setState(() {});
+                                        } else {
+                                          selectedEventAndRec.add(eventsOrGroupRec[index]);
+                                          setState(() {});
+                                        }
+                                      },
+                                      child: Container(
                                         padding: const EdgeInsets.all(3),
                                         decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(8),
@@ -230,9 +231,9 @@ class _InterestAndPreferencesState extends State<InterestAndPreferences> {
                                           height: 20,
                                           width: 20,
                                         ),
-                                      )
-                                    ],
-                                  ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
                               const SizedBox(height: 10,),
@@ -247,12 +248,16 @@ class _InterestAndPreferencesState extends State<InterestAndPreferences> {
                     child: BlocConsumer<InterestsCubit, InterestsState>(
                       listener: (context, state) {
                         if(state is InterestsSuccess){
+                          setState(() {
+                            isUpdated=true;
+                          });
                           Fluttertoast.showToast(
                               msg: "Interests updated successfully",
                               toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.CENTER,
+                              gravity: ToastGravity.SNACKBAR,
                               timeInSecForIosWeb: 1,
                               textColor: Colors.black,
+                              backgroundColor: CupertinoColors.white,
                               fontSize: 15.0
                           );
                         }
@@ -260,9 +265,10 @@ class _InterestAndPreferencesState extends State<InterestAndPreferences> {
                           Fluttertoast.showToast(
                               msg: "Please select at least one interest",
                               toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.CENTER,
+                              gravity: ToastGravity.SNACKBAR,
                               timeInSecForIosWeb: 1,
                               textColor: Colors.black,
+                              backgroundColor: CupertinoColors.white,
                               fontSize: 15.0
                           );
                         }

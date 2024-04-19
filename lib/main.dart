@@ -56,21 +56,21 @@ void main() async{
       onDidReceiveNotificationResponse: _handleNotificationResponse);
   PushNotificationServices.incomingMessage();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  // FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage){
-  //   print(remoteMessage);
-  //   navigatorKey.currentState?.restorablePushNamed(
-  //       RouteName.notificationPost,
-  //       arguments:remoteMessage.data["post_id"]);
-  // });
-  // FirebaseMessaging.instance.getInitialMessage().then((message) {
-  //   if (message != null) {
-  //     navigatorKey.currentState?.restorablePushNamed(
-  //         RouteName.splash,arguments: {
-  //       "fromBackground":true,
-  //       "postId":message.data["post_id"]
-  //     });
-  //   }
-  // });
+  FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage){
+    print(remoteMessage);
+    navigatorKey.currentState?.restorablePushNamed(
+        RouteName.notificationPost,
+        arguments:remoteMessage.data["post_id"]);
+  });
+  FirebaseMessaging.instance.getInitialMessage().then((message) {
+    if (message != null) {
+      navigatorKey.currentState?.restorablePushNamed(
+          RouteName.splash,arguments: {
+        "fromBackground":true,
+        "postId":message.data["post_id"]
+      });
+    }
+  });
   runApp(const MyApp());
 }
 

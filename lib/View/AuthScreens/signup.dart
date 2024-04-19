@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -205,9 +206,10 @@ class _SignUpState extends State<SignUp> {
                      Fluttertoast.showToast(
                          msg: "oops something went wrong",
                          toastLength: Toast.LENGTH_SHORT,
-                         gravity: ToastGravity.CENTER,
+                         gravity: ToastGravity.SNACKBAR,
                          timeInSecForIosWeb: 1,
                          textColor: Colors.black,
+                         backgroundColor: CupertinoColors.white,
                          fontSize: 15.0
                      );
                    }
@@ -215,9 +217,10 @@ class _SignUpState extends State<SignUp> {
                      Fluttertoast.showToast(
                          msg: "user already exists",
                          toastLength: Toast.LENGTH_SHORT,
-                         gravity: ToastGravity.CENTER,
+                         gravity: ToastGravity.SNACKBAR,
                          timeInSecForIosWeb: 1,
                          textColor: Colors.black,
+                         backgroundColor: CupertinoColors.white,
                          fontSize: 15.0
                      );
                    }
@@ -225,9 +228,10 @@ class _SignUpState extends State<SignUp> {
                      Fluttertoast.showToast(
                          msg: "User name field should not be empty",
                          toastLength: Toast.LENGTH_SHORT,
-                         gravity: ToastGravity.CENTER,
+                         gravity: ToastGravity.SNACKBAR,
                          timeInSecForIosWeb: 1,
                          textColor: Colors.black,
+                         backgroundColor: CupertinoColors.white,
                          fontSize: 15.0
                      );
                    }
@@ -235,9 +239,10 @@ class _SignUpState extends State<SignUp> {
                      Fluttertoast.showToast(
                          msg: "Email should not be empty",
                          toastLength: Toast.LENGTH_LONG,
-                         gravity: ToastGravity.CENTER,
+                         gravity: ToastGravity.SNACKBAR,
                          timeInSecForIosWeb: 1,
                          textColor: Colors.black,
+                         backgroundColor: CupertinoColors.white,
                          fontSize: 15.0
                      );
                    }
@@ -245,9 +250,10 @@ class _SignUpState extends State<SignUp> {
                      Fluttertoast.showToast(
                          msg: "Please enter a valid email",
                          toastLength: Toast.LENGTH_SHORT,
-                         gravity: ToastGravity.CENTER,
+                         gravity: ToastGravity.SNACKBAR,
                          timeInSecForIosWeb: 1,
                          textColor: Colors.black,
+                         backgroundColor: CupertinoColors.white,
                          fontSize: 15.0
                      );
                    }
@@ -255,9 +261,11 @@ class _SignUpState extends State<SignUp> {
                      Fluttertoast.showToast(
                          msg: "Phone number field should not be empty",
                          toastLength: Toast.LENGTH_LONG,
-                         gravity: ToastGravity.CENTER,
+                         gravity: ToastGravity.SNACKBAR,
                          timeInSecForIosWeb: 1,
                          textColor: Colors.black,
+                         backgroundColor: CupertinoColors.white,
+
                          fontSize: 15.0
                      );
                    }
@@ -265,9 +273,10 @@ class _SignUpState extends State<SignUp> {
                      Fluttertoast.showToast(
                          msg: "Please enter a valid phone number",
                          toastLength: Toast.LENGTH_LONG,
-                         gravity: ToastGravity.CENTER,
+                         gravity: ToastGravity.SNACKBAR,
                          timeInSecForIosWeb: 1,
                          textColor: Colors.black,
+                         backgroundColor: CupertinoColors.white,
                          fontSize: 15.0
                      );
                    }
