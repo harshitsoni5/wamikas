@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,6 +36,7 @@ class _ForumCardState extends State<ForumCard> {
   TextEditingController commentsController = TextEditingController();
   List<PostModel> localSearch = [];
   bool mostRelevant = false;
+  bool isEmpty=false;
 
   showBottomSheet({
     required Size size,
@@ -123,6 +125,7 @@ class _ForumCardState extends State<ForumCard> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
+
                         ),
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
@@ -178,8 +181,8 @@ class _ForumCardState extends State<ForumCard> {
                                                     ? SvgPicture.asset(
                                                         "assets/svg/profile.svg",
                                                         height: 30)
-                                                    : Image.network(
-                                                        data["profile_pic"],
+                                                    : CachedNetworkImage(
+                                                       imageUrl:data["profile_pic"],
                                                         fit: BoxFit.fill,
                                                       ),
                                               ),
@@ -301,6 +304,9 @@ class _ForumCardState extends State<ForumCard> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: Colors.white,
+                    border: Border.all(
+                        color: const Color(0xffE8E8E8)
+                    )
                 ),
                 child: Row(
                   children: [
@@ -309,13 +315,32 @@ class _ForumCardState extends State<ForumCard> {
                         onChanged: (value) {
                           setState(() {
                             if (value.isEmpty) {
+                             if(localSearch.isNotEmpty && value.isEmpty){
+                               setState(() {
+                                 isEmpty=false;
+                               });
+                             }else{
+                               setState(() {
+                                 isEmpty=true;
+                               });
+                             }
                               localSearch.clear();
-                            } else {
+                            }
+                            else {
                               localSearch = widget.posts
                                   .where((element) => element.forumTitle
                                       .toLowerCase()
                                       .contains(value.toLowerCase()))
                                   .toList();
+                              if(localSearch.isNotEmpty){
+                                setState(() {
+                                  isEmpty=false;
+                                });
+                              }else{
+                                setState(() {
+                                  isEmpty=true;
+                                });
+                              }
                             }
                           });
                         },
@@ -337,7 +362,12 @@ class _ForumCardState extends State<ForumCard> {
             : const SizedBox(
                 height: 10,
               ),
-        ListView.builder(
+        isEmpty? const Center(
+          child: SimpleText(
+            text: "No search result is found for this forum name ",
+            fontSize: 15,
+          ),
+        ):ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount:
@@ -353,6 +383,9 @@ class _ForumCardState extends State<ForumCard> {
                         const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                     decoration: BoxDecoration(
                       color: Colors.white,
+                      border: Border.all(
+                          color: const Color(0xffE8E8E8)
+                      ),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(

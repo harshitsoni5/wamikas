@@ -31,6 +31,14 @@ class ProfilePhotoWithDetails extends StatelessWidget {
             children: [
               Stack(
                 children: [
+                  // Positioned(
+                  //   left:0,
+                  //   child: SvgPicture.asset("assets/svg/Rectangle 382.svg"),
+                  // ),
+                  // Positioned(
+                  //   right: 0,
+                  //   child: SvgPicture.asset("assets/svg/Rectangle 381.svg"),
+                  // ),
                   Container(
                     margin: const EdgeInsets.only(bottom: 20),
                     height: size.height >850 ?150:size.height<600? 115:140,

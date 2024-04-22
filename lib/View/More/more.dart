@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:wamikas/Utils/Components/Profile/profile_photo_details.dart';
-import '../../Bloc/UserProfileBloc/ImageCubit/upload_image_cubit.dart';
-import '../../Bloc/UserProfileBloc/UserProfileBloc/user_profile_bloc.dart';
-import '../../Bloc/UserProfileBloc/UserProfileBloc/user_profile_event.dart';
-import '../../Bloc/UserProfileBloc/UserProfileBloc/user_profile_state.dart';
-import '../../Models/user_profile_model.dart';
+import 'package:flutter_svg/svg.dart';
+import '../../Core/FirebasePushNotificationService/firebase_push_notificatioin_services.dart';
 import '../../SharedPrefernce/shared_pref.dart';
+import '../../Utils/Color/colors.dart';
 import '../../Utils/Components/AppBar/user_profile_app_bar.dart';
 import '../../Utils/Components/Text/simple_text.dart';
 import '../../Utils/Components/Tiles/settings_tiles.dart';
@@ -24,107 +18,115 @@ class More extends StatefulWidget {
 
 class _MoreState extends State<More> {
 
+  bool _notificationEnabled = false;
+
   @override
   void initState() {
-    BlocProvider.of<UserProfileBloc>(context).add(GetUserDataEvent());
+    loadNotification();
     super.initState();
   }
 
-  void showPermissionDeniedDialog(String permissionType) {
-    showDialog(
+  void loadNotification()async{
+    bool notification =await SharedFcmToken.getFcmToken("notification");
+    setState(() {
+      _notificationEnabled =notification;
+    });
+  }
+
+  // void loadNotificationStatus() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     _notificationEnabled = prefs.getBool('notification_enabled') ?? false;
+  //   });
+  // }
+
+
+  // void requestNotificationPermission() async {
+  //   PermissionStatus status = await Permission.notification.request();
+  //   if (status == PermissionStatus.granted) {
+  //     saveNotificationStatus(true);
+  //   } else {
+  //     setState(() {
+  //       _notificationEnabled = false;
+  //     });
+  //     saveNotificationStatus(false);
+  //   }
+  // }
+
+  Future<void> showLogoutDialog(BuildContext context, Size size) async {
+    return showDialog<void>(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Permission Required'),
-          content: Text(
-              'Permission to access $permissionType is required to use this feature.'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                openAppSettings();
-                Navigator.of(context).pop();
-              },
-              child: const Text('Settings'),
-            ),
-          ],
-        );
+        return Dialog(
+            child: Container(
+              height: size.height * 0.17,
+              width: size.width - 30,
+              padding:
+              const EdgeInsets.only(bottom: 15, left: 20, right: 20, top: 15),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SimpleText(
+                    text: "Log Out",
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    fontColor: Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  const SimpleText(
+                    text: 'Are you sure you want to logout ?',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    fontColor: Colors.blueGrey,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const SimpleText(
+                            text: "Cancel",
+                            fontSize: 15,
+                            fontColor: ColorClass.primaryColor,
+                          )),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      GestureDetector(
+                          onTap: () {
+                            SharedData.clearPref("phone");
+                            SharedData.clearPref("uid");
+                            SharedData.clearPref("profile");
+                            SharedData.clearPref("name");
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                RouteName.signIn, (route) => false);
+                          },
+                          child: const SimpleText(
+                            text: "Ok",
+                            fontSize: 15,
+                            fontColor: ColorClass.primaryColor,
+                          ))
+                    ],
+                  )
+                ],
+              ),
+            ));
       },
     );
   }
 
-  void _pickedImage(){
-    showDialog<ImageSource>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Center(
-          child: Text('Choose image source',style: TextStyle(
-              fontSize: 16
-          ),),
-        ),
-        actions: [
-          ElevatedButton(
-            child: const Text('Camera'),
-            onPressed: () async {
-              PermissionStatus permission = await Permission.camera.status;
-              if (permission.isGranted) {
-                Navigator.of(context).pop();
-                BlocProvider.of<UploadImageCubit>(context).uploadPhotoEvent(true);
-              } else if (permission.isDenied) {
-                // If permission is denied, request permission again
-                permission = await Permission.camera.request();
-                if (permission.isGranted) {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<UploadImageCubit>(context).uploadPhotoEvent(true);
-                } else {
-                  showPermissionDeniedDialog('Camera');
-                }
-              } else {
-                // If permission is neither granted nor denied, request permission
-                permission = await Permission.camera.request();
-                if (permission.isGranted) {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<UploadImageCubit>(context).uploadPhotoEvent(true);
-                } else {
-                  showPermissionDeniedDialog('Camera');
-                }
-              }
-            },
-          ),
-          ElevatedButton(
-            child: const Text('Gallery'),
-            onPressed: () async {
-              PermissionStatus status =await Permission.photos.request();
-              if ( status.isGranted) {
-                Navigator.of(context).pop();
-                BlocProvider.of<UploadImageCubit>(context)
-                    .uploadPhotoEvent(false);
-              } else if ( status.isDenied) {
-                status = await Permission.photos.request();
-                if ( status.isGranted) {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<UploadImageCubit>(context)
-                      .uploadPhotoEvent(false);
-                } else {
-                  showPermissionDeniedDialog('Gallery');
-                }
-              } else {
-                showPermissionDeniedDialog('Gallery');
-              }
-            },
-          ),
-        ],
-      ),
-    ).then((ImageSource? source) async {
-      if (source == null) return;
-
-      final pickedFile = await ImagePicker().pickImage(source: source);
-      if (pickedFile == null) return;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,74 +136,105 @@ class _MoreState extends State<More> {
         children: [
           UserProfileAppBar(size: size,title: "Settings"),
           const SizedBox(height: 20,),
-          Expanded(
-            child: BlocConsumer<UserProfileBloc, UserProfileState>(
-              listener: (context, state) {},
-              builder: (context, state) {
-                if (state is UserProfileLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                else if (state is UserProfileSuccess) {
-                  final UserProfileModel data = state.userData;
-                  return Column(
+          Column(
+        children: [
+          SettingsTiles(
+            tileName: "My Account",
+            onPressed: () {
+              Navigator.of(context).pushNamed(RouteName.userProfile);
+            },
+            isLastTile: true,
+            assetName: "assets/svg/user_dp.svg",
+          ),
+          const SizedBox(height: 15,),
+          SettingsTiles(
+            tileName: "Privacy Policy",
+            onPressed: () {
+
+            },
+            isLastTile: true,
+            assetName: "assets/svg/privacy_policy.svg",
+            hideArrow: true,
+          ),
+          const SizedBox(height: 15,),
+          SettingsTiles(
+            tileName: "Terms Of Use",
+            onPressed: () {
+
+            },
+            isLastTile: true,
+            assetName: "assets/svg/terms_of_use.svg",
+            hideArrow: true,
+          ),
+          const SizedBox(height: 15,),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: (){
+                  },
+                  child: Row(
                     children: [
-                      ProfilePhotoWithDetails(
-                        data: data,
-                        onPressed: (){
-                          _pickedImage();
-                        },
-                        isEditProfile: false,
+                      Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: SvgPicture.asset("assets/svg/notification_outline.svg",height: 22,width: 22,)
                       ),
-                      const SizedBox(height: 20,),
-                      SettingsTiles(
-                        tileName: "Privacy Policy",
-                        onPressed: () {
+                      const SizedBox(width: 10,),
+                      SimpleText(
+                        text: "Notifications",
+                        fontSize: 14.5.sp,
+                        fontColor: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      const Spacer(),
+                      Switch(
+                        activeColor: ColorClass.textColor,
+                        value: _notificationEnabled,
+                        onChanged: (value) {
+                          if(value && _notificationEnabled){
+                          }
+                          else if (value==false && _notificationEnabled==false){
 
+                          }
+                         else if(value){
+                           SharedFcmToken.setNotification(true);
+                         }else{
+                            PushNotificationServices.firebaseCloudMessaging();
+                           SharedFcmToken.setNotification(false);
+                         }
+                          setState(() {
+                            _notificationEnabled = value;
+                          });
                         },
-                        isLastTile: true,
-                        assetName: "assets/svg/privacy_policy.svg",
-                        hideArrow: true,
-                      ),
-                      const SizedBox(height: 15,),
-                      SettingsTiles(
-                        tileName: "Terms Of Use",
-                        onPressed: () {
-
-                        },
-                        isLastTile: true,
-                        assetName: "assets/svg/terms_of_use.svg",
-                        hideArrow: true,
-                      ),
-                      const SizedBox(height: 15,),
-                      SettingsTiles(
-                        tileName: "Logout",
-                        onPressed: () {
-                          SharedData.clearPref("phone");
-                          SharedData.clearPref("uid");
-                          SharedData.clearPref("profile");
-                          SharedData.clearPref("name");
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              RouteName.signIn, (route) => false);
-                        },
-                        isLastTile: true,
-                        assetName: "assets/svg/logout.svg",
                       ),
                     ],
-                  );
-                } else {
-                  return Center(
-                    child: SimpleText(
-                      text: 'Oops something went wrong',
-                      fontSize: 16.sp,
-                      fontColor: Colors.black,
-                    ),
-                  );
-                }
-              },
+                  ),
+                ),
+              ],
             ),
           ),
+          const SizedBox(height: 15,),
+          SettingsTiles(
+            tileName: "Feedback",
+            onPressed: () {
+
+            },
+            isLastTile: true,
+            assetName: "assets/svg/feedback.svg",
+            hideArrow: true,
+          ),
+          const SizedBox(height: 15,),
+          SettingsTiles(
+            tileName: "Logout",
+            onPressed: () {
+            showLogoutDialog(context, size);
+            },
+            isLastTile: true,
+            assetName: "assets/svg/logout.svg",
+          ),
+        ],
+      ),
         ],
       ),
     );

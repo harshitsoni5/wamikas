@@ -54,4 +54,20 @@ class FireStoreDataBaseServices{
     return e.toString();
   }
   }
+
+  static Future deleteDocumentById({
+    required String collectionName,
+    required String documentId,
+  }) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection(collectionName)
+          .doc(documentId)
+          .delete();
+      return "Document with ID $documentId deleted successfully.";
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
 }

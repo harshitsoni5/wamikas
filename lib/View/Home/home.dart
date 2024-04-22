@@ -23,6 +23,10 @@ class _HomeScreenState extends State<HomeScreen> {
       HomeInitialEvent());
     super.initState();
   }
+  Future refresh()async{
+    BlocProvider.of<HomeBloc>(context).add(
+        HomeInitialEvent());
+  }
   @override
   Widget build(BuildContext context) {
     Size size =MediaQuery.of(context).size;
@@ -41,22 +45,25 @@ class _HomeScreenState extends State<HomeScreen> {
         } else if (state is HomeSuccess) {
           final List<PostModel> posts = state.listOfAllPost;
           final UserProfileModel userData = state.userData;
-          return Column(
-            children: [
-              HomeAppBar(userData: userData,),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.only(top: 15),
-                  color: const Color(0xffF0F0F0),
-                  child: ForumCard(
-                    userData: userData,
-                    size: size,
-                    posts: posts,
-                    fromProfileScreen: false,
+          return RefreshIndicator(
+            onRefresh: refresh,
+            child: Column(
+              children: [
+                HomeAppBar(userData: userData,),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 15),
+                    color: const Color(0xffF0F0F0),
+                    child: ForumCard(
+                      userData: userData,
+                      size: size,
+                      posts: posts,
+                      fromProfileScreen: false,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         } else if (state is HomeError) {
           return Center(

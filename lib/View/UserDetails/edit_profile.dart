@@ -7,9 +7,11 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/UserProfileBloc/user_profile_state.dart';
 import 'package:wamikas/Models/user_profile_model.dart';
 import 'package:wamikas/SharedPrefernce/shared_pref.dart';
+import 'package:wamikas/Utils/Color/colors.dart';
 import 'package:wamikas/Utils/Components/Profile/profile_photo_details.dart';
 import 'package:wamikas/Utils/Components/Tiles/attention_widget.dart';
 import 'package:wamikas/Utils/Routes/route_name.dart';
+import 'package:wamikas/View/UserDetails/user_profile.dart';
 import '../../Bloc/UserProfileBloc/ImageCubit/upload_image_cubit.dart';
 import '../../Bloc/UserProfileBloc/UserProfileBloc/user_profile_bloc.dart';
 import '../../Bloc/UserProfileBloc/UserProfileBloc/user_profile_event.dart';
@@ -58,105 +60,185 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Future<void> showLogoutDialog(BuildContext context) async {
+  Future<void> showLogoutDialog(BuildContext context, Size size) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const SimpleText(text:
-          'Are you sure you want to logout ?',
-            fontSize: 16,),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const SimpleText(
-                text: 'No',
-                fontSize: 16,
+        return Dialog(
+            child: Container(
+          height: size.height * 0.17,
+          width: size.width - 30,
+          padding:
+              const EdgeInsets.only(bottom: 15, left: 20, right: 20, top: 15),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SimpleText(
+                text: "Log Out",
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                fontColor: Colors.black,
               ),
-            ),
-            TextButton(
-              onPressed: () {
-                SharedData.clearPref("phone");
-                SharedData.clearPref("uid");
-                SharedData.clearPref("profile");
-                SharedData.clearPref("name");
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    RouteName.signIn, (route) => false);
-              },
-              child: const SimpleText(
-                  text: 'Yes',
-                fontSize: 16,
+              const SizedBox(
+                height: 5,
               ),
-            ),
-          ],
-        );
+              const SimpleText(
+                text: 'Are you sure you want to logout ?',
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
+                fontColor: Colors.blueGrey,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const SimpleText(
+                        text: "Cancel",
+                        fontSize: 15,
+                        fontColor: ColorClass.primaryColor,
+                      )),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  GestureDetector(
+                      onTap: () {
+                        SharedData.clearPref("phone");
+                        SharedData.clearPref("uid");
+                        SharedData.clearPref("profile");
+                        SharedData.clearPref("name");
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            RouteName.signIn, (route) => false);
+                      },
+                      child: const SimpleText(
+                        text: "Ok",
+                        fontSize: 15,
+                        fontColor: ColorClass.primaryColor,
+                      ))
+                ],
+              )
+            ],
+          ),
+        ));
       },
     );
   }
-  void _pickedImage(){
+
+  void _pickedImage(Size size){
     showDialog<ImageSource>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Center(
-          child: Text('Choose image source',style: TextStyle(
-              fontSize: 16
-          ),),
+      builder: (context) => Dialog(
+        child: Container(
+          height:size.height*0.26,
+          width:size.width-30,
+          padding: const EdgeInsets.only(bottom: 15,left: 20,right: 20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: (){
+                  Navigator.of(context).pop();
+                },
+                child: const Padding(
+                  padding: EdgeInsets.only(top: 15),
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.black,
+                      child: Icon(Icons.close,color: Colors.white,),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10,),
+              const SimpleText(
+                text: 'Choose image source',
+                fontSize: 18,
+                fontColor: Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CameraButtons(
+                    title: "Camera",
+                    onPressed: () async {
+                      PermissionStatus permission = await Permission.camera.status;
+                      if (permission.isGranted) {
+                        Navigator.of(context).pop();
+                        BlocProvider.of<UploadImageCubit>(context)
+                            .uploadPhotoEvent(true);
+                      } else if (permission.isDenied) {
+                        // If permission is denied, request permission again
+                        permission = await Permission.camera.request();
+                        if (permission.isGranted) {
+                          Navigator.of(context).pop();
+                          BlocProvider.of<UploadImageCubit>(context)
+                              .uploadPhotoEvent(true);
+                        } else {
+                          showPermissionDeniedDialog('Camera');
+                        }
+                      } else {
+                        // If permission is neither granted nor denied, request permission
+                        permission = await Permission.camera.request();
+                        if (permission.isGranted) {
+                          Navigator.of(context).pop();
+                          BlocProvider.of<UploadImageCubit>(context)
+                              .uploadPhotoEvent(true);
+                        } else {
+                          showPermissionDeniedDialog('Camera');
+                        }
+                      }
+                    },
+                    svg: "assets/svg/camera.svg",
+                    size: size,
+                  ),
+                  const SizedBox(width: 20,),
+                  CameraButtons(
+                    size: size,
+                    title: "Gallery",
+                    onPressed: () async {
+                      PermissionStatus status =await Permission.photos.request();
+                      if ( status.isGranted) {
+                        Navigator.of(context).pop();
+                        BlocProvider.of<UploadImageCubit>(context)
+                            .uploadPhotoEvent(false);
+                      } else if ( status.isDenied) {
+                        status = await Permission.photos.request();
+                        if ( status.isGranted) {
+                          Navigator.of(context).pop();
+                          BlocProvider.of<UploadImageCubit>(context)
+                              .uploadPhotoEvent(false);
+                        } else {
+                          showPermissionDeniedDialog('Gallery');
+                        }
+                      } else {
+                        showPermissionDeniedDialog('Gallery');
+                      }
+                    },
+                    svg: "assets/svg/gallery.svg",
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
-        actions: [
-          ElevatedButton(
-            child: const Text('Camera'),
-            onPressed: () async {
-              PermissionStatus permission = await Permission.camera.status;
-              if (permission.isGranted) {
-                Navigator.of(context).pop();
-                BlocProvider.of<UploadImageCubit>(context).uploadPhotoEvent(true);
-              } else if (permission.isDenied) {
-                // If permission is denied, request permission again
-                permission = await Permission.camera.request();
-                if (permission.isGranted) {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<UploadImageCubit>(context).uploadPhotoEvent(true);
-                } else {
-                  showPermissionDeniedDialog('Camera');
-                }
-              } else {
-                // If permission is neither granted nor denied, request permission
-                permission = await Permission.camera.request();
-                if (permission.isGranted) {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<UploadImageCubit>(context).uploadPhotoEvent(true);
-                } else {
-                  showPermissionDeniedDialog('Camera');
-                }
-              }
-            },
-          ),
-          ElevatedButton(
-            child: const Text('Gallery'),
-            onPressed: () async {
-              PermissionStatus status =await Permission.photos.request();
-              if ( status.isGranted) {
-                Navigator.of(context).pop();
-                BlocProvider.of<UploadImageCubit>(context)
-                    .uploadPhotoEvent(false);
-              } else if ( status.isDenied) {
-                status = await Permission.photos.request();
-                if ( status.isGranted) {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<UploadImageCubit>(context)
-                      .uploadPhotoEvent(false);
-                } else {
-                  showPermissionDeniedDialog('Gallery');
-                }
-              } else {
-                showPermissionDeniedDialog('Gallery');
-              }
-            },
-          ),
-        ],
       ),
     ).then((ImageSource? source) async {
       if (source == null) return;
@@ -225,7 +307,7 @@ class _EditProfileState extends State<EditProfile> {
                       ProfilePhotoWithDetails(
                         data: data,
                         onPressed: () {
-                          _pickedImage();
+                          _pickedImage(size);
                         },
                         isEditProfile: true,
                       ),
@@ -282,7 +364,7 @@ class _EditProfileState extends State<EditProfile> {
                       EditProfileTiles(
                         tileName: "Logout",
                         onPressed: () {
-                          showLogoutDialog(context);
+                          showLogoutDialog(context,size);
                         },
                         isLastTile: true,
                         assetName: "assets/svg/logout.svg",

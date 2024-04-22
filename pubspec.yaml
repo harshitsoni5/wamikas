@@ -61,6 +61,8 @@ dependencies:
   firebase_messaging: ^14.6.8
   font_awesome_flutter: ^10.7.0
   readmore: ^3.0.0
+  provider:
+  cached_network_image: ^3.3.1
 
 dev_dependencies:
   flutter_test:

@@ -147,7 +147,7 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
             FireStoreDataBaseServices.setDataToUserCollection(
                 "posts", event.postId, {
               "comments": comments,
-              "uid": docId,
+              "uid": event.postModel.uid,
               "forum_name": event.postModel.forumName,
               "forum_title": event.postModel.forumTitle,
               "forum_content": event.postModel.forumContent,
@@ -175,7 +175,7 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
             FireStoreDataBaseServices.setDataToUserCollection(
                 "posts", event.postId, {
               "comments": comments,
-              "uid": docId,
+              "uid": event.postModel.uid,
               "forum_name": event.postModel.forumName,
               "forum_title": event.postModel.forumTitle,
               "forum_content": event.postModel.forumContent,

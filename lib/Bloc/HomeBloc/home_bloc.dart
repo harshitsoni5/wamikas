@@ -15,6 +15,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeInitial()) {
     on<HomeInitialEvent>(homeInitialEvent);
     on<BookmarkResources>(bookmarkResources);
+    on<DeletePostEvent>(deletePostEvent);
   }
 
   FutureOr<void> homeInitialEvent(
@@ -70,8 +71,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               emit(HomeError());
             }
           }
-
-
           //events
           QuerySnapshot eventsSnap = await events.get();
           List allEvents = eventsSnap.docs
@@ -213,5 +212,53 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     catch(e){
       print(e.toString());
     }
+  }
+}
+
+FutureOr<void> deletePostEvent(
+    DeletePostEvent event, Emitter<HomeState> emit) async {
+  try {
+    await FireStoreDataBaseServices.deleteDocumentById(
+        collectionName: "posts", documentId: event.postId);
+    CollectionReference postReference =
+        await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
+            "posts");
+    QuerySnapshot querySnapshot = await postReference.get();
+    //list of posts
+    List allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+    List<PostModel> listsOfPosts = [];
+    for (int i = 0; i < allData.length; i++) {
+      var userData = await postReference.doc(allData[i]["uid"]).get();
+      if (userData.exists) {
+        var postedDataProfileDetails = userData.data();
+        if (postedDataProfileDetails != null &&
+            postedDataProfileDetails is Map<String, dynamic>) {
+          listsOfPosts.add(PostModel(
+              uid: allData[i]["uid"],
+              forumName: allData[i]["forum_name"],
+              forumTitle: allData[i]["forum_title"],
+              forumContent: allData[i]["forum_content"],
+              like: allData[i]["like"],
+              comments: allData[i]["comments"],
+              time: allData[i]["time"],
+              name: postedDataProfileDetails["name"],
+              emailId: postedDataProfileDetails["email"],
+              id: allData[i]["id"],
+              profilePic: postedDataProfileDetails["profile_pic"]));
+        }
+      } else {
+        emit(HomeError());
+      }
+    }
+    emit(HomeSuccess(
+        listOfAllPost: listsOfPosts,
+        userData: event.userData,
+        workshopData: event.workshopData,
+        trendingData: event.trendingData,
+        featuredData: event.featuredData,
+        personalFinance: event.personalFinance,
+        personalGrowth: event.personalGrowth));
+  } catch (e) {
+    print(e.toString());
   }
 }

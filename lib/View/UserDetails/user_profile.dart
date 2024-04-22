@@ -70,67 +70,111 @@ class _UserProfileState extends State<UserProfile>
     );
   }
 
-  void _pickedImage(){
+  void _pickedImage(Size size){
     showDialog<ImageSource>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Center(
-          child: Text('Choose image source',style: TextStyle(
-            fontSize: 16
-          ),),
+      builder: (context) => Dialog(
+        child: Container(
+          height:size.height*0.26,
+          width:size.width-30,
+          padding: const EdgeInsets.only(bottom: 15,left: 20,right: 20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: (){
+                  Navigator.of(context).pop();
+                },
+                child: const Padding(
+                  padding: EdgeInsets.only(top: 15),
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.black,
+                      child: Icon(Icons.close,color: Colors.white,),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10,),
+              const SimpleText(
+                text: 'Choose image source',
+                fontSize: 18,
+                fontColor: Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CameraButtons(
+                    title: "Camera",
+                    onPressed: () async {
+                      PermissionStatus permission = await Permission.camera.status;
+                      if (permission.isGranted) {
+                        Navigator.of(context).pop();
+                        BlocProvider.of<UploadImageCubit>(context)
+                            .uploadPhotoEvent(true);
+                      } else if (permission.isDenied) {
+                        // If permission is denied, request permission again
+                        permission = await Permission.camera.request();
+                        if (permission.isGranted) {
+                          Navigator.of(context).pop();
+                          BlocProvider.of<UploadImageCubit>(context)
+                              .uploadPhotoEvent(true);
+                        } else {
+                          showPermissionDeniedDialog('Camera');
+                        }
+                      } else {
+                        // If permission is neither granted nor denied, request permission
+                        permission = await Permission.camera.request();
+                        if (permission.isGranted) {
+                          Navigator.of(context).pop();
+                          BlocProvider.of<UploadImageCubit>(context)
+                              .uploadPhotoEvent(true);
+                        } else {
+                          showPermissionDeniedDialog('Camera');
+                        }
+                      }
+                    },
+                    svg: "assets/svg/camera.svg",
+                    size: size,
+                  ),
+                  const SizedBox(width: 20,),
+                  CameraButtons(
+                    size: size,
+                    title: "Gallery",
+                    onPressed: () async {
+                      PermissionStatus status =await Permission.photos.request();
+                      if ( status.isGranted) {
+                        Navigator.of(context).pop();
+                        BlocProvider.of<UploadImageCubit>(context)
+                            .uploadPhotoEvent(false);
+                      } else if ( status.isDenied) {
+                        status = await Permission.photos.request();
+                        if ( status.isGranted) {
+                          Navigator.of(context).pop();
+                          BlocProvider.of<UploadImageCubit>(context)
+                              .uploadPhotoEvent(false);
+                        } else {
+                          showPermissionDeniedDialog('Gallery');
+                        }
+                      } else {
+                        showPermissionDeniedDialog('Gallery');
+                      }
+                    },
+                    svg: "assets/svg/gallery.svg",
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
-        actions: [
-          ElevatedButton(
-            child: const Text('Camera'),
-            onPressed: () async {
-              PermissionStatus permission = await Permission.camera.status;
-              if (permission.isGranted) {
-                Navigator.of(context).pop();
-                BlocProvider.of<UploadImageCubit>(context).uploadPhotoEvent(true);
-              } else if (permission.isDenied) {
-                // If permission is denied, request permission again
-                permission = await Permission.camera.request();
-                if (permission.isGranted) {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<UploadImageCubit>(context).uploadPhotoEvent(true);
-                } else {
-                  showPermissionDeniedDialog('Camera');
-                }
-              } else {
-                // If permission is neither granted nor denied, request permission
-                permission = await Permission.camera.request();
-                if (permission.isGranted) {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<UploadImageCubit>(context).uploadPhotoEvent(true);
-                } else {
-                  showPermissionDeniedDialog('Camera');
-                }
-              }
-            },
-          ),
-          ElevatedButton(
-            child: const Text('Gallery'),
-            onPressed: () async {
-              PermissionStatus status =await Permission.photos.request();
-              if ( status.isGranted) {
-                Navigator.of(context).pop();
-                BlocProvider.of<UploadImageCubit>(context)
-                    .uploadPhotoEvent(false);
-              } else if ( status.isDenied) {
-                status = await Permission.photos.request();
-                if ( status.isGranted) {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<UploadImageCubit>(context)
-                      .uploadPhotoEvent(false);
-                } else {
-                  showPermissionDeniedDialog('Gallery');
-                }
-              } else {
-                showPermissionDeniedDialog('Gallery');
-              }
-            },
-          ),
-        ],
       ),
     ).then((ImageSource? source) async {
       if (source == null) return;
@@ -166,7 +210,7 @@ class _UserProfileState extends State<UserProfile>
                         ProfilePhotoWithDetails(
                           data: data,
                           onPressed: (){
-                            _pickedImage();
+                            _pickedImage(size);
                           },
                           isEditProfile: false,
                         ),
@@ -307,6 +351,46 @@ class _UserProfileState extends State<UserProfile>
                 },
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CameraButtons extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String title;
+  final String svg;
+  final Size size;
+  const CameraButtons({
+    super.key,
+    required this.onPressed,
+    required this.title,
+    required this.svg, required this.size,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: size.width/3.5,
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          gradient: const LinearGradient(
+            colors: [Color(0xFF9B1065), Color(0xFFFF30C5)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SvgPicture.asset(svg,height: 30,width: 30,),
+            const SizedBox(height: 10),
+            SimpleText(text: title, fontSize: 15,fontColor: Colors.white,),
           ],
         ),
       ),

@@ -42,6 +42,11 @@ class SharedData {
 }
 
 class SharedFcmToken {
+  static Future setNotification(bool token) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool("notification", token);
+  }
+
   static Future getFcmToken(String key) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.get(key);

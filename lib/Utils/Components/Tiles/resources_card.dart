@@ -115,8 +115,7 @@ class _ResourcesCardState extends State<ResourcesCard> {
                         },
                           child:
                               isLiked[index] ?
-                              SvgPicture.asset("assets/svg/bookmark.svg",
-                              color: ColorClass.textColor,
+                              SvgPicture.asset("assets/svg/bookmarked.svg",
                               ):SvgPicture.asset("assets/svg/bookmark.svg"),
                       ),
                   ),

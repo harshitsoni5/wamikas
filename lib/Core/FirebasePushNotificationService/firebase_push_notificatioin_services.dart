@@ -23,12 +23,11 @@ class PushNotificationServices {
 
   static void saveFcmToken() async {
     await FirebaseMessaging.instance.getToken().then((value) async {
-      print(value);
       await SharedFcmToken.setFcmToken(value!);
     });
   }
 
-  static void firebaseCloudMessaging() async {
+  static Future firebaseCloudMessaging() async {
     await FirebaseMessaging.instance.getInitialMessage();
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     NotificationSettings settings = await messaging.requestPermission(
@@ -41,12 +40,12 @@ class PushNotificationServices {
       provisional: false,
     );
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print("user granted permission");
+      SharedFcmToken.setNotification(true);
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
       print("user granted provisonal permission");
     } else {
-      print("user declined or not granted permission");
+      SharedFcmToken.setNotification(false);
     }
   }
 

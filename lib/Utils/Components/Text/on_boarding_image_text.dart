@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../SharedPrefernce/shared_pref.dart';
@@ -107,7 +106,7 @@ class OnBoardingText extends StatelessWidget {
                     },
                     child:  const SimpleText(
                       text: "Skip",
-                      fontColor: Colors.white,
+                      fontColor: Colors.grey,
                       fontSize: 18,
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.w400,

@@ -15,6 +15,8 @@ class Resources extends StatefulWidget {
 
 class _ResourcesState extends State<Resources> {
   List<ResourcesModel> localSearch =[];
+  bool isEmpty=false;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -47,6 +49,15 @@ class _ResourcesState extends State<Resources> {
                               onChanged: (value) {
                                 setState(() {
                                   if (value.isEmpty) {
+                                    if(localSearch.isNotEmpty && value.isEmpty){
+                                      setState(() {
+                                        isEmpty=false;
+                                      });
+                                    }else{
+                                      setState(() {
+                                        isEmpty=true;
+                                      });
+                                    }
                                     localSearch.clear();
                                   } else {
                                     localSearch = LocalData.personalGrowth
@@ -62,6 +73,15 @@ class _ResourcesState extends State<Resources> {
                                         localSearch
                                             .add(LocalData.personalFinance[i]);
                                       }
+                                    }
+                                    if(localSearch.isNotEmpty){
+                                      setState(() {
+                                        isEmpty=false;
+                                      });
+                                    }else{
+                                      setState(() {
+                                        isEmpty=true;
+                                      });
                                     }
                                   }
                                 });
@@ -80,32 +100,59 @@ class _ResourcesState extends State<Resources> {
                       ),
                     ),
                     const SizedBox(height: 15,),
-                   localSearch.isNotEmpty? const SimpleText(
-                      text: "Search Result",
-                      fontSize: 14,
-                      fontColor: Color(0xff570035),
-                    ):const SizedBox(),
-                    localSearch.isNotEmpty?ResourcesCard(
-                      list: localSearch,
-                    ):const SizedBox(),
-                    localSearch.isEmpty? const SimpleText(
-                      text: "Personal Finance",
-                      fontSize: 14,
-                      fontColor: Color(0xff570035),
-                    ):const SizedBox(),
-                    const SizedBox(height: 5,),
-                    localSearch.isEmpty? ResourcesCard(
-                      list: LocalData.personalFinance,
-                    ):const SizedBox(),
-                   localSearch.isEmpty? const SizedBox(height: 25,):SizedBox(),
-                    localSearch.isEmpty? const SimpleText(
-                      text: "Personal Growth",
-                      fontSize: 14,
-                      fontColor: Color(0xff570035),
-                    ):const SizedBox(),
-                    localSearch.isEmpty? ResourcesCard(
-                      list: LocalData.personalGrowth,
-                    ):const SizedBox(),
+                    isEmpty? const Center(
+                      child: SimpleText(
+                        text: "No search result is found for this resource name ",
+                        fontSize: 15,
+                      ),
+                    ): Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        localSearch.isNotEmpty
+                          ? const SimpleText(
+                        text: "Search Result",
+                        fontSize: 14,
+                        fontColor: Color(0xff570035),
+                      )
+                          : const SizedBox(),
+                        localSearch.isNotEmpty
+                            ? ResourcesCard(
+                          list: localSearch,
+                        )
+                            : const SizedBox(),
+                        localSearch.isEmpty
+                            ? const SimpleText(
+                          text: "Personal Finance",
+                          fontSize: 14,
+                          fontColor: Color(0xff570035),
+                        )
+                            : const SizedBox(),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        localSearch.isEmpty
+                            ? ResourcesCard(
+                          list: LocalData.personalFinance,
+                        )
+                            : const SizedBox(),
+                        localSearch.isEmpty
+                            ? const SizedBox(
+                          height: 25,
+                        )
+                            : const SizedBox(),
+                        localSearch.isEmpty
+                            ? const SimpleText(
+                          text: "Personal Growth",
+                          fontSize: 14,
+                          fontColor: Color(0xff570035),
+                        )
+                            : const SizedBox(),
+                        localSearch.isEmpty
+                            ? ResourcesCard(
+                          list: LocalData.personalGrowth,
+                        )
+                            : const SizedBox(),],
+                    ),
                     const SizedBox(height: 5,),
                   ],
                 ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -70,8 +71,8 @@ class HomeAppBar extends StatelessWidget {
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
-                        child: Image.network(
-                          userData.profilePic!,
+                        child: CachedNetworkImage(
+                         imageUrl: userData.profilePic!,
                           height: 35,
                           width: 35,
                           fit: BoxFit.cover,

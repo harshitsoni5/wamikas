@@ -27,7 +27,7 @@ class LocalData{
     } else if (difference.inDays == 1) {
       return "Yesterday";
     } else {
-      return "${postTime.day}/${postTime.month}";
+      return "${postTime.day}/${postTime.month}/${postTime.year}";
     }
   }
   static String getTime(var timestamp) {
@@ -49,7 +49,7 @@ class LocalData{
     } else if (difference.inDays == 1) {
       return "Yesterday";
     } else {
-      return "${postTime.day}/${postTime.month}";
+      return "${postTime.day}/${postTime.month}/${postTime.year}";
     }
   }
 }

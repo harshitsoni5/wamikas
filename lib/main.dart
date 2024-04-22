@@ -17,6 +17,7 @@ import 'package:wamikas/Bloc/UserProfileBloc/ImageCubit/upload_image_cubit.dart'
 import 'package:wamikas/Bloc/UserProfileBloc/JobDescriptionCubit/job_description_cubit.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/LocationCubit/location_cubit.dart';
 import 'package:wamikas/Bloc/UserProfileBloc/UserProfileBloc/user_profile_bloc.dart';
+import 'package:wamikas/SharedPrefernce/shared_pref.dart';
 import 'package:wamikas/firebase_options.dart';
 import 'Bloc/NotficationPost/notification_post_cubit.dart';
 import 'Bloc/NotificationBloc/notification_cubit.dart';
@@ -47,22 +48,24 @@ void main() async{
     androidProvider: AndroidProvider.playIntegrity,
     appleProvider: AppleProvider.appAttest,
   );
-  PushNotificationServices.firebaseCloudMessaging();
+ await PushNotificationServices.firebaseCloudMessaging();
   var initializationSettings =
   PushNotificationServices.localNotificationInitialization();
   PushNotificationServices.saveFcmToken();
+  bool? isNotificationOn = await SharedFcmToken.getFcmToken("notification");
+  isNotificationOn ??= false;
   await notificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: _handleNotificationResponse);
   PushNotificationServices.incomingMessage();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage){
+  isNotificationOn ? FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler):null;
+  isNotificationOn ? FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage){
     print(remoteMessage);
     navigatorKey.currentState?.restorablePushNamed(
         RouteName.notificationPost,
         arguments:remoteMessage.data["post_id"]);
-  });
-  FirebaseMessaging.instance.getInitialMessage().then((message) {
+  }):null;
+  isNotificationOn ? FirebaseMessaging.instance.getInitialMessage().then((message) {
     if (message != null) {
       navigatorKey.currentState?.restorablePushNamed(
           RouteName.splash,arguments: {
@@ -70,7 +73,7 @@ void main() async{
         "postId":message.data["post_id"]
       });
     }
-  });
+  }):null;
   runApp(const MyApp());
 }
 

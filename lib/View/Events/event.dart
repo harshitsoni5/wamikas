@@ -4,6 +4,7 @@ import 'package:wamikas/Models/event_model.dart';
 import 'package:wamikas/Utils/LocalData/local_data.dart';
 import '../../Utils/Components/AppBar/user_profile_app_bar.dart';
 import '../../Utils/Components/TabBarChildrens/evnts_card.dart';
+import '../../Utils/Components/Text/simple_text.dart';
 
 class Events extends StatefulWidget {
   const Events({super.key});
@@ -14,6 +15,8 @@ class Events extends StatefulWidget {
 
 class _EventsState extends State<Events> {
   List<EventModel> localSearch =[];
+  bool isEmpty=false;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -46,6 +49,15 @@ class _EventsState extends State<Events> {
                               onChanged: (value){
                                setState(() {
                                  if (value.isEmpty) {
+                                   if(localSearch.isNotEmpty && value.isEmpty){
+                                     setState(() {
+                                       isEmpty=false;
+                                     });
+                                   }else{
+                                     setState(() {
+                                       isEmpty=true;
+                                     });
+                                   }
                                    localSearch.clear();
                                  }
                                else{
@@ -64,7 +76,15 @@ class _EventsState extends State<Events> {
                                        localSearch.add(LocalData.workshopEvents[i]);
                                      }
                                    }
-
+                                   if(localSearch.isNotEmpty){
+                                     setState(() {
+                                       isEmpty=false;
+                                     });
+                                   }else{
+                                     setState(() {
+                                       isEmpty=true;
+                                     });
+                                   }
                                  }
                                });
                               },
@@ -82,31 +102,40 @@ class _EventsState extends State<Events> {
                       ),
                     ),
                     const SizedBox(height: 15,),
-                    localSearch.isNotEmpty?
-                    EventsCard(
-                      size: size,
-                      eventsData: localSearch,
-                      svg: null,
-                      titleName: "Search Result",
-                    ):const SizedBox(),
-                    localSearch.isEmpty? EventsCard(
-                      size: size,
-                      eventsData: LocalData.trendingEvents,
-                      svg: "assets/svg/flame.svg",
-                      titleName: "Trending Events",
-                    ):const SizedBox(),
-                    localSearch.isEmpty? EventsCard(
-                      size: size,
-                      eventsData: LocalData.featuredEvents,
-                      svg: "assets/svg/bookmark.svg",
-                      titleName: "Featured events",
-                    ):const SizedBox(),
-                    localSearch.isEmpty? EventsCard(
-                      size: size,
-                      eventsData: LocalData.workshopEvents,
-                      svg: "assets/svg/bookmark.svg",
-                      titleName: "Workshops",
-                    ):const SizedBox(),
+                    isEmpty? const Center(
+                      child: SimpleText(
+                        text: "No search result is found for this event name ",
+                        fontSize: 15,
+                      ),
+                    ): Column(
+                      children: [
+                        localSearch.isNotEmpty?
+                        EventsCard(
+                          size: size,
+                          eventsData: localSearch,
+                          svg: null,
+                          titleName: "Search Result",
+                        ):const SizedBox(),
+                        localSearch.isEmpty? EventsCard(
+                          size: size,
+                          eventsData: LocalData.trendingEvents,
+                          svg: "assets/svg/flame.svg",
+                          titleName: "Trending Events",
+                        ):const SizedBox(),
+                        localSearch.isEmpty? EventsCard(
+                          size: size,
+                          eventsData: LocalData.featuredEvents,
+                          svg: "assets/svg/bookmark.svg",
+                          titleName: "Featured events",
+                        ):const SizedBox(),
+                        localSearch.isEmpty? EventsCard(
+                          size: size,
+                          eventsData: LocalData.workshopEvents,
+                          svg: "assets/svg/bookmark.svg",
+                          titleName: "Workshops",
+                        ):const SizedBox(),
+                      ],
+                    )
                   ],
                 ),
               ),

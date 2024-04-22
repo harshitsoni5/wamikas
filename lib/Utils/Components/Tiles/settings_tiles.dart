@@ -36,7 +36,7 @@ class SettingsTiles extends StatelessWidget {
               children: [
                 Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: SvgPicture.asset(assetName)
+                    child: SvgPicture.asset(assetName,height: 22,width: 22,)
                 ),
                 const SizedBox(width: 10,),
                 SimpleText(
