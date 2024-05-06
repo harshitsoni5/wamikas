@@ -89,7 +89,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     child: SimpleText(
                       text: "No Notifications yet",
                       fontSize: 16,
-                      fontColor: Colors.black,
+                      fontColor: Colors.black38,
                     ),
                   )):Expanded(
                     child: ListView.builder(

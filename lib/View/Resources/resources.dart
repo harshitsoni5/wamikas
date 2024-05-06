@@ -14,16 +14,22 @@ class Resources extends StatefulWidget {
 }
 
 class _ResourcesState extends State<Resources> {
-  List<ResourcesModel> localSearch =[];
-  bool isEmpty=false;
+  List<ResourcesModel> localSearch = [];
+  bool isEmpty = false;
+  final TextEditingController searchController = TextEditingController();
 
   @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Column(
         children: [
-          UserProfileAppBar(size: size,title: "Resources"),
+          UserProfileAppBar(size: size, title: "Resources"),
           Expanded(
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -31,33 +37,34 @@ class _ResourcesState extends State<Resources> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 10,),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           color: Colors.white,
-                        border: Border.all(
-                          color: const Color(0xffE8E8E8)
-                        )
-                      ),
+                          border: Border.all(color: const Color(0xffE8E8E8))),
                       child: Row(
                         children: [
-                           Flexible(
+                          Flexible(
                             child: TextField(
+                              controller: searchController,
                               onChanged: (value) {
                                 setState(() {
                                   if (value.isEmpty) {
-                                    if(localSearch.isNotEmpty && value.isEmpty){
-                                      setState(() {
-                                        isEmpty=false;
-                                      });
-                                    }else{
-                                      setState(() {
-                                        isEmpty=true;
-                                      });
-                                    }
+                                    isEmpty = false;
+                                    // if (localSearch.isNotEmpty &&
+                                    //     value.isEmpty) {
+                                    //   setState(() {
+                                    //     isEmpty = false;
+                                    //   });
+                                    // } else {
+                                    //   setState(() {
+                                    //     isEmpty = true;
+                                    //   });
+                                    // }
                                     localSearch.clear();
                                   } else {
                                     localSearch = LocalData.personalGrowth
@@ -74,13 +81,13 @@ class _ResourcesState extends State<Resources> {
                                             .add(LocalData.personalFinance[i]);
                                       }
                                     }
-                                    if(localSearch.isNotEmpty){
+                                    if (localSearch.isNotEmpty) {
                                       setState(() {
-                                        isEmpty=false;
+                                        isEmpty = false;
                                       });
-                                    }else{
+                                    } else {
                                       setState(() {
-                                        isEmpty=true;
+                                        isEmpty = true;
                                       });
                                     }
                                   }
@@ -88,72 +95,94 @@ class _ResourcesState extends State<Resources> {
                               },
                               decoration: const InputDecoration(
                                   border: InputBorder.none,
-                                  hintText:
-                                  "concert, comedy show etc...",
+                                  hintText: "concert, comedy show etc...",
                                   hintStyle: TextStyle(
-                                      color: Color(0xffC8C8C8),
-                                      fontSize: 14)),
+                                      color: Color(0xffC8C8C8), fontSize: 14)),
                             ),
                           ),
-                          SvgPicture.asset("assets/svg/search.svg")
+                          searchController.text.isEmpty
+                              ? SvgPicture.asset("assets/svg/search.svg")
+                              : InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      isEmpty=false;
+                                      localSearch.clear();
+                                      searchController.text="";
+                                    });
+                                  },
+                                  child: const Icon(Icons.close),
+                                )
                         ],
                       ),
                     ),
-                    const SizedBox(height: 15,),
-                    isEmpty? const Center(
-                      child: SimpleText(
-                        text: "No search result is found for this resource name ",
-                        fontSize: 15,
-                      ),
-                    ): Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        localSearch.isNotEmpty
-                          ? const SimpleText(
-                        text: "Search Result",
-                        fontSize: 14,
-                        fontColor: Color(0xff570035),
-                      )
-                          : const SizedBox(),
-                        localSearch.isNotEmpty
-                            ? ResourcesCard(
-                          list: localSearch,
-                        )
-                            : const SizedBox(),
-                        localSearch.isEmpty
-                            ? const SimpleText(
-                          text: "Personal Finance",
-                          fontSize: 14,
-                          fontColor: Color(0xff570035),
-                        )
-                            : const SizedBox(),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        localSearch.isEmpty
-                            ? ResourcesCard(
-                          list: LocalData.personalFinance,
-                        )
-                            : const SizedBox(),
-                        localSearch.isEmpty
-                            ? const SizedBox(
-                          height: 25,
-                        )
-                            : const SizedBox(),
-                        localSearch.isEmpty
-                            ? const SimpleText(
-                          text: "Personal Growth",
-                          fontSize: 14,
-                          fontColor: Color(0xff570035),
-                        )
-                            : const SizedBox(),
-                        localSearch.isEmpty
-                            ? ResourcesCard(
-                          list: LocalData.personalGrowth,
-                        )
-                            : const SizedBox(),],
+                    const SizedBox(
+                      height: 15,
                     ),
-                    const SizedBox(height: 5,),
+                    isEmpty
+                        ? Container(
+                            alignment: Alignment.center,
+                            margin: const EdgeInsets.only(top: 80),
+                            child: const SimpleText(
+                              text:
+                                  "No search result is found for this resource name ",
+                              fontSize: 14,
+                              fontColor: Colors.black38,
+                            ),
+                          )
+                        :SingleChildScrollView(
+                      child:  Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          localSearch.isNotEmpty
+                              ? const SimpleText(
+                            text: "Search Result",
+                            fontSize: 14,
+                            fontColor: Color(0xff570035),
+                          )
+                              : const SizedBox(),
+                          localSearch.isNotEmpty
+                              ? ResourcesCard(
+                            list: localSearch,
+                          )
+                              : const SizedBox(),
+                          localSearch.isEmpty
+                              ? const SimpleText(
+                            text: "Personal Finance",
+                            fontSize: 14,
+                            fontColor: Color(0xff570035),
+                          )
+                              : const SizedBox(),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          localSearch.isEmpty
+                              ? ResourcesCard(
+                            list: LocalData.personalFinance,
+                          )
+                              : const SizedBox(),
+                          localSearch.isEmpty
+                              ? const SizedBox(
+                            height: 25,
+                          )
+                              : const SizedBox(),
+                          localSearch.isEmpty
+                              ? const SimpleText(
+                            text: "Personal Growth",
+                            fontSize: 14,
+                            fontColor: Color(0xff570035),
+                          )
+                              : const SizedBox(),
+                          localSearch.isEmpty
+                              ? ResourcesCard(
+                            list: LocalData.personalGrowth,
+                          )
+                              : const SizedBox(),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
                   ],
                 ),
               ),

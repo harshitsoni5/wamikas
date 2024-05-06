@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -88,12 +89,13 @@ class ProfilePhotoWithDetails extends StatelessWidget {
                                 borderRadius:
                                 BorderRadius
                                     .circular(80),
-                                child: Image.network(
-                                  data.profilePic!,
+                                child: CachedNetworkImage(
+                                  imageUrl: data.profilePic! ,
                                   fit: BoxFit.cover,
                                   height: size.height >850 ?150:size.height<600? 115:140,
                                   width: size.height >850 ?150:size.height<600? 115:140,
-                                )),
+                                )
+                          ),
                           );
                         }
                       },
@@ -164,7 +166,7 @@ class ProfilePhotoWithDetails extends StatelessWidget {
                             child:  Icon(
                               Icons.edit,
                               color: const Color(0xff6C6C6C),
-                              size: size.width <390? 17:19,
+                              size: size.width <390? 16:19,
                             )),
                       ],
                     ),

@@ -63,6 +63,7 @@ dependencies:
   readmore: ^3.0.0
   provider:
   cached_network_image: ^3.3.1
+  shimmer: ^3.0.0 #its loader
 
 dev_dependencies:
   flutter_test:

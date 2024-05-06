@@ -73,8 +73,16 @@ class TextFieldContainer extends StatelessWidget {
             controller: controller,
             maxLines: maxLines,
             readOnly: readOnlyTrue ?? false,
+            toolbarOptions: ToolbarOptions(
+              copy: true,
+              cut: true,
+              paste: true,
+              selectAll: true,
+            ),
+
             decoration: InputDecoration(
                 counterText: "",
+
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.only(left: 10),
                 hintText: hintText,

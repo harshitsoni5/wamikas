@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -28,11 +29,12 @@ class EventsCard extends StatelessWidget {
       children: [
         Row(
           children: [
-            svg == null ?
-            const SizedBox():SvgPicture.asset(
-              svg!,
-              height: 18,
-            ),
+            svg == null
+                ? const SizedBox()
+                : SvgPicture.asset(
+                    svg!,
+                    height: 18,
+                  ),
             const SizedBox(width: 5),
             SimpleText(
               text: titleName,
@@ -43,7 +45,8 @@ class EventsCard extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         SingleChildScrollView(
-          scrollDirection:eventsData.length ==1 ? Axis.vertical:Axis.horizontal,
+          scrollDirection:
+              eventsData.length == 1 ? Axis.vertical : Axis.horizontal,
           child: Container(
             color: Colors.white,
             child: Wrap(
@@ -51,28 +54,32 @@ class EventsCard extends StatelessWidget {
               children: eventsData.map((data) {
                 return Container(
                   height: 270,
-                  width: eventsData.length ==1 ? size.width:size.width * 0.75,
+                  width:
+                      eventsData.length == 1 ? size.width : size.width * 0.75,
                   padding: const EdgeInsets.only(bottom: 10),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                      border: Border.all(
-                          color: const Color(0xffE8E8E8)
-                      )
-                  ),
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                      border: Border.all(color: const Color(0xffE8E8E8))),
                   child: Column(
                     children: [
                       SizedBox(
-                        width:eventsData.length ==1 ? size.width:size.width * 0.75,
+                        width: eventsData.length == 1
+                            ? size.width
+                            : size.width * 0.75,
                         height: size.height * 0.15,
-                        child: Image.network(
-                          data.eventPic,
-                          fit: BoxFit.fill,
-                        ),
+                        child: ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10)),
+                            child: CachedNetworkImage(
+                              imageUrl: data.eventPic,
+                              fit: BoxFit.fill,
+                            )),
                       ),
                       Expanded(
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Container(
                             padding: const EdgeInsets.only(left: 10, right: 10),
@@ -121,7 +128,7 @@ class EventsCard extends StatelessWidget {
                             },
                             child: Container(
                               margin:
-                              const EdgeInsets.symmetric(horizontal: 10),
+                                  const EdgeInsets.symmetric(horizontal: 10),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(10),
@@ -129,8 +136,7 @@ class EventsCard extends StatelessWidget {
                                   color: ColorClass.primaryColor,
                                 ),
                               ),
-                              padding:
-                              const EdgeInsets.symmetric(vertical: 5),
+                              padding: const EdgeInsets.symmetric(vertical: 5),
                               child: Center(
                                 child: SimpleText(
                                   text: "Register Now!!",

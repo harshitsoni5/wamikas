@@ -123,176 +123,182 @@ class _ForumScreenState extends State<ForumScreen> {
             ],
           ),
         ),
-        body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: BlocBuilder<ForumUserCubit, ForumUserState>(
-            builder: (context, state) {
-             if(state is ForumUserSuccess){
-               name=state.name;
-                return Column(
-                  children: [
-                    SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 10,),
-                          Row(
-                            children: [
-                              InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                    BlocProvider.of<HomeBloc>(context).add(
-                                        HomeInitialEvent());
-                                  },
-                                  child: SvgPicture.asset(
-                                    "assets/svg/ep_back (2).svg",
-                                    height: 35,
-                                  )),
-                              const SizedBox(
-                                width: 15,
-                              ),
-                              const SimpleText(
-                                text: "Create post",
-                                fontSize: 24,
-                                fontColor: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20,),
-                          Row(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(40),
-                                child: CircleAvatar(
-                                  radius: 25,
-                                  child:state.profilePic ==null?
-                                  SvgPicture.asset("assets/svg/profile.svg",):
-                                  Image.network(state.profilePic!),
+        body:SingleChildScrollView(
+          child:  Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: BlocBuilder<ForumUserCubit, ForumUserState>(
+              builder: (context, state) {
+                if(state is ForumUserSuccess){
+                  name=state.name;
+                  return Column(
+                    children: [
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 10,),
+                            Row(
+                              children: [
+                                InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                      BlocProvider.of<HomeBloc>(context).add(
+                                          HomeInitialEvent());
+                                    },
+                                    child: SvgPicture.asset(
+                                      "assets/svg/ep_back (2).svg",
+                                      height: 35,
+                                    )),
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                const SimpleText(
+                                  text: "Create post",
+                                  fontSize: 24,
+                                  fontColor: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20,),
+                            Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(40),
+                                  child: CircleAvatar(
+                                    radius: 25,
+                                    child:state.profilePic ==null?
+                                    SvgPicture.asset("assets/svg/profile.svg",):
+                                    Image.network(state.profilePic!),
+                                  ),
+                                ),
+                                const SizedBox(width: 10,),
+                                SimpleText(
+                                  text: state.name,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                // Flexible(
+                                //   child: Column(
+                                //     crossAxisAlignment: CrossAxisAlignment.start,
+                                //     children: [
+                                //       SimpleText(
+                                //         text: state.name,
+                                //         fontSize: 14.sp,
+                                //         fontWeight: FontWeight.w600,
+                                //       ),
+                                //       // widget.userData?.jobTitle!=null?
+                                //       // SimpleText(
+                                //       //   text:state.jobTitle!,
+                                //       //   fontSize: 12.sp,
+                                //       //   fontColor: const Color(0xff6C6C6C),
+                                //       // ):
+                                //       // const SizedBox(),
+                                //     ],
+                                //   ),
+                                // )
+                              ],
+                            ),
+                            const SizedBox(height: 15,),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: SimpleText(
+                                  text: "Select Forum",
+                                  fontSize: 14.sp,
+                                  fontColor: Colors.black,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              const SizedBox(width: 10,),
-                              SimpleText(
-                                text: state.name,
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              // Flexible(
-                              //   child: Column(
-                              //     crossAxisAlignment: CrossAxisAlignment.start,
-                              //     children: [
-                              //       SimpleText(
-                              //         text: state.name,
-                              //         fontSize: 14.sp,
-                              //         fontWeight: FontWeight.w600,
-                              //       ),
-                              //       // widget.userData?.jobTitle!=null?
-                              //       // SimpleText(
-                              //       //   text:state.jobTitle!,
-                              //       //   fontSize: 12.sp,
-                              //       //   fontColor: const Color(0xff6C6C6C),
-                              //       // ):
-                              //       // const SizedBox(),
-                              //     ],
-                              //   ),
-                              // )
-                            ],
-                          ),
-                          const SizedBox(height: 15,),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: SimpleText(
-                                text: "Select Forum",
-                                fontSize: 14.sp,
-                                fontColor: Colors.black,
-                                fontWeight: FontWeight.w500,
-                              ),
                             ),
-                          ),
-                          const SizedBox(height: 2,),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            width: size.width,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                    color: const Color(0xffE8E8E8)
-                                )
-                            ),
-                            child: DropdownButtonFormField<String>(
-                              icon: SvgPicture.asset("assets/svg/down_arrow.svg"),
-                              value: selectForum.text.isEmpty
-                                  ? null
-                                  : selectForum.text,
-                              onChanged: (String? newValue) {
-                                if (newValue != null) {
-                                  selectForum.text = newValue;
-                                }
-                              },
-                              items: forums
-                                  .map<DropdownMenuItem<String>>(
-                                    (String value) => DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                ),
-                              ).toList(),
-                              decoration: InputDecoration(
-                                  hintText: "Select Forum",
-                                  border: InputBorder.none,
-                                  hintStyle: GoogleFonts.poppins(
-                                    color: const Color(0xff888888),
-                                    fontSize: 13.sp,
+                            const SizedBox(height: 2,),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 15),
+                              width: size.width,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                      color: const Color(0xffE8E8E8)
                                   )
                               ),
+                              child: DropdownButtonFormField<String>(
+
+                                icon: SvgPicture.asset("assets/svg/down_arrow.svg"),
+                                value: selectForum.text.isEmpty
+                                    ? null
+                                    : selectForum.text,
+                                onChanged: (String? newValue) {
+                                  if (newValue != null) {
+                                    selectForum.text = newValue;
+                                  }
+                                },
+                                items: forums.map<DropdownMenuItem<String>>(
+                                      (String value) => DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  ),
+                                ).toList(),
+
+                                decoration: InputDecoration(
+                                    hintText: "Select Forum",
+
+
+                                    border: InputBorder.none,
+                                    hintStyle: GoogleFonts.poppins(
+                                      color: const Color(0xff888888),
+                                      fontSize: 13.sp,
+                                    )
+                                ),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 15,),
-                          TextFieldContainer(
-                            hintText: "Enter headline here",
-                            titleBox: "Post Headlines",
-                            controller: postTitle,
-                          ),
-                          headlinesMissing?
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: SimpleText(
-                              text: "Headline is missing",
-                              fontSize: 12.sp,
-                              fontColor: Colors.red,
+                            const SizedBox(height: 15,),
+                            TextFieldContainer(
+                              hintText: "Enter headline here",
+                              titleBox: "Post Headlines",
+                              controller: postTitle,
                             ),
-                          ):
-                          const SizedBox(),
-                          const SizedBox(height: 15,),
-                          TextFieldContainer(
-                            hintText: "Description",
-                            titleBox: "What’s on your mind",
-                            controller: description,
-                            maxLines: 8,
-                          ),
-                          descriptionMissing?
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: SimpleText(
-                              text: "Description is missing",
-                              fontSize: 12.sp,
-                              fontColor: Colors.red,
+                            headlinesMissing?
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: SimpleText(
+                                text: "Headline is missing",
+                                fontSize: 12.sp,
+                                fontColor: Colors.red,
+                              ),
+                            ):
+                            const SizedBox(),
+                            const SizedBox(height: 15,),
+                            TextFieldContainer(
+                              hintText: "Description",
+                              titleBox: "What’s on your mind",
+                              controller: description,
+                              keyboardType:  TextInputType.text,
+                              maxLines: 8,
                             ),
-                          ):
-                          const SizedBox(),
-                          const SizedBox(height: 30,),
-                        ],
+                            descriptionMissing?
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: SimpleText(
+                                text: "Description is missing",
+                                fontSize: 12.sp,
+                                fontColor: Colors.red,
+                              ),
+                            ):
+                            const SizedBox(),
+                            const SizedBox(height: 30,),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              }
-             else{
-               return const Center(
-                 child: CircularProgressIndicator(),
-               );
-             }
-            },
+                    ],
+                  );
+                }
+                else{
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
           ),
         ),
       ),
