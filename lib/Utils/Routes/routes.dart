@@ -3,6 +3,7 @@ import 'package:wamikas/Models/user_profile_model.dart';
 import 'package:wamikas/Utils/Routes/route_name.dart';
 import 'package:wamikas/View/AuthScreens/auth_screen.dart';
 import 'package:wamikas/View/AuthScreens/signup.dart';
+import 'package:wamikas/View/Feedback/feedback.dart';
 import 'package:wamikas/View/Forum/forum_screeen.dart';
 import 'package:wamikas/View/Home/bottom_navigation_bar.dart';
 import 'package:wamikas/View/Home/home.dart';
@@ -54,6 +55,9 @@ class Routes {
         case RouteName.more:
         return MaterialPageRoute(
             builder: (BuildContext context) => const More());
+        case RouteName.feedback:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const FeedBack());
         case RouteName.register:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SignUp());

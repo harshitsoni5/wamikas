@@ -221,7 +221,7 @@ class _MoreState extends State<More> {
 
             },
             isLastTile: true,
-            assetName: "assets/svg/feedback.svg",
+            assetName: "assets/svg/Feedback.svg",
             hideArrow: true,
           ),
           const SizedBox(height: 15,),

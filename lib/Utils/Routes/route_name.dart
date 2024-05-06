@@ -21,4 +21,5 @@ class RouteName {
   static const String bottomBar = 'bottom_nav_bar';
   static const String notification = 'notification';
   static const String notificationPost = 'notification_post';
+  static const String feedback = 'feedback';
 }

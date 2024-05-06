@@ -122,7 +122,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          initialRoute: RouteName.splash,
+          initialRoute: RouteName.feedback,
           onGenerateRoute: Routes.generateRoute,
           debugShowCheckedModeBanner: false,
         ),
