@@ -9,6 +9,7 @@ import 'package:wamikas/Models/user_profile_model.dart';
 import 'package:wamikas/Utils/Components/TabBarChildrens/forums_card.dart';
 import 'package:wamikas/Utils/Components/Text/simple_text.dart';
 import '../../Utils/Components/AppBar/home_app_bar.dart';
+import '../../widgets/home_shimmer_loading.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,11 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       builder: (context, state) {
         if (state is HomeLoading) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
+          return const HomeShimmerLoading();
         } else if (state is HomeSuccess) {
           final List<PostModel> posts = state.listOfAllPost;
           final UserProfileModel userData = state.userData;
@@ -49,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onRefresh: refresh,
             child: Column(
               children: [
-                HomeAppBar(userData: userData,),
+                HomeAppBar(userData: userData),
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.only(top: 15),

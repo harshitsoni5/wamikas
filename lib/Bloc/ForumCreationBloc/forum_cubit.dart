@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wamikas/Models/user_profile_model.dart';
 import '../../Core/FirebaseDataBaseService/firestore_database_services.dart';
 import '../../SharedPrefernce/shared_pref.dart';
 import 'forum_state.dart';

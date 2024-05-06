@@ -108,7 +108,7 @@ class _MainScreenState extends State<MainScreen> {
       //   ),
       // ),
       bottomNavigationBar: SizedBox(
-        height: size.height<595?size.height*0.12:size.height*0.085,
+        //height: size.height<595?size.height*0.12:size.height*0.085,
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           backgroundColor:Colors.white,

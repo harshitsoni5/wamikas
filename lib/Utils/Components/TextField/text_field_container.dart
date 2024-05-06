@@ -73,6 +73,13 @@ class TextFieldContainer extends StatelessWidget {
             controller: controller,
             maxLines: maxLines,
             readOnly: readOnlyTrue ?? false,
+            toolbarOptions: ToolbarOptions(
+              copy: true,
+              cut: true,
+              paste: true,
+              selectAll: true,
+            ),
+
             decoration: InputDecoration(
                 counterText: "",
                 border: InputBorder.none,
@@ -86,7 +93,7 @@ class TextFieldContainer extends StatelessWidget {
             inputFormatters: [EmailInputFormatter()], // Apply EmailInputFormatter
           ),
         ),
-        const SizedBox(height: 15,)
+        const SizedBox(height: 10,)
       ],
     );
   }

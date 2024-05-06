@@ -88,10 +88,7 @@ class HomeAppBar extends StatelessWidget {
                           RouteName.notification
                         );
                       },
-                      child: SvgPicture.asset(
-                        "assets/svg/notification.svg",
-
-                      ),
+                      child: Icon(Icons.notifications,color: Color(0xFF9C236B),size: 30,),
                     ),
                   ],
                 ),

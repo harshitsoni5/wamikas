@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wamikas/Bloc/AuthBloc/OtpVerficationCubit/otp_verification_cubit.dart';
 import 'package:wamikas/Bloc/AuthBloc/SignUpCubit/signup_cubit.dart';
 import 'package:wamikas/Bloc/CommentsBloc/comments_bloc.dart';
+import 'package:wamikas/Bloc/FeedBackCubit/feedback_cubit.dart';
 import 'package:wamikas/Bloc/ForumCreationBloc/forum_cubit.dart';
 import 'package:wamikas/Bloc/ForumUserCubit/forum_user_cubit.dart';
 import 'package:wamikas/Bloc/HomeBloc/home_bloc.dart';
@@ -114,6 +115,8 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) =>ForumUserCubit()),
         BlocProvider<NotificationPostCubit>(
             create: (BuildContext context) =>NotificationPostCubit()),
+        BlocProvider<FeedbackCubit>(
+            create: (BuildContext context) =>FeedbackCubit()),
       ],
       child: ScreenUtilInit(
         child: MaterialApp(
@@ -122,7 +125,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          initialRoute: RouteName.feedback,
+          initialRoute: RouteName.splash,
           onGenerateRoute: Routes.generateRoute,
           debugShowCheckedModeBanner: false,
         ),
