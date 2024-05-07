@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -66,7 +65,8 @@ class _NotificationPostState extends State<NotificationPost> {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (state is NotificationPostSuccess) {
+            }
+            else if (state is NotificationPostSuccess) {
               final postData = state.postModel;
               if (isLiked.isEmpty) {
                 isLiked = List.generate(postData.comments.length, (index) => false);
@@ -189,6 +189,7 @@ class _NotificationPostState extends State<NotificationPost> {
                             ListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
+                              reverse: true,
                               itemCount: postData.comments.length,
                                 itemBuilder: (context,index){
                                   final commentData= postData.comments[index];
@@ -284,7 +285,16 @@ class _NotificationPostState extends State<NotificationPost> {
                   ],
                 ),
               );
-            } else {
+            }
+            else if(state is PostRemovedByUser){
+              return const Center(
+                child: SimpleText(
+                  text: "Post is removed by the user",
+                  fontSize: 16,
+                ),
+              );
+            }
+            else {
               return const Center(
                 child: SimpleText(
                   text: "oops Something went wrong",

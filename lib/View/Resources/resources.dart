@@ -24,6 +24,7 @@ class _ResourcesState extends State<Resources> {
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
@@ -124,7 +125,7 @@ class _ResourcesState extends State<Resources> {
                             margin: const EdgeInsets.only(top: 80),
                             child: const SimpleText(
                               text:
-                                  "No search result is found for this resource name ",
+                                  "No results found",
                               fontSize: 14,
                               fontColor: Colors.black38,
                             ),

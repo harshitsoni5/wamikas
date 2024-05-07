@@ -13,4 +13,6 @@ class NotificationPostSuccess extends NotificationPostState {
 });
 }
 
+class PostRemovedByUser extends NotificationPostState{}
+
 class NotificationError extends NotificationPostState{}

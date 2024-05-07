@@ -30,7 +30,8 @@ class SettingsTiles extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          GestureDetector(
+          InkWell(
+            highlightColor: Colors.white,
             onTap: onPressed,
             child: Row(
               children: [

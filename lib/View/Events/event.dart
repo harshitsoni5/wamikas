@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:pinput/pinput.dart';
 import 'package:wamikas/Models/event_model.dart';
 import 'package:wamikas/Utils/LocalData/local_data.dart';
 import '../../Utils/Components/AppBar/user_profile_app_bar.dart';
@@ -24,6 +23,7 @@ class _EventsState extends State<Events> {
     searchController.dispose();
     super.dispose();
   }
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
@@ -133,7 +133,7 @@ class _EventsState extends State<Events> {
                             margin: const EdgeInsets.only(top: 80),
                             child: const SimpleText(
                               text:
-                                  "No search result is found for this event name ",
+                                  "No results found",
                               fontSize: 14,
                               fontColor: Colors.black38,
                             ),

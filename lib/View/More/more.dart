@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../Core/FirebasePushNotificationService/firebase_push_notificatioin_services.dart';
 import '../../SharedPrefernce/shared_pref.dart';
 import '../../Utils/Color/colors.dart';
@@ -224,8 +225,11 @@ class _MoreState extends State<More> {
           const SizedBox(height: 15,),
           SettingsTiles(
             tileName: "Privacy Policy",
-            onPressed: () {
-
+            onPressed: () async{
+              if (!await launch(
+              Uri.parse("https://www.termsfeed.com/live/01cf7fdf-b14f-4b6f-ba53-543377c5f060").toString())) {
+              throw Exception('Could not launch url');
+              }
             },
             isLastTile: true,
             assetName: "assets/svg/privacy_policy.svg",
@@ -234,8 +238,11 @@ class _MoreState extends State<More> {
           const SizedBox(height: 15,),
           SettingsTiles(
             tileName: "Terms Of Use",
-            onPressed: () {
-
+            onPressed: () async{
+              if (!await launch(
+              Uri.parse("https://www.termsfeed.com/live/01cf7fdf-b14f-4b6f-ba53-543377c5f060").toString())) {
+              throw Exception('Could not launch url');
+              }
             },
             isLastTile: true,
             assetName: "assets/svg/terms_of_use.svg",

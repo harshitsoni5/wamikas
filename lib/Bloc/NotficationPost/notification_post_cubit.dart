@@ -18,6 +18,7 @@ class NotificationPostCubit extends Cubit<NotificationPostState> {
               "posts");
       var querySnapshot = await postReference.doc(postId).get();
       if (querySnapshot.exists) {
+        print("vhghg");
         var postData = querySnapshot.data();
         if (postData != null && postData is Map) {
           var snapshot = await reference.doc(postData["uid"]).get();
@@ -45,6 +46,8 @@ class NotificationPostCubit extends Cubit<NotificationPostState> {
         else{
           emit(NotificationError());
         }
+      }else{
+       emit(PostRemovedByUser());
       }
     } catch (e) {
       print(e.toString());

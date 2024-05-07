@@ -156,7 +156,7 @@ class _MainScreenState extends State<MainScreen> {
               icon:  SvgPicture.asset("assets/svg/icon-park-outline_more-app.svg",
                 color: _bottomNavIndex==4?ColorClass.textColor:null,
                 height: 25,),
-              label: "More",
+              label: "Settings",
             )
           ],
           onTap: (value) {

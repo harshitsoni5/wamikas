@@ -17,19 +17,25 @@ class FeedbackCubit extends Cubit<FeedbackState> {
       if(name.isNotEmpty){
         if(email.isNotEmpty){
           if(experience.isNotEmpty){
-            await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
-                "feedback");
-            String documentId = await SharedData.getIsLoggedIn("phone");
-            await FireStoreDataBaseServices.setDataToUserCollection(
-                "feedback", documentId, {
-              "uid": documentId,
-              "name":name,
-              "email":email,
-              "experience":experience,
-              "comments":comments
-            });
-            emit(FeedBackSuccess());
-            emit(FeedbackInitial());
+           if(comments.isNotEmpty){
+             await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
+                 "feedback");
+             String documentId = await SharedData.getIsLoggedIn("phone");
+             await FireStoreDataBaseServices.setDataToUserCollection(
+                 "feedback", documentId, {
+               "uid": documentId,
+               "name":name,
+               "email":email,
+               "experience":experience,
+               "comments":comments
+             });
+             emit(FeedBackSuccess());
+             emit(FeedbackInitial());
+           }
+           else{
+             emit(EmptyComment());
+             emit(FeedbackInitial());
+           }
           }else{
             emit(FeedbackExperience());
             emit(FeedbackInitial());

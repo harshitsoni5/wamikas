@@ -5,13 +5,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
+import 'package:wamikas/Bloc/HomeBloc/home_bloc.dart';
+import 'package:wamikas/Bloc/HomeBloc/home_event.dart';
 import 'package:wamikas/Models/user_profile_model.dart';
 import 'package:wamikas/Utils/Components/TextField/comment_textfield.dart';
 import 'package:wamikas/Utils/LocalData/local_data.dart';
 import '../../../Bloc/CommentsBloc/comments_bloc.dart';
 import '../../../Bloc/CommentsBloc/comments_event.dart';
 import '../../../Bloc/CommentsBloc/comments_state.dart';
+import '../../../Models/event_model.dart';
 import '../../../Models/post_model.dart';
+import '../../../Models/resources_model.dart';
 import '../../Color/colors.dart';
 import '../Text/simple_text.dart';
 
@@ -37,11 +41,9 @@ class _ForumCardState extends State<ForumCard> {
   List<PostModel> localSearch = [];
   bool mostRelevant = false;
   bool isEmpty = false;
+  bool isSearching =false;
 
   final TextEditingController searchController = TextEditingController();
-
-
-
 
   showBottomSheet({
     required Size size,
@@ -160,7 +162,7 @@ class _ForumCardState extends State<ForumCard> {
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemCount: comments.length,
                                   shrinkWrap: true,
-                                  reverse: mostRelevant == true ? true : false,
+                                  reverse: true,
                                   itemBuilder: (context, index) {
                                     final data = comments[index];
                                     bool isLikeOrNot = false;
@@ -256,6 +258,17 @@ class _ForumCardState extends State<ForumCard> {
                                             const SizedBox(width: 5),
                                             SimpleText(
                                                 text: "Like", fontSize: 10.sp),
+                                            const SizedBox(width: 5,),
+                                            state.comments[index]["likes"]
+                                                    .isNotEmpty
+                                                ? SimpleText(
+                                                    text: state
+                                                        .comments[index]
+                                                            ["likes"]
+                                                        .length
+                                                        .toString(),
+                                                    fontSize: 10.sp)
+                                                : const SizedBox(),
                                             const Spacer(),
                                             SimpleText(
                                                 text: LocalData.getTime(
@@ -297,14 +310,88 @@ class _ForumCardState extends State<ForumCard> {
     );
   }
 
-
-
-  @override
-  void initState() {
-    super.initState();
-    localSearch = widget.posts;
-
+  showBottomSheetOnDeletePost({
+    required Size size,
+    required String postId,
+    required UserProfileModel userData,
+    required PostModel postModel,
+    required List<PostModel> listsOfPost,
+    required List<EventModel> workshopData,
+    required List<EventModel> trendingData,
+    required List<EventModel> featuredData,
+    required List<ResourcesModel> personalFinance,
+    required List<ResourcesModel> personalGrowth,
+  }) async {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                top: -50,
+                left: size.width / 2.2,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Center(
+                    child: CircleAvatar(
+                      backgroundColor: Colors.grey[200],
+                      child: const Icon(Icons.close, color: Colors.black),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: Container(
+                  height: size.height*0.08,
+                  width: size.width,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
+                  ),
+                  child: InkWell(
+                    onTap: (){
+                      BlocProvider.of<HomeBloc>(context).add(DeletePostEvent(
+                          postId: postId,
+                          listsOfPost: listsOfPost,
+                          workshopData: workshopData,
+                          personalFinance: personalFinance,
+                          personalGrowth: personalGrowth,
+                          featuredData: featuredData,
+                          userData: userData,
+                          trendingData: trendingData));
+                      Navigator.of(context).pop();
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SimpleText(text: "Delete post", fontSize: 15,
+                          fontColor: Colors.black,fontWeight: FontWeight.w500,),
+                          Icon(Icons.delete,color: Colors.red,),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -312,6 +399,7 @@ class _ForumCardState extends State<ForumCard> {
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
@@ -330,13 +418,12 @@ class _ForumCardState extends State<ForumCard> {
                       child: TextField(
                         controller: searchController,
                         onChanged: (value) {
-                          setState((){
+                          setState(() {
                             if (value.isEmpty) {
                               setState(() {
                                 isEmpty = false;
                               });
-
-                              localSearch = widget.posts;
+                              localSearch.clear();
                             } else {
                               setState(() {
                                 isEmpty = true;
@@ -346,29 +433,29 @@ class _ForumCardState extends State<ForumCard> {
                                       .toLowerCase()
                                       .contains(value.toLowerCase()))
                                   .toList();
-
                             }
                           });
                         },
                         decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: "Search topics",
-
                             hintStyle: TextStyle(
                                 color: Color(0xffC8C8C8), fontSize: 14)),
                       ),
                     ),
-                    searchController.text.isEmpty?  SvgPicture.asset(
-                      "assets/svg/search.svg",
-                    ):InkWell(
-                      onTap: (){
-                        setState(() {
-                          localSearch = widget.posts;
-                        });
-                        searchController.text="";
-                      },
-                      child: const Icon(Icons.close),
-                    )
+                    searchController.text.isEmpty
+                        ? SvgPicture.asset(
+                            "assets/svg/search.svg",
+                          )
+                        : InkWell(
+                            onTap: () {
+                              setState(() {
+                                localSearch = widget.posts;
+                              });
+                              searchController.text = "";
+                            },
+                            child: const Icon(Icons.close),
+                          )
                   ],
                 ),
               ),
@@ -377,12 +464,12 @@ class _ForumCardState extends State<ForumCard> {
             : const SizedBox(
                 height: 10,
               ),
-        localSearch.isEmpty
-            ?  Container(
-          margin: const EdgeInsets.only(top: 80),
+        localSearch.isEmpty && isEmpty
+            ? Container(
+                margin: const EdgeInsets.only(top: 80),
                 alignment: Alignment.center,
                 child: const SimpleText(
-                  text: "No search result is found for this forum name ",
+                  text: "No results found",
                   fontSize: 14,
                   fontColor: Colors.black38,
                 ),
@@ -390,9 +477,12 @@ class _ForumCardState extends State<ForumCard> {
             : ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: localSearch.length,
+                itemCount: localSearch.isEmpty
+                    ? widget.posts.length
+                    : localSearch.length,
                 reverse: true,
                 itemBuilder: (context, index) {
+                  PostModel postData = localSearch.isEmpty? widget.posts[index]:localSearch[index];
                   return Column(
                     children: [
                       Container(
@@ -410,20 +500,17 @@ class _ForumCardState extends State<ForumCard> {
                           children: [
                             Row(
                               children: [
-                                widget.posts[index].profilePic == null
+                                postData.profilePic == null
                                     ? SvgPicture.asset(
                                         "assets/svg/profile.svg",
                                         height: 40,
                                         width: 40,
                                       )
                                     : ClipRRect(
-
-
                                         borderRadius: BorderRadius.circular(20),
-
                                         child: CachedNetworkImage(
                                           imageUrl:
-                                              widget.posts[index].profilePic!,
+                                              postData.profilePic!,
                                           progressIndicatorBuilder: (context,
                                                   url, downloadProgress) =>
                                               CircularProgressIndicator(
@@ -449,12 +536,16 @@ class _ForumCardState extends State<ForumCard> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SimpleText(
-                                      text: widget.posts[index].name,
+                                      text: localSearch.isEmpty
+                                          ? widget.posts[index].name
+                                          : localSearch[index].name,
                                       fontSize: 12.sp,
                                       textHeight: 0.9,
                                     ),
                                     SimpleText(
-                                      text: widget.posts[index].emailId,
+                                      text: localSearch.isEmpty
+                                          ? widget.posts[index].emailId
+                                          : localSearch[index].name,
                                       fontSize: 11.5.sp,
                                       fontColor: ColorClass.textColor,
                                     ),
@@ -462,7 +553,21 @@ class _ForumCardState extends State<ForumCard> {
                                 ),
                                 const Spacer(),
                                 widget.posts[index].uid == widget.userData.phone
-                                    ? const Icon(Icons.more_vert)
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          showBottomSheetOnDeletePost(
+                                              size: widget.size,
+                                              postId: widget.posts[index].id,
+                                              userData: widget.userData,
+                                              postModel: widget.posts[index],
+                                              listsOfPost: widget.posts,
+                                              workshopData: LocalData.workshopEvents,
+                                              trendingData: LocalData.trendingEvents,
+                                              featuredData: LocalData.featuredEvents,
+                                              personalFinance: LocalData.personalFinance,
+                                              personalGrowth: LocalData.personalGrowth);
+                                        },
+                                        child: const Icon(Icons.more_vert))
                                     : const SizedBox(),
                               ],
                             ),
@@ -568,10 +673,7 @@ class _ForumCardState extends State<ForumCard> {
                                             const SizedBox(
                                               width: 5,
                                             ),
-                                            localSearch[
-                                                        index]
-                                                    .comments
-                                                    .isNotEmpty
+                                            localSearch[index].comments.isNotEmpty
                                                 ? SimpleText(
                                                     text:
                                                         "${localSearch[index].comments.length.toString()} Comments",

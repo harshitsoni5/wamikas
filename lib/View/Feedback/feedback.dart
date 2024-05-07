@@ -26,6 +26,7 @@ class _FeedBackState extends State<FeedBack> {
   bool fullName =false;
   bool emailEmpty =false;
   bool experienceEmpty =false;
+  bool commentsEmpty =false;
   @override
   void dispose() {
     name.dispose();
@@ -53,11 +54,22 @@ class _FeedBackState extends State<FeedBack> {
                 }
                 if(state is FeedbackEmailEmpty){
                   setState(() {
+                    fullName=false;
                     emailEmpty=true;
                   });
                 }
+                if(state is EmptyComment){
+                 setState(() {
+                   fullName=false;
+                   emailEmpty=false;
+                   experienceEmpty=false;
+                   commentsEmpty=true;
+                 });
+                }
                 if(state is FeedbackExperience){
                   setState(() {
+                    fullName=false;
+                    emailEmpty=false;
                     experienceEmpty=true;
                   });
                 } if(state is FeedBackSuccess){
@@ -131,7 +143,7 @@ class _FeedBackState extends State<FeedBack> {
                       fullName? Align(
                         alignment: Alignment.centerRight,
                         child: SimpleText(
-                          text: "Name field should not be empty",
+                          text: "Please enter your name",
                           fontSize: 11.sp,
                           fontColor: Colors.red,
                         ),
@@ -144,7 +156,7 @@ class _FeedBackState extends State<FeedBack> {
                       emailEmpty? Align(
                         alignment: Alignment.centerRight,
                         child: SimpleText(
-                          text: "Email should not be empty",
+                          text: "Please enter email id",
                           fontSize: 11.sp,
                           fontColor: Colors.red,
                         ),
@@ -166,10 +178,9 @@ class _FeedBackState extends State<FeedBack> {
                       ):const SizedBox(),
                       const SizedBox(height: 10,),
                       EmojiFeedback(
-                        animDuration: const Duration(milliseconds: 300),
+                        animDuration: const Duration(milliseconds: 100),
                         curve: Curves.bounceIn,
                         inactiveElementScale: .5,
-
                         onChanged: (value) {
                           if(value ==1){
                             experience ="Terrible";
@@ -194,6 +205,14 @@ class _FeedBackState extends State<FeedBack> {
                         controller: comments,
                         maxLines: 5,
                       ),
+                      commentsEmpty? Align(
+                        alignment: Alignment.centerRight,
+                        child: SimpleText(
+                          text: "Please enter your comment",
+                          fontSize: 11.sp,
+                          fontColor: Colors.red,
+                        ),
+                      ):const SizedBox(),
                     ],
                   ),
                 ),

@@ -14,6 +14,8 @@ class FeedbackEmailEmpty extends FeedBackActionState{}
 
 class FeedbackExperience extends FeedBackActionState{}
 
+class EmptyComment extends FeedBackActionState{}
+
 class FeedbackError extends FeedBackActionState{}
 
 
