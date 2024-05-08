@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wamikas/Bloc/AuthBloc/SignUpCubit/signup_cubit.dart';
 import 'package:wamikas/Bloc/AuthBloc/SignUpCubit/signup_state.dart';
 import 'package:wamikas/Utils/Color/colors.dart';
@@ -66,7 +67,8 @@ class _SignUpState extends State<SignUp> {
                  padding: const EdgeInsets.only(right: 20,left: 20,top: 10),
                  child: Column(
                    children: [
-                     SvgPicture.asset("assets/svg/w-logo.svg"),
+                     SvgPicture.asset("assets/svg/logo.svg",height: 125,width: 150,),
+                      const SizedBox(height: 10,),
                       SimpleText(
                        text: "Signup",
                        fontSize: 20.sp,
@@ -79,7 +81,8 @@ class _SignUpState extends State<SignUp> {
                          crossAxisAlignment: CrossAxisAlignment.start,
                          children: [
                            TextFieldContainer(
-                             hintText: "Enter username",
+                             isToolbarAllowed: false,
+                             hintText: "Please enter username",
                              titleBox: "Username",
                              controller: name,
                              maxLength: 16,
@@ -93,7 +96,8 @@ class _SignUpState extends State<SignUp> {
                              },
                            ),
                            TextFieldContainer(
-                             hintText: "Enter email",
+                             isToolbarAllowed: false,
+                             hintText: "Please enter email_id",
                              titleBox: "Email",
                              controller: email,
                              maxLength: 32,
@@ -143,6 +147,12 @@ class _SignUpState extends State<SignUp> {
                                            child: VerticalDivider()),
                                        Flexible(
                                          child: TextField(
+                                           toolbarOptions:const ToolbarOptions(
+                                             copy: false,
+                                             cut: false,
+                                             paste: false,
+                                             selectAll: false,
+                                           ),
                                            onTapOutside: (event) {
                                              FocusScopeNode currentFocus = FocusScope.of(context);
                                              if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
@@ -208,7 +218,7 @@ class _SignUpState extends State<SignUp> {
                          toastLength: Toast.LENGTH_SHORT,
                          gravity: ToastGravity.SNACKBAR,
                          timeInSecForIosWeb: 1,
-                         textColor: Colors.black,
+                         textColor: Colors.red,
                          backgroundColor: CupertinoColors.white,
                          fontSize: 15.0
                      );
@@ -219,7 +229,7 @@ class _SignUpState extends State<SignUp> {
                          toastLength: Toast.LENGTH_SHORT,
                          gravity: ToastGravity.SNACKBAR,
                          timeInSecForIosWeb: 1,
-                         textColor: Colors.black,
+                         textColor: Colors.red,
                          backgroundColor: CupertinoColors.white,
                          fontSize: 15.0
                      );
@@ -230,7 +240,7 @@ class _SignUpState extends State<SignUp> {
                          toastLength: Toast.LENGTH_SHORT,
                          gravity: ToastGravity.SNACKBAR,
                          timeInSecForIosWeb: 1,
-                         textColor: Colors.black,
+                         textColor: Colors.red,
                          backgroundColor: CupertinoColors.white,
                          fontSize: 15.0
                      );
@@ -241,7 +251,7 @@ class _SignUpState extends State<SignUp> {
                          toastLength: Toast.LENGTH_LONG,
                          gravity: ToastGravity.SNACKBAR,
                          timeInSecForIosWeb: 1,
-                         textColor: Colors.black,
+                         textColor: Colors.red,
                          backgroundColor: CupertinoColors.white,
                          fontSize: 15.0
                      );
@@ -252,7 +262,7 @@ class _SignUpState extends State<SignUp> {
                          toastLength: Toast.LENGTH_SHORT,
                          gravity: ToastGravity.SNACKBAR,
                          timeInSecForIosWeb: 1,
-                         textColor: Colors.black,
+                         textColor: Colors.red,
                          backgroundColor: CupertinoColors.white,
                          fontSize: 15.0
                      );
@@ -263,7 +273,7 @@ class _SignUpState extends State<SignUp> {
                          toastLength: Toast.LENGTH_LONG,
                          gravity: ToastGravity.SNACKBAR,
                          timeInSecForIosWeb: 1,
-                         textColor: Colors.black,
+                         textColor: Colors.red,
                          backgroundColor: CupertinoColors.white,
 
                          fontSize: 15.0
@@ -275,7 +285,7 @@ class _SignUpState extends State<SignUp> {
                          toastLength: Toast.LENGTH_LONG,
                          gravity: ToastGravity.SNACKBAR,
                          timeInSecForIosWeb: 1,
-                         textColor: Colors.black,
+                         textColor: Colors.red,
                          backgroundColor: CupertinoColors.white,
                          fontSize: 15.0
                      );
@@ -311,44 +321,23 @@ class _SignUpState extends State<SignUp> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SimpleText(
-                            text: "By proceeding, you agree to Wamikas",
+                            text: "By proceeding, you agree to Wamikas ",
                             fontSize: 10.sp),
-                        SimpleText(text: "Terms of Service.",
-                          fontSize: 10.sp,
-                          fontColor: ColorClass.textColor,
-                          textDecoration: TextDecoration.underline,
+                        InkWell(
+                          onTap: ()async{
+                            if (!await launch(
+                            Uri.parse("https://www.termsfeed.com/live/01cf7fdf-b14f-4b6f-ba53-543377c5f060").toString())) {
+                            throw Exception('Could not launch url');
+                            }
+                          },
+                          child: SimpleText(text: "Privacy Policy ",
+                            fontSize: 10.sp,
+                            fontColor: ColorClass.textColor,
+                            textDecoration: TextDecoration.underline,
+                          ),
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SimpleText(
-                            text: "We will manage information about you as described in",
-                            fontSize: 10.sp),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SimpleText(
-                            text: "our ",
-                            fontSize: 10.sp),
-                        SimpleText(text: "Privacy Policy ",
-                          fontSize: 10.sp,
-                          fontColor: ColorClass.textColor,
-                          textDecoration: TextDecoration.underline,
-                        ),
-                        SimpleText(
-                            text: "and ",
-                            fontSize: 10.sp),
-                        SimpleText(text: "Cookie Policy.",
-                          fontSize: 10.sp,
-                          fontColor: ColorClass.textColor,
-                          textDecoration: TextDecoration.underline,
-                        ),
-                      ],
-                    )
                   ],
                 ),
                 const SizedBox(height: 20,),

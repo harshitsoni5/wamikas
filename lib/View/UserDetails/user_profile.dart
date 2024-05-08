@@ -184,7 +184,6 @@ class _UserProfileState extends State<UserProfile>
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -212,7 +211,7 @@ class _UserProfileState extends State<UserProfile>
                           onPressed: (){
                             _pickedImage(size);
                           },
-                          isEditProfile: false,
+                          isEditProfile: false, isPenNeeded: false,
                         ),
                         Expanded(
                           child: Column(

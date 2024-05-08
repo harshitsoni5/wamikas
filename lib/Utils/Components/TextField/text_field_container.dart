@@ -26,11 +26,13 @@ class TextFieldContainer extends StatelessWidget {
   final int? maxLength;
   final TextInputType? keyboardType;
   final Function(String)? onChanged;
+  final bool? isToolbarAllowed;
   const TextFieldContainer({
     super.key, // Added Key? key parameter
     required this.hintText,
     required this.titleBox,
     required this.controller,
+    this.isToolbarAllowed,
     this.maxLines,
     this.readOnlyTrue,
     this.maxLength,
@@ -73,12 +75,12 @@ class TextFieldContainer extends StatelessWidget {
             controller: controller,
             maxLines: maxLines,
             readOnly: readOnlyTrue ?? false,
-            toolbarOptions: ToolbarOptions(
+            toolbarOptions: isToolbarAllowed!=null ? ToolbarOptions(
               copy: true,
               cut: true,
               paste: true,
               selectAll: true,
-            ),
+            ):null,
 
             decoration: InputDecoration(
                 counterText: "",

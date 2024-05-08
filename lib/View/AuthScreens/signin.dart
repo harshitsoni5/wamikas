@@ -109,6 +109,12 @@ class _SignInState extends State<SignIn> {
                            child: VerticalDivider()),
                        Flexible(
                          child: TextField(
+                             toolbarOptions:const ToolbarOptions(
+                               copy: false,
+                               cut: false,
+                               paste: false,
+                               selectAll: false,
+                             ),
                            onTapOutside: (event) {
                              FocusScopeNode currentFocus = FocusScope.of(context);
                              if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
@@ -163,18 +169,18 @@ class _SignInState extends State<SignIn> {
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.SNACKBAR,
                         timeInSecForIosWeb: 1,
-                        textColor: Colors.black,
+                        textColor: Colors.red,
                         backgroundColor: CupertinoColors.white,
                         fontSize: 15.0
                     );
                   }
                   if(state is UserNotExists){
                     Fluttertoast.showToast(
-                        msg: "User not exists",
+                        msg: "User not found",
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.SNACKBAR,
                         timeInSecForIosWeb: 1,
-                        textColor: Colors.black,
+                        textColor: Colors.red,
                         backgroundColor: CupertinoColors.white,
                         fontSize: 15.0
                     );
@@ -186,7 +192,7 @@ class _SignInState extends State<SignIn> {
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.SNACKBAR,
                         timeInSecForIosWeb: 1,
-                        textColor: Colors.black,
+                        textColor: Colors.red,
                         backgroundColor: CupertinoColors.white,
                         fontSize: 15.0
                     );
@@ -197,7 +203,7 @@ class _SignInState extends State<SignIn> {
                           toastLength: Toast.LENGTH_LONG,
                           gravity: ToastGravity.SNACKBAR,
                           timeInSecForIosWeb: 1,
-                          textColor: Colors.black,
+                          textColor: Colors.red,
                           backgroundColor: CupertinoColors.white,
                           fontSize: 15.0);
                     }
@@ -207,7 +213,7 @@ class _SignInState extends State<SignIn> {
                           toastLength: Toast.LENGTH_LONG,
                           gravity: ToastGravity.SNACKBAR,
                           timeInSecForIosWeb: 1,
-                          textColor: Colors.black,
+                          textColor: Colors.red,
                           backgroundColor: CupertinoColors.white,
                           fontSize: 15.0);
                     }

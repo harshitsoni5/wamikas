@@ -15,10 +15,12 @@ class ProfilePhotoWithDetails extends StatelessWidget {
   final UserProfileModel data;
   final VoidCallback onPressed;
   final bool isEditProfile;
+  final bool isPenNeeded;
   const ProfilePhotoWithDetails(
       {super.key,
       required this.data,
       required this.onPressed,
+      required this.isPenNeeded,
       required this.isEditProfile});
 
   @override
@@ -157,7 +159,7 @@ class ProfilePhotoWithDetails extends StatelessWidget {
                         const SizedBox(
                           width: 3,
                         ),
-                        InkWell(
+                       isPenNeeded? InkWell(
                             onTap: (){
                               Navigator.of(context).pushNamed(
                                   RouteName.jobDescription,
@@ -167,7 +169,7 @@ class ProfilePhotoWithDetails extends StatelessWidget {
                               Icons.edit,
                               color: const Color(0xff6C6C6C),
                               size: size.width <390? 16:19,
-                            )),
+                            )):const SizedBox(),
                       ],
                     ),
                     SimpleText(

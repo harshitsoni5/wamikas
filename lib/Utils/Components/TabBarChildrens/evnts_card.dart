@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../Models/event_model.dart';
 import '../../Color/colors.dart';
@@ -74,6 +75,33 @@ class EventsCard extends StatelessWidget {
                                 topRight: Radius.circular(10)),
                             child: CachedNetworkImage(
                               imageUrl: data.eventPic,
+                              progressIndicatorBuilder: (context,
+                                  url, downloadProgress) =>
+                                  Shimmer(
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color(0xFFEBEBF4),
+                                        Color(0xFFF4F4F4),
+                                        Color(0xFFEBEBF4),
+                                      ],
+                                      stops: [
+                                        0.1,
+                                        0.3,
+                                        0.4,
+                                      ],
+                                      begin: Alignment(-1.0, -0.3),
+                                      end: Alignment(1.0, 0.3),
+                                      tileMode: TileMode.clamp,
+                                    ),
+                                    child: SizedBox(
+                                      width: eventsData.length == 1
+                                          ? size.width
+                                          : size.width * 0.75,
+                                      height: size.height * 0.15,
+                                    ),
+                                  ),
+                              errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
                               fit: BoxFit.fill,
                             )),
                       ),

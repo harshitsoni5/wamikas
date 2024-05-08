@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,6 +46,16 @@ class _ForumCardState extends State<ForumCard> {
 
   final TextEditingController searchController = TextEditingController();
 
+   dateTimeToTimestamp(var dateTime) {
+    if (dateTime is Timestamp) {
+      return dateTime;
+    } else if (dateTime is DateTime) {
+      return Timestamp.fromDate(dateTime);
+    } else {
+      return null;
+    }
+  }
+
   showBottomSheet({
     required Size size,
     required String postId,
@@ -66,6 +77,7 @@ class _ForumCardState extends State<ForumCard> {
                 left: size.width / 2.2,
                 child: GestureDetector(
                   onTap: () {
+                    setState(() {});
                     Navigator.of(context).pop();
                   },
                   child: Center(
@@ -136,25 +148,6 @@ class _ForumCardState extends State<ForumCard> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
                           children: [
-                            const SizedBox(height: 10),
-                            // GestureDetector(
-                            //   onTap: (){
-                            //     print(mostRelevant);
-                            //     setState(() {
-                            //       mostRelevant=!mostRelevant;
-                            //     });
-                            //   },
-                            //   child: Row(
-                            //     children: [
-                            //       SimpleText(
-                            //         text: "Most relevant",
-                            //         fontSize: 12.sp,
-                            //       ),
-                            //       const SizedBox(width: 5),
-                            //       const Icon(Icons.keyboard_arrow_down),
-                            //     ],
-                            //   ),
-                            // ),
                             const SizedBox(height: 20),
                             Expanded(
                               child: SingleChildScrollView(
@@ -177,44 +170,90 @@ class _ForumCardState extends State<ForumCard> {
                                         Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(40),
-                                              child: CircleAvatar(
-                                                radius: 20,
-                                                child: data["profile_pic"] ==
-                                                        null
-                                                    ? SvgPicture.asset(
-                                                        "assets/svg/profile.svg",
-                                                        height: 30)
-                                                    : CachedNetworkImage(
-                                                        imageUrl:
-                                                            data["profile_pic"],
-                                                        fit: BoxFit.fill,
-                                                      ),
+                                           Flexible(
+                                             child: Row(
+                                               children: [
+                                                 ClipRRect(
+                                                   borderRadius:
+                                                   BorderRadius.circular(40),
+                                                   child: CircleAvatar(
+                                                     radius: 20,
+                                                     child: data["profile_pic"] ==
+                                                         null
+                                                         ? SvgPicture.asset(
+                                                         "assets/svg/profile.svg",
+                                                         height: 30)
+                                                         : CachedNetworkImage(
+                                                       imageUrl:
+                                                       data["profile_pic"],
+                                                       fit: BoxFit.fill,
+                                                     ),
+                                                   ),
+                                                 ),
+                                                 const SizedBox(width: 10),
+                                                 Flexible(
+                                                   child: Column(
+                                                     crossAxisAlignment:
+                                                     CrossAxisAlignment.start,
+                                                     children: [
+                                                       SimpleText(
+                                                         text: data["name"],
+                                                         fontSize: 11.sp,
+                                                         fontWeight: FontWeight.w500,
+                                                       ),
+                                                       SimpleText(
+                                                         text: data["comments_desc"],
+                                                         fontSize: 11.sp,
+                                                         fontColor:
+                                                         const Color(0xff696969),
+                                                       ),
+                                                     ],
+                                                   ),
+                                                 ),
+                                               ],
+                                             ),
+                                           ),
+                                           data["uid"] == userData.phone || postModel.uid==userData.phone
+                                               ? InkWell(
+                                             onTap: (){
+                                               BlocProvider.of<CommentsBloc>(context).add(
+                                                   DeleteComment(
+                                                              commentId:
+                                                                  data["comment_id"],
+                                                              comments:
+                                                                  comments,
+                                                              postId: postId,
+                                                              postModel:
+                                                                  postModel,
+                                                       commentModel: Comment(
+                                                           uid: state.comments[index]
+                                                           ["uid"],
+                                                           name: state.comments[index]
+                                                           ["name"],
+                                                           profilePic: state
+                                                               .comments[index]
+                                                           ["profile_pic"],
+                                                           time:state.comments[index]
+                                                           ["time"],
+                                                           commentsDesc: state
+                                                               .comments[index]
+                                                           ["comments_desc"],
+                                                           likes: state.comments[index]
+                                                           ["likes"],
+                                                           commentId: state
+                                                               .comments[index]
+                                                           ["comment_id"]))
+                                               );
+                                                    },
+                                             child: const Icon(
+                                                Icons.delete,
+                                                color: Colors.red,
+                                                size: 18,
                                               ),
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Flexible(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  SimpleText(
-                                                    text: data["name"],
-                                                    fontSize: 11.sp,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                  SimpleText(
-                                                    text: data["comments_desc"],
-                                                    fontSize: 11.sp,
-                                                    fontColor:
-                                                        const Color(0xff696969),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
+                                           ):const SizedBox()
                                           ],
                                         ),
                                         const SizedBox(
@@ -223,41 +262,47 @@ class _ForumCardState extends State<ForumCard> {
                                         Row(
                                           children: [
                                             InkWell(
-                                                onTap: () {
-                                                  BlocProvider.of<CommentsBloc>(context).add(LikeAComment(
-                                                      postId: postId,
-                                                      comments: state.comments,
-                                                      postModel: postModel,
-                                                      likeOrNot: isLikeOrNot,
-                                                      commentModel: Comment(
-                                                          uid: state.comments[index]
-                                                              ["uid"],
-                                                          name: state.comments[index]
-                                                              ["name"],
-                                                          profilePic: state
-                                                                  .comments[index]
-                                                              ["profile_pic"],
-                                                          time: state.comments[index]
-                                                              ["time"],
-                                                          commentsDesc: state
-                                                                  .comments[index]
-                                                              ["comments_desc"],
-                                                          likes: state.comments[index]
-                                                              ["likes"],
-                                                          commentId: state
-                                                                  .comments[index]
-                                                              ["comment_id"])));
-                                                },
-                                                child: isLikeOrNot
-                                                    ? SvgPicture.asset(
-                                                        "assets/svg/like_filled.svg",
-                                                        height: 15,
-                                                      )
-                                                    : SvgPicture.asset(
-                                                        "assets/svg/like_wami.svg")),
-                                            const SizedBox(width: 5),
-                                            SimpleText(
-                                                text: "Like", fontSize: 10.sp),
+                                              onTap: () {
+                                                BlocProvider.of<CommentsBloc>(context).add(LikeAComment(
+                                                    postId: postId,
+                                                    comments: state.comments,
+                                                    postModel: postModel,
+                                                    likeOrNot: isLikeOrNot,
+                                                    commentModel: Comment(
+                                                        uid: state.comments[index]
+                                                        ["uid"],
+                                                        name: state.comments[index]
+                                                        ["name"],
+                                                        profilePic: state
+                                                            .comments[index]
+                                                        ["profile_pic"],
+                                                        time: state.comments[index]
+                                                        ["time"],
+                                                        commentsDesc: state
+                                                            .comments[index]
+                                                        ["comments_desc"],
+                                                        likes: state.comments[index]
+                                                        ["likes"],
+                                                        commentId: state
+                                                            .comments[index]
+                                                        ["comment_id"])
+                                                ));
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  isLikeOrNot
+                                                      ? SvgPicture.asset(
+                                                          "assets/svg/like_filled.svg",
+                                                          height: 15,
+                                                        )
+                                                      : SvgPicture.asset(
+                                                          "assets/svg/like_wami.svg"),
+                                                  const SizedBox(width: 5),
+                                                  SimpleText(
+                                                      text: "Like", fontSize: 10.sp),
+                                                ],
+                                              ),
+                                            ),
                                             const SizedBox(width: 5,),
                                             state.comments[index]["likes"]
                                                     .isNotEmpty

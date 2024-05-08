@@ -1,12 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wamikas/Bloc/HomeBloc/home_bloc.dart';
 import 'package:wamikas/Bloc/HomeBloc/home_event.dart';
 import 'package:wamikas/Utils/LocalData/local_data.dart';
 import '../../../Models/resources_model.dart';
-import '../../Color/colors.dart';
 import '../Text/simple_text.dart';
 
 class ResourcesCard extends StatefulWidget {
@@ -24,6 +25,7 @@ class _ResourcesCardState extends State<ResourcesCard> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -54,8 +56,33 @@ class _ResourcesCardState extends State<ResourcesCard> {
                   width: 70,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      widget.list[index].image,
+                    child: CachedNetworkImage(
+                      imageUrl:widget.list[index].image,
+                      progressIndicatorBuilder: (context,
+                          url, downloadProgress) =>
+                          const Shimmer(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color(0xFFEBEBF4),
+                                Color(0xFFF4F4F4),
+                                Color(0xFFEBEBF4),
+                              ],
+                              stops: [
+                                0.1,
+                                0.3,
+                                0.4,
+                              ],
+                              begin: Alignment(-1.0, -0.3),
+                              end: Alignment(1.0, 0.3),
+                              tileMode: TileMode.clamp,
+                            ),
+                            child: SizedBox(
+                              height: 70,
+                              width: 70,
+                            ),
+                          ),
+                      errorWidget: (context, url, error) =>
+                      const Icon(Icons.error),
                       fit: BoxFit.cover,
                     ),
                   ),

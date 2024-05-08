@@ -13,6 +13,7 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
     on<CommentsInit>(commentsInit);
     on<PostAComment>(postAComment);
     on<LikeAComment>(likeAComment);
+    on<DeleteComment>(deleteComment);
   }
 
   FutureOr<void> commentsInit(
@@ -21,7 +22,6 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
       comments: event.comments,
     ));
   }
-
   FutureOr<void> postAComment(
       PostAComment event, Emitter<CommentsState> emit) async {
       CollectionReference postReference =
@@ -30,7 +30,6 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
       CollectionReference usersReference =
       await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
           "users");
-      var docId = await SharedData.getIsLoggedIn("phone");
       var postDetails = await postReference.doc(event.postId).get();
       if (postDetails.exists) {
         var postData = postDetails.data();
@@ -79,12 +78,12 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
               CollectionReference notificationListReference =
               await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
                   "notifications");
-              var notiList = await notificationListReference.doc(docId).get();
+              var notiList = await notificationListReference.doc(postData["uid"]).get();
               if(notiList.exists){
                 var notiData = notiList.data();
                 if(notiData!= null && notiData is Map){
-                  var localNotiData = notiData;
-                  localNotiData["notifications"].add({
+                  List localNotiData = notiData["notifications"];
+                  localNotiData.add({
                     "uid_of_User": documentId,
                     "title": event.commentDesc,
                     "time": DateTime.now(),
@@ -92,7 +91,7 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
                   });
                   await FireStoreDataBaseServices.setDataToUserCollection(
                       "notifications", event.postModel.uid,{
-                   "notifications":localNotiData["notifications"]
+                   "notifications":localNotiData
                   });
                 }
               }else{
@@ -189,6 +188,35 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
           ));
         }
       }
+    } catch (e) {
+      emit(CommentsError());
+    }
+  }
+
+  FutureOr<void> deleteComment(
+      DeleteComment event, Emitter<CommentsState> emit) async {
+    try {
+      List allComments = event.comments;
+      int index =0;
+      for(int i=0; i<allComments.length;i++){
+        if(event.commentId == allComments[i]["comment_id"]){
+          break;
+        }
+        index+=1;
+      }
+      allComments.removeAt(index);
+      emit(CommentsSuccess(comments: allComments));
+      FireStoreDataBaseServices.setDataToUserCollection(
+          "posts", event.postId, {
+        "comments": allComments,
+        "uid": event.postModel.uid,
+        "forum_name": event.postModel.forumName,
+        "forum_title": event.postModel.forumTitle,
+        "forum_content": event.postModel.forumContent,
+        "like": [],
+        "time": event.postModel.time,
+        "id": event.postModel.id
+      });
     } catch (e) {
       emit(CommentsError());
     }

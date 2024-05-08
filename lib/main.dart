@@ -49,15 +49,15 @@ void main() async{
     androidProvider: AndroidProvider.playIntegrity,
     appleProvider: AppleProvider.appAttest,
   );
- await PushNotificationServices.firebaseCloudMessaging();
-  var initializationSettings =
-  PushNotificationServices.localNotificationInitialization();
-  PushNotificationServices.saveFcmToken();
   bool? isNotificationOn = await SharedFcmToken.getFcmToken("notification");
   isNotificationOn ??= false;
-  await notificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: _handleNotificationResponse);
+  isNotificationOn ? await PushNotificationServices.firebaseCloudMessaging():null;
+  var initializationSettings =
+ isNotificationOn? PushNotificationServices.localNotificationInitialization():null;
+  PushNotificationServices.saveFcmToken();
+  isNotificationOn ? await notificationsPlugin.initialize(
+      initializationSettings!,
+      onDidReceiveNotificationResponse: _handleNotificationResponse):null;
   PushNotificationServices.incomingMessage();
   isNotificationOn ? FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler):null;
   isNotificationOn ? FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage){
@@ -136,5 +136,4 @@ class MyApp extends StatelessWidget {
 
 // privacy icon
 // comments edit or like removed and delete
-//notification delete on deleting the post
 //shimmer effect in events and resources

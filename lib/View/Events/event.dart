@@ -75,8 +75,8 @@ class _EventsState extends State<Events> {
                                     for (int i = 0;
                                         i < LocalData.trendingEvents.length;
                                         i++) {
-                                      if (LocalData.trendingEvents[i].eventName
-                                          .contains(value)) {
+                                      if (LocalData.trendingEvents[i].eventName.toLowerCase()
+                                          .contains(value.toLowerCase())) {
                                         localSearch
                                             .add(LocalData.trendingEvents[i]);
                                       }
@@ -84,8 +84,8 @@ class _EventsState extends State<Events> {
                                     for (int i = 0;
                                         i < LocalData.workshopEvents.length;
                                         i++) {
-                                      if (LocalData.workshopEvents[i].eventName
-                                          .contains(value)) {
+                                      if (LocalData.workshopEvents[i].eventName.toLowerCase()
+                                          .contains(value.toLowerCase())) {
                                         localSearch
                                             .add(LocalData.workshopEvents[i]);
                                       }

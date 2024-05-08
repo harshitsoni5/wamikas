@@ -30,15 +30,6 @@ class PostAComment extends CommentsEvent{
   });
 }
 
-class ReduceBottomSheetSize extends CommentsEvent {
-  final List comments;
-  final bool isClicked;
-  ReduceBottomSheetSize({
-    required this.comments,
-    required this.isClicked,
-  });
-}
-
 class LikeAComment extends CommentsEvent{
   final String postId;
   final List comments;
@@ -51,6 +42,21 @@ class LikeAComment extends CommentsEvent{
     required this.postModel,
     required this.commentModel,
     required this.likeOrNot,
+  });
+}
+
+class DeleteComment extends CommentsEvent{
+  final String commentId;
+  final List comments;
+  final String postId;
+  final PostModel postModel;
+  final Comment commentModel;
+  DeleteComment({
+    required this.commentId,
+    required this.comments,
+    required this.postId,
+    required this.postModel,
+    required this.commentModel,
   });
 }
 

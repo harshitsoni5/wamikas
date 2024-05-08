@@ -261,6 +261,7 @@ class _ContactDetailsState extends State<ContactDetails> {
             ),
             ProfilePhotoWithDetails(
                 data: widget.userData,
+                isPenNeeded: false,
                 onPressed: () {
                   _pickedImage(size);
                 },isEditProfile: true,),

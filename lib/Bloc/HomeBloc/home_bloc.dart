@@ -15,6 +15,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeInitial()) {
     on<HomeInitialEvent>(homeInitialEvent);
     on<DeletePostEvent>(deletePostEvent);
+    on<BookmarkResources>(bookmarkResources);
   }
 
   FutureOr<void> homeInitialEvent(HomeInitialEvent event,
@@ -135,7 +136,85 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  FutureOr<void> deletePostEvent(DeletePostEvent event,
+  FutureOr<void> bookmarkResources(
+      BookmarkResources event, Emitter<HomeState> emit) async {
+    try{
+      var docId = await SharedData.getIsLoggedIn("phone");
+      List<ResourcesModel> personalFinance = [];
+      List<ResourcesModel> personalGrowth = [];
+      personalFinance.addAll(LocalData.personalFinance);
+      personalGrowth.addAll(LocalData.personalGrowth);
+      for(int i=0; i<personalFinance.length;i++){
+        if(event.id== personalFinance[i].id){
+          if(event.bookmarkOrNot){
+            personalFinance[i].bookmark.add(docId);
+            LocalData.bookmarked.add(personalFinance[i]);
+          }else{
+            personalFinance[i].bookmark.remove(docId);
+            for(int j=0;j<LocalData.bookmarked.length;j++){
+              if(event.id==LocalData.bookmarked[j].id){
+                LocalData.bookmarked.removeAt(j);
+              }
+            }
+          }
+          break;
+        }
+      }
+      for(int i=0; i<personalGrowth.length;i++){
+        if(event.id== personalGrowth[i].id){
+          if(event.bookmarkOrNot){
+            personalGrowth[i].bookmark.add(docId);
+            LocalData.bookmarked.add(personalGrowth[i]);
+          }else{
+            personalGrowth[i].bookmark.remove(docId);
+            for(int j=0;j<LocalData.bookmarked.length;j++){
+              if(event.id==LocalData.bookmarked[j].id){
+                LocalData.bookmarked.removeAt(j);
+              }
+            }
+          }
+          break;
+        }
+      }
+      LocalData.personalFinance.clear();
+      LocalData.personalGrowth.clear();
+      LocalData.personalFinance.addAll(personalFinance);
+      LocalData.personalGrowth.addAll(personalGrowth);
+      List<Map> finance =[];
+      List<Map> growth =[];
+      for(int i=0;i<personalFinance.length;i++){
+        finance.add({
+          "title": personalFinance[i].title,
+          "by": personalFinance[i].by,
+          "image": personalFinance[i].image,
+          "link": personalFinance[i].link,
+          "bookmark": personalFinance[i].bookmark,
+          "id": personalFinance[i].id,
+        });
+      }
+      for(int i=0;i<personalGrowth.length;i++){
+        growth.add({
+          "title": personalGrowth[i].title,
+          "by": personalGrowth[i].by,
+          "image": personalGrowth[i].image,
+          "link": personalGrowth[i].link,
+          "bookmark": personalGrowth[i].bookmark,
+          "id": personalGrowth[i].id,
+        });
+      }
+      await FireStoreDataBaseServices.setDataToUserCollection(
+          "resources", "OwqESSB2dPDMh8GguQqQ", {
+        "personal_financee":finance,
+        "professional_growth":growth
+      });
+    }
+    catch(e){
+      print(e.toString());
+    }
+  }
+
+
+FutureOr<void> deletePostEvent(DeletePostEvent event,
       Emitter<HomeState> emit) async {
     try {
       await FireStoreDataBaseServices.deleteDocumentById(

@@ -39,13 +39,16 @@ class PushNotificationServices {
       criticalAlert: false,
       provisional: false,
     );
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      SharedFcmToken.setNotification(true);
-    } else if (settings.authorizationStatus ==
-        AuthorizationStatus.provisional) {
-      print("user granted provisonal permission");
-    } else {
-      SharedFcmToken.setNotification(false);
+    bool? isNotificationOn = await SharedFcmToken.getFcmToken("notification");
+    if(isNotificationOn == null){
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        SharedFcmToken.setNotification(true);
+      } else if (settings.authorizationStatus ==
+          AuthorizationStatus.provisional) {
+        print("user granted provisonal permission");
+      } else {
+        SharedFcmToken.setNotification(false);
+      }
     }
   }
 

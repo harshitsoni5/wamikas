@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BannerPlaceholder extends StatelessWidget {
-  const BannerPlaceholder({Key? key}) : super(key: key);
+  const BannerPlaceholder({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +21,9 @@ class TitlePlaceholder extends StatelessWidget {
   final double width;
 
   const TitlePlaceholder({
-    Key? key,
+    super.key,
     required this.width,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +59,9 @@ class ContentPlaceholder extends StatelessWidget {
   final ContentLineType lineType;
 
   const ContentPlaceholder({
-    Key? key,
+    super.key,
     required this.lineType,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

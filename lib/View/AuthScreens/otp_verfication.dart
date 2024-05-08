@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pinput/pinput.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wamikas/Bloc/AuthBloc/OtpVerficationCubit/otp_verfication_state.dart';
 import 'package:wamikas/Bloc/AuthBloc/OtpVerficationCubit/otp_verification_cubit.dart';
 import 'package:wamikas/Utils/Color/colors.dart';
@@ -177,7 +179,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.SNACKBAR,
                                     timeInSecForIosWeb: 1,
-                                    textColor: Colors.black,
+                                    textColor: Colors.red,
                                     fontSize: 15.0
                                 );
                               }
@@ -220,7 +222,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.SNACKBAR,
                                   timeInSecForIosWeb: 1,
-                                  textColor: Colors.black,
+                                  textColor: Colors.red,
                                   backgroundColor: CupertinoColors.white,
                                   fontSize: 15.0
                               );
@@ -248,7 +250,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                         },
                       ),
                         const SizedBox(height: 20,),
-                        const Column(
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -256,44 +258,23 @@ class _OtpVerificationState extends State<OtpVerification> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SimpleText(
-                                    text: "By proceeding, you agree to Wamikas",
-                                    fontSize: 12),
-                                SimpleText(text: "Terms of Service.",
-                                  fontSize: 12,
-                                  fontColor: ColorClass.textColor,
-                                  textDecoration: TextDecoration.underline,
+                                    text: "By proceeding, you agree to Wamikas ",
+                                    fontSize: 10.sp),
+                                InkWell(
+                                  onTap: ()async{
+                                    if (!await launch(
+                                        Uri.parse("https://www.termsfeed.com/live/01cf7fdf-b14f-4b6f-ba53-543377c5f060").toString())) {
+                                      throw Exception('Could not launch url');
+                                    }
+                                  },
+                                  child: SimpleText(text: "Privacy Policy ",
+                                    fontSize: 10.sp,
+                                    fontColor: ColorClass.textColor,
+                                    textDecoration: TextDecoration.underline,
+                                  ),
                                 ),
                               ],
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SimpleText(
-                                    text: "We will manage information about you as described in",
-                                    fontSize: 12),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SimpleText(
-                                    text: "our ",
-                                    fontSize: 12),
-                                SimpleText(text: "Privacy Policy ",
-                                  fontSize: 12,
-                                  fontColor: ColorClass.textColor,
-                                  textDecoration: TextDecoration.underline,
-                                ),
-                                SimpleText(
-                                    text: "and ",
-                                    fontSize: 12),
-                                SimpleText(text: "Cookie Policy.",
-                                  fontSize: 12,
-                                  fontColor: ColorClass.textColor,
-                                  textDecoration: TextDecoration.underline,
-                                ),
-                              ],
-                            )
                           ],
                         ),
                       ],

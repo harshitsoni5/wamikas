@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wamikas/main.dart';
 import '../../Core/FirebasePushNotificationService/firebase_push_notificatioin_services.dart';
 import '../../SharedPrefernce/shared_pref.dart';
 import '../../Utils/Color/colors.dart';
@@ -273,16 +274,18 @@ class _MoreState extends State<More> {
                       Switch(
                         activeColor: ColorClass.textColor,
                         value: _notificationEnabled,
-                        onChanged: (value) {
+                        onChanged: (value) async{
                           if(value && _notificationEnabled){
                           }
                           else if (value==false && _notificationEnabled==false){
-
                           }
                          else if(value){
+                           print("here");
                            SharedFcmToken.setNotification(true);
+                           PushNotificationServices.firebaseCloudMessaging();
                          }else{
-                            PushNotificationServices.firebaseCloudMessaging();
+                            await notificationsPlugin.cancel(0);
+                            await notificationsPlugin.cancelAll();
                            SharedFcmToken.setNotification(false);
                          }
                           setState(() {

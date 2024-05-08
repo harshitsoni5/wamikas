@@ -42,7 +42,7 @@ class UserProfileAppBar extends StatelessWidget {
             ],
           ),
           SvgPicture.asset(
-            "assets/svg/w-logo.svg",
+            "assets/svg/logo.svg",
             height: size.width <390? 35:40,
           ),
         ],

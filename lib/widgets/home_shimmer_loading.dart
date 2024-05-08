@@ -49,7 +49,6 @@ class _HomeShimmerLoadingState extends State<HomeShimmerLoading> {
                 BannerPlaceholder(),
                 TitlePlaceholder(width: double.infinity),
                 SizedBox(height: 8.0),
-
               ],
             ),
           )),

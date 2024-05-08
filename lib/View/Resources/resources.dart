@@ -76,8 +76,8 @@ class _ResourcesState extends State<Resources> {
                                     for (int i = 0;
                                         i < LocalData.personalFinance.length;
                                         i++) {
-                                      if (LocalData.personalFinance[i].title
-                                          .contains(value)) {
+                                      if (LocalData.personalFinance[i].title.toLowerCase()
+                                          .contains(value.toLowerCase())) {
                                         localSearch
                                             .add(LocalData.personalFinance[i]);
                                       }
@@ -96,7 +96,7 @@ class _ResourcesState extends State<Resources> {
                               },
                               decoration: const InputDecoration(
                                   border: InputBorder.none,
-                                  hintText: "concert, comedy show etc...",
+                                  hintText: "Search...",
                                   hintStyle: TextStyle(
                                       color: Color(0xffC8C8C8), fontSize: 14)),
                             ),

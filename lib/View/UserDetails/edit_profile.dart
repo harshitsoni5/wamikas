@@ -310,6 +310,7 @@ class _EditProfileState extends State<EditProfile> {
                           _pickedImage(size);
                         },
                         isEditProfile: true,
+                        isPenNeeded: true,
                       ),
                       const SizedBox(
                         height: 12,
@@ -348,7 +349,7 @@ class _EditProfileState extends State<EditProfile> {
                               RouteName.interestAndPref,
                               arguments: data);
                         },
-                        isLastTile: false,
+                        isLastTile: true,
                         assetName: "assets/svg/tabler_hand-love-you.svg",
                         widget: state.userData.eventsOrGroupRec == null
                             ? const Padding(
@@ -360,14 +361,6 @@ class _EditProfileState extends State<EditProfile> {
                           ),
                         ):
                               const SizedBox(),
-                      ),
-                      EditProfileTiles(
-                        tileName: "Logout",
-                        onPressed: () {
-                          showLogoutDialog(context,size);
-                        },
-                        isLastTile: true,
-                        assetName: "assets/svg/logout.svg",
                       ),
                     ],
                   );
