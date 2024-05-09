@@ -25,13 +25,16 @@ class ForumCard extends StatefulWidget {
   final List<PostModel> posts;
   final Size size;
   final bool fromProfileScreen;
+  final bool isNewNotification;
 
   const ForumCard(
       {super.key,
       required this.userData,
       required this.posts,
       required this.size,
-      required this.fromProfileScreen});
+      required this.fromProfileScreen,
+      required this.isNewNotification,
+      });
 
   @override
   State<ForumCard> createState() => _ForumCardState();
@@ -413,7 +416,8 @@ class _ForumCardState extends State<ForumCard> {
                           personalGrowth: personalGrowth,
                           featuredData: featuredData,
                           userData: userData,
-                          trendingData: trendingData));
+                          trendingData: trendingData,
+                      isNewNotification: widget.isNewNotification));
                       Navigator.of(context).pop();
                     },
                     child: const Padding(
@@ -439,7 +443,7 @@ class _ForumCardState extends State<ForumCard> {
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed.
+     commentsController.dispose();
     searchController.dispose();
     super.dispose();
   }
@@ -565,14 +569,7 @@ class _ForumCardState extends State<ForumCard> {
                                               const Icon(Icons.error),
                                           height: 40.0,
                                           width: 40.0,
-                                        )
-
-                                        // Image.network(
-                                        //   widget.posts[index].profilePic!,
-                                        //   height: 40,
-                                        //   width: 40,
-                                        //   fit: BoxFit.cover,
-                                        // ),
+                                        ),
                                         ),
                                 const SizedBox(
                                   width: 10,

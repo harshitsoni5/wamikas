@@ -178,6 +178,7 @@ class _FeedBackState extends State<FeedBack> {
                       ):const SizedBox(),
                       const SizedBox(height: 10,),
                       EmojiFeedback(
+                        inactiveElementBlendColor: Colors.white,
                         animDuration: const Duration(milliseconds: 100),
                         curve: Curves.bounceIn,
                         inactiveElementScale: .5,

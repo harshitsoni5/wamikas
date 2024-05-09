@@ -131,7 +131,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     children: [
                                       SimpleText(text: lists[index].name, fontSize: 15,
                                         fontColor: const Color(0xffE52A9C),),
-                                      const SizedBox(height: 3,),
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         mainAxisAlignment: MainAxisAlignment.start,
@@ -144,17 +143,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                               textHeight: 1,
                                             ),
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(left: 15.0),
-                                            child: SimpleText(
-                                              text: getTime(lists[index].time),
-                                              fontSize: 15,
-                                              fontColor: Colors.grey,
-                                            ),
-                                          )
                                         ],
                                       )
                                     ],),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 15.0),
+                                  child: SimpleText(
+                                    text: getTime(lists[index].time),
+                                    fontSize: 15,
+                                    fontColor: Colors.grey,
+                                  ),
                                 )
                               ],
                             ),

@@ -34,6 +34,7 @@ class DeletePostEvent extends HomeEvent{
   final List<EventModel> featuredData;
   final List<ResourcesModel> personalFinance;
   final List<ResourcesModel> personalGrowth;
+  final bool isNewNotification;
 
   DeletePostEvent({
     required this.postId,
@@ -44,5 +45,6 @@ class DeletePostEvent extends HomeEvent{
     required this.featuredData,
     required this.userData,
     required this.trendingData,
+    required this.isNewNotification,
   });
 }

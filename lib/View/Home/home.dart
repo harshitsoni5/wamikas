@@ -46,7 +46,10 @@ class _HomeScreenState extends State<HomeScreen> {
             onRefresh: refresh,
             child: Column(
               children: [
-                HomeAppBar(userData: userData),
+                HomeAppBar(
+                  userData: userData,
+                  isNewNotification: state.isNewNotification,
+                ),
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.only(top: 15),
@@ -56,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       size: size,
                       posts: posts,
                       fromProfileScreen: false,
+                      isNewNotification: state.isNewNotification,
                     ),
                   ),
                 ),

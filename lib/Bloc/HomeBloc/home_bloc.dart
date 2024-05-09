@@ -5,6 +5,7 @@ import 'package:wamikas/Models/event_model.dart';
 import 'package:wamikas/Models/resources_model.dart';
 import 'package:wamikas/Models/user_profile_model.dart';
 import 'package:wamikas/Utils/LocalData/local_data.dart';
+import 'package:wamikas/main.dart';
 import '../../Core/FirebaseDataBaseService/firestore_database_services.dart';
 import '../../Models/post_model.dart';
 import '../../SharedPrefernce/shared_pref.dart';
@@ -114,6 +115,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
           LocalData.personalFinance.addAll(personalFinance);
           LocalData.personalGrowth.addAll(personalGrowth);
+          bool isNewNotification = false;
+          CollectionReference notificationListReference =
+          await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
+              "notifications");
+          var notiList = await notificationListReference.doc(docId).get();
+          if(notiList.exists){
+            var notiData = notiList.data();
+            if(notiData!= null && notiData is Map){
+              List localNotiData = notiData["notifications"];
+              int notificationList = await SharedData.getIsLoggedIn("list");
+              if(notificationList<localNotiData.length){
+                SharedData.notificationList(localNotiData.length);
+                isNewNotification=true;
+              }else{
+                isNewNotification=false;
+              }
+            }
+          }
           emit(HomeSuccess(
               listOfAllPost: listsOfPosts,
               userData: UserProfileModel.fromJson(data),
@@ -121,7 +140,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               trendingData: trendingData,
               workshopData: workshopData,
               personalFinance: personalFinance,
-              personalGrowth: personalGrowth
+              personalGrowth: personalGrowth,
+            isNewNotification: isNewNotification
           ));
         }
         else {
@@ -259,7 +279,9 @@ FutureOr<void> deletePostEvent(DeletePostEvent event,
           trendingData: event.trendingData,
           featuredData: event.featuredData,
           personalFinance: event.personalFinance,
-          personalGrowth: event.personalGrowth));
+          personalGrowth: event.personalGrowth,
+        isNewNotification: event.isNewNotification
+      ));
       CollectionReference notification =
       await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
           "notifications");

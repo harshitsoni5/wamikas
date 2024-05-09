@@ -39,6 +39,11 @@ class SharedData {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove(key);
   }
+
+  static Future notificationList(int list) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setInt("list", list);
+  }
 }
 
 class SharedFcmToken {

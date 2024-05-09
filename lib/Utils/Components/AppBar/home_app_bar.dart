@@ -8,7 +8,10 @@ import '../Text/simple_text.dart';
 
 class HomeAppBar extends StatelessWidget {
   final UserProfileModel userData;
-  const HomeAppBar({super.key, required this.userData});
+  final bool isNewNotification;
+
+  const HomeAppBar(
+      {super.key, required this.userData, required this.isNewNotification});
 
   @override
   Widget build(BuildContext context) {
@@ -82,13 +85,26 @@ class HomeAppBar extends StatelessWidget {
                     const SizedBox(
                       width: 10,
                     ),
-                    InkWell(
+                    isNewNotification?InkWell(
+                      onTap: (){
+                        Navigator.of(context).pushNamed(
+                            RouteName.notification
+                        );
+                      },
+                      child:  SvgPicture.asset(
+                        "assets/svg/notification.svg",
+                      ),
+                    ) :InkWell(
                       onTap: (){
                         Navigator.of(context).pushNamed(
                           RouteName.notification
                         );
                       },
-                      child: Icon(Icons.notifications,color: Color(0xFF9C236B),size: 30,),
+                      child: const Icon(
+                        Icons.notifications,
+                        color: Color(0xFF9C236B),
+                        size: 30,
+                      ),
                     ),
                   ],
                 ),

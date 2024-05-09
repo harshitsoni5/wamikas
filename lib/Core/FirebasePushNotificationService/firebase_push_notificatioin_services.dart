@@ -1,11 +1,22 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:rxdart/rxdart.dart';
 import '../../SharedPrefernce/shared_pref.dart';
 import '../../main.dart';
 
 
 class PushNotificationServices {
-  static InitializationSettings localNotificationInitialization() {
+  static final onClickNotification = BehaviorSubject<Map>();
+
+  static void onNotificationTap(NotificationResponse notificationResponse) {
+    Map<String, dynamic> data = jsonDecode(notificationResponse.payload!);
+    // Now you have access to the data
+    onClickNotification.add(data);
+  }
+
+  static localNotificationInitialization() {
     AndroidInitializationSettings androidSettings =
         const AndroidInitializationSettings("@mipmap/ic_launcher");
     DarwinInitializationSettings iosSettings =
@@ -18,7 +29,9 @@ class PushNotificationServices {
       android: androidSettings,
       iOS: iosSettings,
     );
-    return initializationSettings;
+    notificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse: onNotificationTap,
+        onDidReceiveBackgroundNotificationResponse: onNotificationTap);
   }
 
   static void saveFcmToken() async {
@@ -54,20 +67,16 @@ class PushNotificationServices {
 
   static void showNotification(RemoteMessage message) async {
     AndroidNotificationDetails androidDetails =
-        const AndroidNotificationDetails(
-            "notifications-youtube", "YouTube Notifications",
-            priority: Priority.max, importance: Importance.max);
-    DarwinNotificationDetails iosDetails = const DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
+    const AndroidNotificationDetails(
+        "notifications-wamikas", "Wamikas",
+        priority: Priority.max, importance: Importance.max);
     NotificationDetails notiDetails =
-        NotificationDetails(android: androidDetails, iOS: iosDetails);
+    NotificationDetails(android: androidDetails);
     await notificationsPlugin.show(
         0, message.notification?.title, message.notification?.body, notiDetails,
-        payload: message.data["title"]);
+        payload: jsonEncode(message.data));
   }
+
 
   static void incomingMessage() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {

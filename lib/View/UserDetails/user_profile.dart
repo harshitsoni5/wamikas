@@ -296,6 +296,7 @@ class _UserProfileState extends State<UserProfile>
                                                 posts: posts,
                                                 size: size,
                                                 fromProfileScreen: true,
+                                         isNewNotification: false,
                                               ),
                                         // You have not saved any Resource.
                                         // assets/svg/empty_resources.svg

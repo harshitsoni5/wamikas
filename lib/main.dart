@@ -33,10 +33,6 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
   print(message.data);
 }
 
-Future<void> _handleNotificationResponse(NotificationResponse response) async {
-  print("here");
-}
-
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async{
@@ -49,15 +45,15 @@ void main() async{
     androidProvider: AndroidProvider.playIntegrity,
     appleProvider: AppleProvider.appAttest,
   );
+  int? notificationList = await SharedData.getIsLoggedIn("list");
+  if(notificationList == null){
+    SharedData.notificationList(0);
+  }
   bool? isNotificationOn = await SharedFcmToken.getFcmToken("notification");
   isNotificationOn ??= false;
   isNotificationOn ? await PushNotificationServices.firebaseCloudMessaging():null;
-  var initializationSettings =
- isNotificationOn? PushNotificationServices.localNotificationInitialization():null;
+  isNotificationOn? PushNotificationServices.localNotificationInitialization():null;
   PushNotificationServices.saveFcmToken();
-  isNotificationOn ? await notificationsPlugin.initialize(
-      initializationSettings!,
-      onDidReceiveNotificationResponse: _handleNotificationResponse):null;
   PushNotificationServices.incomingMessage();
   isNotificationOn ? FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler):null;
   isNotificationOn ? FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage){
@@ -75,6 +71,11 @@ void main() async{
       });
     }
   }):null;
+  PushNotificationServices.onClickNotification.stream.listen((event) {
+    navigatorKey.currentState?.restorablePushNamed(
+        RouteName.notificationPost,
+        arguments:event["post_id"]);
+  });
   runApp(const MyApp());
 }
 
@@ -124,6 +125,10 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
+            snackBarTheme: const SnackBarThemeData(
+              backgroundColor: Colors.white,
+              contentTextStyle: TextStyle(color: Colors.red),
+            ),
           ),
           initialRoute: RouteName.splash,
           onGenerateRoute: Routes.generateRoute,

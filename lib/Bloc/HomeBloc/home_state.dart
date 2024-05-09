@@ -18,6 +18,7 @@ final List<EventModel> trendingData;
 final List<EventModel> featuredData;
 final List<ResourcesModel> personalFinance;
 final List<ResourcesModel> personalGrowth;
+final bool isNewNotification;
 HomeSuccess({
   required this.listOfAllPost,
   required this.userData,
@@ -26,6 +27,7 @@ HomeSuccess({
   required this.featuredData,
   required this.personalFinance,
   required this.personalGrowth,
+  required this.isNewNotification,
 });
 }
 

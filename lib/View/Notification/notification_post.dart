@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -105,10 +106,27 @@ class _NotificationPostState extends State<NotificationPost> {
                           children: [
                             Row(
                               children: [
-                                SvgPicture.asset(
+                                postData.profilePic == null
+                                    ? SvgPicture.asset(
                                   "assets/svg/profile.svg",
                                   height: 40,
                                   width: 40,
+                                )
+                                    : ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                    postData.profilePic!,
+                                    progressIndicatorBuilder: (context,
+                                        url, downloadProgress) =>
+                                        CircularProgressIndicator(
+                                            value: downloadProgress
+                                                .progress),
+                                    errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                                    height: 40.0,
+                                    width: 40.0,
+                                  ),
                                 ),
                                 const SizedBox(
                                   width: 10,

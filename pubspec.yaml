@@ -65,6 +65,7 @@ dependencies:
   cached_network_image: ^3.3.1
   flutter_emoji_feedback: 0.2.0
   shimmer: ^3.0.0
+  rxdart:
 
 dev_dependencies:
   flutter_test:
