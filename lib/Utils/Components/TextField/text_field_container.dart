@@ -27,6 +27,7 @@ class TextFieldContainer extends StatelessWidget {
   final TextInputType? keyboardType;
   final Function(String)? onChanged;
   final bool? isToolbarAllowed;
+  final bool? wantCapitalWord;
   const TextFieldContainer({
     super.key, // Added Key? key parameter
     required this.hintText,
@@ -36,6 +37,7 @@ class TextFieldContainer extends StatelessWidget {
     this.maxLines,
     this.readOnlyTrue,
     this.maxLength,
+    this.wantCapitalWord,
     this.keyboardType,
     this.onChanged,
   }); // Super constructor
@@ -75,13 +77,14 @@ class TextFieldContainer extends StatelessWidget {
             controller: controller,
             maxLines: maxLines,
             readOnly: readOnlyTrue ?? false,
-            toolbarOptions: isToolbarAllowed!=null ? ToolbarOptions(
+            toolbarOptions: isToolbarAllowed!=null ? const ToolbarOptions(
               copy: true,
               cut: true,
               paste: true,
               selectAll: true,
             ):null,
-
+            cursorHeight: 20,
+            textCapitalization:wantCapitalWord!=null?TextCapitalization.sentences:TextCapitalization.none,
             decoration: InputDecoration(
                 counterText: "",
                 border: InputBorder.none,

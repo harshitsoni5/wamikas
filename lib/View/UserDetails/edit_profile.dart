@@ -248,7 +248,6 @@ class _EditProfileState extends State<EditProfile> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -286,7 +285,7 @@ class _EditProfileState extends State<EditProfile> {
                     ],
                   ),
                   SvgPicture.asset(
-                    "assets/svg/w-logo.svg",
+                    "assets/svg/logo.svg",
                     height: size.width <390? 35:40,
                   ),
                 ],
@@ -310,7 +309,7 @@ class _EditProfileState extends State<EditProfile> {
                           _pickedImage(size);
                         },
                         isEditProfile: true,
-                        isPenNeeded: true,
+                        isPenNeeded: false,
                       ),
                       const SizedBox(
                         height: 12,
@@ -339,6 +338,16 @@ class _EditProfileState extends State<EditProfile> {
                               RouteName.jobDescription,
                               arguments: data);
                         },
+                        widget: state.userData.jobTitle== null && state.userData.education == null
+                            ? const Padding(
+                          padding: EdgeInsets.only(left: 10,top: 2),
+                          child: SimpleText(
+                            text: "Not Filled",
+                            fontSize: 10,
+                            fontColor: ColorClass.primaryColor,
+                          ),
+                        ):
+                        const SizedBox(),
                         isLastTile: false,
                         assetName: "assets/svg/bag.svg",
                       ),

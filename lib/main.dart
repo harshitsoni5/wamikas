@@ -138,7 +138,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// privacy icon
-// comments edit or like removed and delete
-//shimmer effect in events and resources

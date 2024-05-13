@@ -17,60 +17,65 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> {
       String? email
       )async {
     emit(OtpVerificationLoading());
-    try {
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: verificationId,
-        smsCode: otp,
-      );
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithCredential(credential);
-      String? fcmToken = await SharedFcmToken.getFcmToken("fcmToken");
-      CollectionReference collectionReference = FireStoreDataBaseServices.
-      createNewCollectionOrAddToExisting("users");
-      if (userCredential.additionalUserInfo!.isNewUser) {
-        SharedData.setUid(userCredential.user!.uid);
-        SharedData.setPhone(phoneNumber);
-        SharedData.setName(username!);
-        collectionReference.doc(phoneNumber).
-        set({
-          "name":username,
-          "phone":phoneNumber,
-          "email":email,
-          "fcm_token": fcmToken
-        });
-        emit(OtpVerificationSuccess());
-        emit(OtpVerificationInitial());
-      }
-      else {
-        SharedData.setUid(userCredential.user!.uid);
-        SharedData.setPhone(phoneNumber);
-        var userData = await collectionReference.doc(phoneNumber).get();
-        if(userData.exists){
-          var userInfo = userData.data();
-          if(userInfo != null && userInfo is Map){
-            SharedData.setName(userInfo["name"]);
-            SharedData.setImageUrl(userInfo["profile_pic"]);
-            collectionReference.doc(phoneNumber).
-            update({
-              "name":userInfo["name"],
-              "phone":phoneNumber,
-              "email":userInfo["email"],
-              "fcm_token": fcmToken,
-            });
-          }
-        }
-        emit(OtpVerificationUserAlreadyExistsState());
-        emit(OtpVerificationInitial());
-      }
-    } catch (e) {
-      if (e is FirebaseAuthException && e.code == "invalid-verification-code") {
-        emit(OtpVerificationFailed());
-        emit(OtpVerificationInitial());
-      } else {
-        emit(OtpVerificationError());
-        emit(OtpVerificationInitial());
-      }
-    }
+   if(otp.isEmpty || otp.length != 6){
+     emit(OtpNotFilled());
+     emit(OtpVerificationInitial());
+   }else{
+     try {
+       PhoneAuthCredential credential = PhoneAuthProvider.credential(
+         verificationId: verificationId,
+         smsCode: otp,
+       );
+       UserCredential userCredential = await FirebaseAuth.instance
+           .signInWithCredential(credential);
+       String? fcmToken = await SharedFcmToken.getFcmToken("fcmToken");
+       CollectionReference collectionReference = FireStoreDataBaseServices.
+       createNewCollectionOrAddToExisting("users");
+       if (userCredential.additionalUserInfo!.isNewUser) {
+         SharedData.setUid(userCredential.user!.uid);
+         SharedData.setPhone(phoneNumber);
+         SharedData.setName(username!);
+         collectionReference.doc(phoneNumber).
+         set({
+           "name":username,
+           "phone":phoneNumber,
+           "email":email,
+           "fcm_token": fcmToken
+         });
+         emit(OtpVerificationSuccess());
+         emit(OtpVerificationInitial());
+       }
+       else {
+         SharedData.setUid(userCredential.user!.uid);
+         SharedData.setPhone(phoneNumber);
+         var userData = await collectionReference.doc(phoneNumber).get();
+         if(userData.exists){
+           var userInfo = userData.data();
+           if(userInfo != null && userInfo is Map){
+             SharedData.setName(userInfo["name"]);
+             SharedData.setImageUrl(userInfo["profile_pic"]);
+             collectionReference.doc(phoneNumber).
+             update({
+               "name":userInfo["name"],
+               "phone":phoneNumber,
+               "email":userInfo["email"],
+               "fcm_token": fcmToken,
+             });
+           }
+         }
+         emit(OtpVerificationUserAlreadyExistsState());
+         emit(OtpVerificationInitial());
+       }
+     } catch (e) {
+       if (e is FirebaseAuthException && e.code == "invalid-verification-code") {
+         emit(OtpVerificationFailed());
+         emit(OtpVerificationInitial());
+       } else {
+         emit(OtpVerificationError());
+         emit(OtpVerificationInitial());
+       }
+     }
+   }
   }
 
   Future otpResend({required String phoneNumber})async{

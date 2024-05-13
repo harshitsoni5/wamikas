@@ -165,7 +165,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const SimpleText(text: "Didn't receive OTP ",
+                            const SimpleText(text: "Didn't receive OTP?",
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               fontColor: Colors.black,
@@ -185,20 +185,23 @@ class _OtpVerificationState extends State<OtpVerification> {
                               }
                             },
                             builder: (context, state) {
-                              return InkWell(
-                              onTap: () {
-                                BlocProvider.of<OtpVerificationCubit>(context).otpResend(
-                                    phoneNumber: widget.phone);
-                              },
-                              child: const SimpleText(
-                                text: "Resend OTP",
-                                fontSize: 14,
-                                fontColor:ColorClass.textColor,
-                                fontWeight: FontWeight.bold,
-                                textDecoration: TextDecoration.underline,
-                                decorationStyle: ColorClass.textColor,
-                              ),
-                            );
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 3,right: 10),
+                                child: InkWell(
+                                onTap: () {
+                                  BlocProvider.of<OtpVerificationCubit>(context).otpResend(
+                                      phoneNumber: widget.phone);
+                                },
+                                child: const SimpleText(
+                                  text: "Resend OTP",
+                                  fontSize: 14,
+                                  fontColor:ColorClass.textColor,
+                                  fontWeight: FontWeight.bold,
+                                  textDecoration: TextDecoration.underline,
+                                  decorationStyle: ColorClass.textColor,
+                                ),
+                                                            ),
+                              );
                               },
                             ),
                           ],
@@ -208,6 +211,17 @@ class _OtpVerificationState extends State<OtpVerification> {
                           listenWhen: (previous, current) => current is OtpVerificationActionState,
                           buildWhen: (previous, current) => current is! OtpVerificationActionState,
                           listener: (context, state) {
+                            if(state is OtpNotFilled){
+                              Fluttertoast.showToast(
+                                  msg: "Otp not filled correctly",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.SNACKBAR,
+                                  timeInSecForIosWeb: 1,
+                                  textColor: Colors.red,
+                                  backgroundColor: CupertinoColors.white,
+                                  fontSize: 15.0
+                              );
+                            }
                             if(state is OtpVerificationSuccess){
                              Navigator.of(context).pushNamedAndRemoveUntil(
                                  RouteName.locationDetails, (route) => false);

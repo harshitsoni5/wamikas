@@ -211,7 +211,12 @@ class _MoreState extends State<More> {
     return SafeArea(
       child: Column(
         children: [
-          UserProfileAppBar(size: size,title: "Settings"),
+          UserProfileAppBar(size: size,
+            title: "Settings",
+            onPressed: (){
+              Navigator.of(context).pop();
+            },
+          ),
           const SizedBox(height: 20,),
           Column(
         children: [

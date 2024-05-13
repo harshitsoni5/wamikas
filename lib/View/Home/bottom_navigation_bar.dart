@@ -20,7 +20,7 @@ class _MainScreenState extends State<MainScreen> {
   final _selectedPage = [
     const HomeScreen(),
     const Events(),
-    const ForumScreen(userData: null),
+    const ForumScreen(userData: null,fromProfileScreen: false,),
     const Resources(),
     const More(),
   ];
@@ -164,6 +164,10 @@ class _MainScreenState extends State<MainScreen> {
               if(value==2){
                 Navigator.of(context).pushNamed(
                   RouteName.forum,
+                  arguments: {
+                    "userData": null,
+                    "fromProfileScreen": false,
+                  }
                 );
               }else{
                 _bottomNavIndex = value;

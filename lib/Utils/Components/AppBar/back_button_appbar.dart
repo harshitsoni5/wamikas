@@ -20,57 +20,49 @@ class BackButtonAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SvgPicture.asset(
-          "assets/svg/semi_circle.svg",
-          height: size.height * 0.15,
-        ),
-        Container(
-          margin: const EdgeInsets.only(left: 15,right: 15,top: 10),
-          padding: EdgeInsets.only(top: topPadding),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Container(
+      margin: const EdgeInsets.only(left: 15,right: 15,top: 10),
+      padding: EdgeInsets.only(top: topPadding),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  InkWell(
-                      onTap: () {
-                        print(isUpdated);
-                        if(isUpdated){
-                          BlocProvider.of<UserProfileBloc>(
-                              context)
-                              .add(GetUserDataEvent());
-                        }else{
-                          BlocProvider.of<UserProfileBloc>(
-                              context)
-                              .add(GetUserDataWithoutLoading());
-                        }
-                        Navigator.of(context).pop();
-                      },
-                      child: SvgPicture.asset(
-                        "assets/svg/ep_back (2).svg",
-                        height: 35,
-                      )),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  SimpleText(
-                    text: title,
-                    fontSize:  size.width <400? 20:22,
-                    fontColor: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ],
+              InkWell(
+                  onTap: () {
+                    print(isUpdated);
+                    if(isUpdated){
+                      BlocProvider.of<UserProfileBloc>(
+                          context)
+                          .add(GetUserDataEvent());
+                    }else{
+                      BlocProvider.of<UserProfileBloc>(
+                          context)
+                          .add(GetUserDataWithoutLoading());
+                    }
+                    Navigator.of(context).pop();
+                  },
+                  child: SvgPicture.asset(
+                    "assets/svg/ep_back (2).svg",
+                    height: 35,
+                  )),
+              const SizedBox(
+                width: 15,
               ),
-              SvgPicture.asset(
-                "assets/svg/w-logo.svg",
-                height:  size.width <400? 35:40,
+              SimpleText(
+                text: title,
+                fontSize:  size.width <400? 20:22,
+                fontColor: Colors.black,
+                fontWeight: FontWeight.bold,
               ),
             ],
           ),
-        ),
-      ],
+          SvgPicture.asset(
+            "assets/svg/logo.svg",
+            height:  size.width <400? 35:40,
+          ),
+        ],
+      ),
     );
   }
 }

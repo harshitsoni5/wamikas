@@ -13,6 +13,8 @@ import 'package:wamikas/Utils/Color/colors.dart';
 import 'package:wamikas/Utils/Components/TabBarChildrens/forums_card.dart';
 import 'package:wamikas/Utils/Components/Text/simple_text.dart';
 import 'package:wamikas/Utils/LocalData/local_data.dart';
+import '../../Bloc/HomeBloc/home_bloc.dart';
+import '../../Bloc/HomeBloc/home_event.dart';
 import '../../Models/post_model.dart';
 import '../../Utils/Components/AppBar/user_profile_app_bar.dart';
 import '../../Utils/Components/Profile/profile_photo_details.dart';
@@ -37,10 +39,13 @@ class _UserProfileState extends State<UserProfile>
   void initState() {
     BlocProvider.of<UserProfileBloc>(context).add(GetUserDataEvent());
     tabController = TabController(length: 2, vsync: this);
-    if(tabController.indexIsChanging){
-      tabIndex=tabController.index;
-      setState(() {});
-    }
+    tabController.addListener(() {
+      if (tabController.indexIsChanging) {
+        setState(() {
+          tabIndex = tabController.index;
+        });
+      }
+    });
     super.initState();
   }
 
@@ -191,7 +196,16 @@ class _UserProfileState extends State<UserProfile>
       body: SafeArea(
         child: Column(
           children: [
-            UserProfileAppBar(size: size,title: "My Profile",isBack: true,),
+            UserProfileAppBar(
+              size: size,
+              title: "My Profile",
+              isBack: true,
+              onPressed: (){
+                BlocProvider.of<HomeBloc>(context).add(
+                    HomeInitialEvent());
+                Navigator.of(context).pop();
+              },
+            ),
             Expanded(
               child: BlocConsumer<UserProfileBloc, UserProfileState>(
                 listener: (context, state) {},
@@ -254,7 +268,7 @@ class _UserProfileState extends State<UserProfile>
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        tabIndex == 2
+                                        tabIndex == 1
                                             ? SvgPicture.asset(
                                                 "assets/svg/resources.svg",
                                                 color: ColorClass.textColor,
@@ -274,7 +288,7 @@ class _UserProfileState extends State<UserProfile>
                                 ],
                               ),
                               DefaultTabController(
-                                length: 1,
+                                length: 2,
                                 child: Expanded(
                                   child: Container(
                                     padding: const EdgeInsets.only(
@@ -297,9 +311,8 @@ class _UserProfileState extends State<UserProfile>
                                                 size: size,
                                                 fromProfileScreen: true,
                                          isNewNotification: false,
+                                         profilePercentage: state.profilePercentage,
                                               ),
-                                        // You have not saved any Resource.
-                                        // assets/svg/empty_resources.svg
                                         Container(
                                           margin: const EdgeInsets.symmetric(horizontal: 20),
                                           child: Column(
@@ -323,9 +336,12 @@ class _UserProfileState extends State<UserProfile>
                                                    ],
                                                  ),
                                                ),
-                                             ):ResourcesCard(
-                                                list: LocalData.bookmarked,
-                                              )
+                                             ):Expanded(
+                                               child: ResourcesCard(
+                                                  list: LocalData.bookmarked,
+                                                 fromUserProfile: true,
+                                                ),
+                                             )
                                             ],
                                           ),
                                         )
@@ -431,7 +447,10 @@ class SvgShowOnEmpty extends StatelessWidget {
           onTap: (){
             Navigator.of(context).pushNamed(
               RouteName.forum,
-              arguments: data,
+              arguments: {
+                "userData": data,
+                "fromProfileScreen": true,
+              },
             );
           },
           child: Container(

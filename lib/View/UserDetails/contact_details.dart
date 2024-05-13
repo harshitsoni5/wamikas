@@ -197,7 +197,6 @@ class _ContactDetailsState extends State<ContactDetails> {
     });
   }
 
-
   @override
   void dispose() {
     email.dispose();
@@ -229,8 +228,7 @@ class _ContactDetailsState extends State<ContactDetails> {
                           onTap: () {
                             Navigator.of(context).pop();
                             if(isUpdatedTrue){
-                              BlocProvider.of<UserProfileBloc>(
-                                  context)
+                              BlocProvider.of<UserProfileBloc>(context)
                                   .add(GetUserDataEvent());
                             }
                             BlocProvider.of<UserProfileBloc>(
@@ -253,7 +251,7 @@ class _ContactDetailsState extends State<ContactDetails> {
                     ],
                   ),
                   SvgPicture.asset(
-                    "assets/svg/w-logo.svg",
+                    "assets/svg/logo.svg",
                     height: size.width <390? 35:40,
                   ),
                 ],

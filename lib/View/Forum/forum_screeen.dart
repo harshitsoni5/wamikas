@@ -13,13 +13,21 @@ import 'package:wamikas/Bloc/ForumUserCubit/forum_user_state.dart';
 import 'package:wamikas/Models/user_profile_model.dart';
 import '../../Bloc/HomeBloc/home_bloc.dart';
 import '../../Bloc/HomeBloc/home_event.dart';
+import '../../Bloc/UserProfileBloc/UserProfileBloc/user_profile_bloc.dart';
+import '../../Bloc/UserProfileBloc/UserProfileBloc/user_profile_event.dart';
 import '../../Utils/Components/Buttons/round_auth_buttons.dart';
 import '../../Utils/Components/Text/simple_text.dart';
 import '../../Utils/Components/TextField/text_field_container.dart';
+import 'package:flutter/services.dart';
 
 class ForumScreen extends StatefulWidget {
   final UserProfileModel? userData;
-  const ForumScreen({super.key, required this.userData});
+  final bool fromProfileScreen;
+  const ForumScreen({
+    super.key,
+    required this.userData,
+    required this.fromProfileScreen
+  });
 
   @override
   State<ForumScreen> createState() => _ForumScreenState();
@@ -141,8 +149,12 @@ class _ForumScreenState extends State<ForumScreen> {
                                 InkWell(
                                     onTap: () {
                                       Navigator.of(context).pop();
-                                      BlocProvider.of<HomeBloc>(context).add(
-                                          HomeInitialEvent());
+                                      if(widget.fromProfileScreen){
+                                        BlocProvider.of<UserProfileBloc>(context).add(GetUserDataEvent());
+                                      }else{
+                                        BlocProvider.of<HomeBloc>(context).add(
+                                            HomeInitialEvent());
+                                      }
                                     },
                                     child: SvgPicture.asset(
                                       "assets/svg/ep_back (2).svg",
@@ -241,8 +253,6 @@ class _ForumScreenState extends State<ForumScreen> {
 
                                 decoration: InputDecoration(
                                     hintText: "Select Forum",
-
-
                                     border: InputBorder.none,
                                     hintStyle: GoogleFonts.poppins(
                                       color: const Color(0xff888888),
@@ -256,6 +266,9 @@ class _ForumScreenState extends State<ForumScreen> {
                               hintText: "Enter headline here",
                               titleBox: "Post Headlines",
                               controller: postTitle,
+                              isToolbarAllowed: null,
+                              wantCapitalWord: true,
+                              maxLines: 1,
                             ),
                             headlinesMissing?
                             Align(
@@ -274,6 +287,8 @@ class _ForumScreenState extends State<ForumScreen> {
                               controller: description,
                               keyboardType:  TextInputType.text,
                               maxLines: 8,
+                              isToolbarAllowed: true,
+                              wantCapitalWord: true,
                             ),
                             descriptionMissing?
                             Align(

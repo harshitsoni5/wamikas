@@ -30,7 +30,10 @@ class _ResourcesState extends State<Resources> {
     return SafeArea(
       child: Column(
         children: [
-          UserProfileAppBar(size: size, title: "Resources"),
+          UserProfileAppBar(size: size, title: "Resources",
+            onPressed: (){
+            Navigator.of(context).pop();
+          },),
           Expanded(
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -144,6 +147,7 @@ class _ResourcesState extends State<Resources> {
                           localSearch.isNotEmpty
                               ? ResourcesCard(
                             list: localSearch,
+                            fromUserProfile: false,
                           )
                               : const SizedBox(),
                           localSearch.isEmpty
@@ -159,6 +163,7 @@ class _ResourcesState extends State<Resources> {
                           localSearch.isEmpty
                               ? ResourcesCard(
                             list: LocalData.personalFinance,
+                            fromUserProfile: false,
                           )
                               : const SizedBox(),
                           localSearch.isEmpty
@@ -176,6 +181,7 @@ class _ResourcesState extends State<Resources> {
                           localSearch.isEmpty
                               ? ResourcesCard(
                             list: LocalData.personalGrowth,
+                            fromUserProfile: false,
                           )
                               : const SizedBox(),
                         ],

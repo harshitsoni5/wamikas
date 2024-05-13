@@ -8,6 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
 import 'package:wamikas/Bloc/HomeBloc/home_bloc.dart';
 import 'package:wamikas/Bloc/HomeBloc/home_event.dart';
+import 'package:wamikas/Bloc/UserProfileBloc/UserProfileBloc/user_profile_bloc.dart';
+import 'package:wamikas/Bloc/UserProfileBloc/UserProfileBloc/user_profile_event.dart';
 import 'package:wamikas/Models/user_profile_model.dart';
 import 'package:wamikas/Utils/Components/TextField/comment_textfield.dart';
 import 'package:wamikas/Utils/LocalData/local_data.dart';
@@ -26,6 +28,7 @@ class ForumCard extends StatefulWidget {
   final Size size;
   final bool fromProfileScreen;
   final bool isNewNotification;
+  final int? profilePercentage;
 
   const ForumCard(
       {super.key,
@@ -34,6 +37,7 @@ class ForumCard extends StatefulWidget {
       required this.size,
       required this.fromProfileScreen,
       required this.isNewNotification,
+      required this.profilePercentage,
       });
 
   @override
@@ -80,8 +84,8 @@ class _ForumCardState extends State<ForumCard> {
                 left: size.width / 2.2,
                 child: GestureDetector(
                   onTap: () {
-                    setState(() {});
                     Navigator.of(context).pop();
+                    setState(() {});
                   },
                   child: Center(
                     child: CircleAvatar(
@@ -239,8 +243,9 @@ class _ForumCardState extends State<ForumCard> {
                                                            profilePic: state
                                                                .comments[index]
                                                            ["profile_pic"],
-                                                           time:state.comments[index]
-                                                           ["time"],
+                                                           time:dateTimeToTimestamp(
+                                                               state.comments[index]
+                                                               ["time"]),
                                                            commentsDesc: state
                                                                .comments[index]
                                                            ["comments_desc"],
@@ -369,6 +374,7 @@ class _ForumCardState extends State<ForumCard> {
     required List<EventModel> featuredData,
     required List<ResourcesModel> personalFinance,
     required List<ResourcesModel> personalGrowth,
+    required bool fromProfileScreen
   }) async {
     showModalBottomSheet(
       isScrollControlled: true,
@@ -408,17 +414,19 @@ class _ForumCardState extends State<ForumCard> {
                   ),
                   child: InkWell(
                     onTap: (){
-                      BlocProvider.of<HomeBloc>(context).add(DeletePostEvent(
+                      Navigator.of(context).pop();
+                      showDeleteDialog(context: context,
+                          size: size,
                           postId: postId,
+                          userData: userData,
+                          postModel: postModel,
                           listsOfPost: listsOfPost,
                           workshopData: workshopData,
+                          trendingData: trendingData,
+                          featuredData: featuredData,
                           personalFinance: personalFinance,
                           personalGrowth: personalGrowth,
-                          featuredData: featuredData,
-                          userData: userData,
-                          trendingData: trendingData,
-                      isNewNotification: widget.isNewNotification));
-                      Navigator.of(context).pop();
+                          fromProfileScreen: fromProfileScreen);
                     },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 15,vertical: 5),
@@ -437,6 +445,108 @@ class _ForumCardState extends State<ForumCard> {
             ],
           ),
         );
+      },
+    );
+  }
+
+  Future<void> showDeleteDialog({
+    required BuildContext context,
+    required Size size,
+    required String postId,
+    required UserProfileModel userData,
+    required PostModel postModel,
+    required List<PostModel> listsOfPost,
+    required List<EventModel> workshopData,
+    required List<EventModel> trendingData,
+    required List<EventModel> featuredData,
+    required List<ResourcesModel> personalFinance,
+    required List<ResourcesModel> personalGrowth,
+    required bool fromProfileScreen
+  }) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+            child: Container(
+              height: size.height * 0.195,
+              width: size.width - 30,
+              padding:
+              const EdgeInsets.only(bottom: 15, left: 20, right: 20, top: 15),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SimpleText(
+                    text: "Delete Post",
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    fontColor: Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  const SimpleText(
+                    text: 'Are you sure you want to delete the post ?',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    fontColor: Colors.blueGrey,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const SimpleText(
+                            text: "Cancel",
+                            fontSize: 15,
+                            fontColor: ColorClass.primaryColor,
+                          )),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      GestureDetector(
+                          onTap: () {
+                            if(fromProfileScreen){
+                              BlocProvider.of<UserProfileBloc>(context)
+                                  .add(DeletePost(postId: postId,
+                                  listsOfPost: listsOfPost,
+                                  personalFinance: personalFinance,
+                                  personalGrowth: personalGrowth,
+                                  userData: userData,
+                                  profilePercentage: widget.profilePercentage!));
+                            }else{
+                              BlocProvider.of<HomeBloc>(context).add(DeletePostEvent(
+                                  postId: postId,
+                                  listsOfPost: listsOfPost,
+                                  workshopData: workshopData,
+                                  personalFinance: personalFinance,
+                                  personalGrowth: personalGrowth,
+                                  featuredData: featuredData,
+                                  userData: userData,
+                                  trendingData: trendingData,
+                                  isNewNotification: widget.isNewNotification));
+                            }
+                            Navigator.of(context).pop();
+                          },
+                          child: const SimpleText(
+                            text: "Yes",
+                            fontSize: 15,
+                            fontColor: ColorClass.primaryColor,
+                          ))
+                    ],
+                  )
+                ],
+              ),
+            ));
       },
     );
   }
@@ -513,6 +623,7 @@ class _ForumCardState extends State<ForumCard> {
             : const SizedBox(
                 height: 10,
               ),
+
         localSearch.isEmpty && isEmpty
             ? Container(
                 margin: const EdgeInsets.only(top: 80),
@@ -598,6 +709,7 @@ class _ForumCardState extends State<ForumCard> {
                                     ? GestureDetector(
                                         onTap: () {
                                           showBottomSheetOnDeletePost(
+                                            fromProfileScreen: widget.fromProfileScreen,
                                               size: widget.size,
                                               postId: widget.posts[index].id,
                                               userData: widget.userData,

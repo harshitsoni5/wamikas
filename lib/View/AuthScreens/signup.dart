@@ -29,7 +29,7 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController phone = TextEditingController();
   final Regex regex =Regex();
   bool isValidEmail=false;
-  bool isEmailEmpty=true;
+  bool isEmailEmpty=false;
   bool isPhoneEmpty=true;
   bool isUsernameEmpty=true;
 
@@ -86,6 +86,7 @@ class _SignUpState extends State<SignUp> {
                              titleBox: "Username",
                              controller: name,
                              maxLength: 16,
+                             wantCapitalWord: true,
                              keyboardType: TextInputType.visiblePassword,
                              onChanged: (val){
                                if(val.isEmpty){
@@ -320,9 +321,9 @@ class _SignUpState extends State<SignUp> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SimpleText(
+                        const SimpleText(
                             text: "By proceeding, you agree to Wamikas ",
-                            fontSize: 10.sp),
+                            fontSize: 11.5),
                         InkWell(
                           onTap: ()async{
                             if (!await launch(
@@ -330,8 +331,8 @@ class _SignUpState extends State<SignUp> {
                             throw Exception('Could not launch url');
                             }
                           },
-                          child: SimpleText(text: "Privacy Policy ",
-                            fontSize: 10.sp,
+                          child: const SimpleText(text: "Privacy Policy ",
+                            fontSize: 11.5,
                             fontColor: ColorClass.textColor,
                             textDecoration: TextDecoration.underline,
                           ),
@@ -344,8 +345,8 @@ class _SignUpState extends State<SignUp> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                     SimpleText(text: "Already have an account? ",
-                      fontSize: 10.sp,
+                     const SimpleText(text: "Already have an account? ",
+                      fontSize: 14,
                       fontWeight: FontWeight.w500,
                       fontColor: Colors.black,
                     ),
@@ -353,9 +354,9 @@ class _SignUpState extends State<SignUp> {
                       onTap: () {
                         Navigator.of(context).pushNamed(RouteName.signIn);
                       },
-                      child: SimpleText(
+                      child: const SimpleText(
                         text: "Login Now",
-                        fontSize: 10.sp,
+                        fontSize: 12,
                         fontColor: ColorClass.textColor,
                         fontWeight: FontWeight.bold,
                       ),

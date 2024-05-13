@@ -68,15 +68,17 @@ class Routes {
         return MaterialPageRoute(
             builder: (BuildContext context) => const UserProfile());
         case RouteName.forum:
-      if(argument is UserProfileModel){
+      if(argument is Map){
         return MaterialPageRoute(
             builder: (BuildContext context) =>  ForumScreen(
-              userData: argument,
+              userData: argument["userData"],
+              fromProfileScreen: argument["fromProfileScreen"],
             ));
       }else{
         return MaterialPageRoute(
             builder: (BuildContext context) =>  const ForumScreen(
               userData: null,
+              fromProfileScreen: true,
             ));
       }
         case RouteName.editProfile:

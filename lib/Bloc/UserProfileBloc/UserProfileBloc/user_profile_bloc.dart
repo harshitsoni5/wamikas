@@ -13,6 +13,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   UserProfileBloc() : super(UserProfileInitial()) {
     on<GetUserDataEvent>(getUserDataEvent);
     on<GetUserDataWithoutLoading>(getUserDataWithoutLoading);
+    on<DeletePost>(deletePost);
   }
 
   FutureOr<void> getUserDataEvent(
@@ -176,5 +177,55 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
       } else {
         emit(UserProfileError());
       }
+  }
+
+  FutureOr<void> deletePost(DeletePost event,
+      Emitter<UserProfileState> emit) async {
+    try {
+      await FireStoreDataBaseServices.deleteDocumentById(
+          collectionName: "posts", documentId: event.postId);
+      List<PostModel> allPosts = [];
+      for (int i = 0; i < event.listsOfPost.length; i++) {
+        if (event.listsOfPost[i].id != event.postId) {
+          allPosts.add(event.listsOfPost[i]);
+        }
+      }
+      emit(UserProfileSuccess(
+         personalFinance: event.personalFinance,
+        personalGrowth: event.personalGrowth,
+        listOfForums: allPosts,
+        userData:event.userData,
+        profilePercentage: event.profilePercentage
+      ));
+      CollectionReference notification =
+      await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
+          "notifications");
+      var docId = await SharedData.getIsLoggedIn("phone");
+      var snapshot = await notification.doc(docId).get();
+      if (snapshot.exists) {
+        var data = snapshot.data();
+        if (data != null && data is Map) {
+          int index = 0;
+          bool isThereAreAnyNotification =false;
+          List notifications = data["notifications"];
+          for (int i = 0; i < notifications.length; i++) {
+            if (notifications[i]["id"] == event.postId) {
+              isThereAreAnyNotification=true;
+              break;
+            }
+            index++;
+          }
+          if(isThereAreAnyNotification){
+            notifications.removeAt(index);
+            await FireStoreDataBaseServices.setDataToUserCollection(
+                "notifications", docId, {
+              "notifications": notifications
+            });
+          }
+        }
+      }
+    } catch (e) {
+      emit(UserProfileError());
+    }
   }
 }

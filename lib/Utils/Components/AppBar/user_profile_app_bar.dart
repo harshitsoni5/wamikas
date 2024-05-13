@@ -5,9 +5,12 @@ import '../Text/simple_text.dart';
 class UserProfileAppBar extends StatelessWidget {
   final String title;
   final bool? isBack;
+  final VoidCallback onPressed;
   const UserProfileAppBar({
     super.key,
-    required this.size, required this.title,
+    required this.size,
+    required this.title,
+    required this.onPressed,
     this.isBack
   });
 
@@ -23,9 +26,7 @@ class UserProfileAppBar extends StatelessWidget {
           Row(
             children: [
               isBack!= null? InkWell(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
+                  onTap:onPressed,
                   child: SvgPicture.asset(
                     "assets/svg/ep_back (2).svg",
                     height: 35,

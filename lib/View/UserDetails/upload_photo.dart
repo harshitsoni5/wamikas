@@ -8,6 +8,7 @@ import 'package:wamikas/Bloc/UserProfileBloc/ImageCubit/upload_image_cubit.dart'
 import 'package:wamikas/Bloc/UserProfileBloc/ImageCubit/upload_image_state.dart';
 import 'package:wamikas/Utils/Components/Buttons/back_button_with_logo.dart';
 import 'package:wamikas/Utils/Components/Text/simple_text.dart';
+import 'package:wamikas/View/UserDetails/user_profile.dart';
 import 'dart:io';
 import '../../Utils/Color/colors.dart';
 import '../../Utils/Components/Buttons/round_auth_buttons.dart';
@@ -21,66 +22,6 @@ class UploadPhoto extends StatefulWidget {
 }
 
 class _UploadPhotoState extends State<UploadPhoto> {
-
-  void _pickedImage(){
-    showDialog<ImageSource>(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: const Text('Choose image source'),
-        actions: [
-          ElevatedButton(
-            child: const Text('Camera'),
-            onPressed: () async {
-              Permission permission = Permission.camera;
-              if (await permission.isGranted) {
-                Navigator.of(context).pop();
-                BlocProvider.of<UploadImageCubit>(context)
-                    .uploadPhotoEvent(true);
-              } else if (await permission.isDenied) {
-                permission = Permission.camera;
-                if (await permission.isGranted) {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<UploadImageCubit>(context)
-                      .uploadPhotoEvent(true);
-                } else {
-                  showPermissionDeniedDialog('Camera');
-                }
-              } else {
-                showPermissionDeniedDialog('Camera');
-              }
-            },
-          ),
-          ElevatedButton(
-            child: const Text('Gallery'),
-            onPressed: () async {
-              PermissionStatus status =await Permission.photos.request();
-              if ( status.isGranted) {
-                Navigator.of(context).pop();
-                BlocProvider.of<UploadImageCubit>(context)
-                    .uploadPhotoEvent(false);
-              } else if ( status.isDenied) {
-                status = await Permission.photos.request();
-                if ( status.isGranted) {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<UploadImageCubit>(context)
-                      .uploadPhotoEvent(false);
-                } else {
-                  showPermissionDeniedDialog('Gallery');
-                }
-              } else {
-                showPermissionDeniedDialog('Gallery');
-              }
-            },
-          ),
-        ],
-      ),
-    ).then((ImageSource? source) async {
-      if (source == null) return;
-
-      final pickedFile = await ImagePicker().pickImage(source: source);
-      if (pickedFile == null) return;
-    });
-  }
 
   void showPermissionDeniedDialog(String permissionType) {
     showDialog(
@@ -106,6 +47,120 @@ class _UploadPhotoState extends State<UploadPhoto> {
         );
       },
     );
+  }
+
+  void _pickedImage(Size size){
+    showDialog<ImageSource>(
+      context: context,
+      builder: (context) => Dialog(
+        child: Container(
+          height:size.height*0.26,
+          width:size.width-30,
+          padding: const EdgeInsets.only(bottom: 15,left: 20,right: 20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: (){
+                  Navigator.of(context).pop();
+                },
+                child: const Padding(
+                  padding: EdgeInsets.only(top: 15),
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.black,
+                      child: Icon(Icons.close,color: Colors.white,),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10,),
+              const SimpleText(
+                text: 'Choose image source',
+                fontSize: 18,
+                fontColor: Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CameraButtons(
+                    title: "Camera",
+                    onPressed: () async {
+                      PermissionStatus permission = await Permission.camera.status;
+                      if (permission.isGranted) {
+                        Navigator.of(context).pop();
+                        BlocProvider.of<UploadImageCubit>(context)
+                            .uploadPhotoEvent(true);
+                      } else if (permission.isDenied) {
+                        // If permission is denied, request permission again
+                        permission = await Permission.camera.request();
+                        if (permission.isGranted) {
+                          Navigator.of(context).pop();
+                          BlocProvider.of<UploadImageCubit>(context)
+                              .uploadPhotoEvent(true);
+                        } else {
+                          showPermissionDeniedDialog('Camera');
+                        }
+                      } else {
+                        // If permission is neither granted nor denied, request permission
+                        permission = await Permission.camera.request();
+                        if (permission.isGranted) {
+                          Navigator.of(context).pop();
+                          BlocProvider.of<UploadImageCubit>(context)
+                              .uploadPhotoEvent(true);
+                        } else {
+                          showPermissionDeniedDialog('Camera');
+                        }
+                      }
+                    },
+                    svg: "assets/svg/camera.svg",
+                    size: size,
+                  ),
+                  const SizedBox(width: 20,),
+                  CameraButtons(
+                    size: size,
+                    title: "Gallery",
+                    onPressed: () async {
+                      PermissionStatus status =await Permission.photos.request();
+                      if ( status.isGranted) {
+                        Navigator.of(context).pop();
+                        BlocProvider.of<UploadImageCubit>(context)
+                            .uploadPhotoEvent(false);
+                      } else if ( status.isDenied) {
+                        status = await Permission.photos.request();
+                        if ( status.isGranted) {
+                          Navigator.of(context).pop();
+                          BlocProvider.of<UploadImageCubit>(context)
+                              .uploadPhotoEvent(false);
+                        } else {
+                          showPermissionDeniedDialog('Gallery');
+                        }
+                      } else {
+                        showPermissionDeniedDialog('Gallery');
+                      }
+                    },
+                    svg: "assets/svg/gallery.svg",
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    ).then((ImageSource? source) async {
+      if (source == null) return;
+
+      final pickedFile = await ImagePicker().pickImage(source: source);
+      if (pickedFile == null) return;
+    });
   }
 
   @override
@@ -186,7 +241,7 @@ class _UploadPhotoState extends State<UploadPhoto> {
                                )
                                : InkWell(
                                  onTap:(){
-                                   _pickedImage();
+                                   _pickedImage(size);
                                  },
                                  child: Container(
                                    padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 25),
@@ -241,7 +296,7 @@ class _UploadPhotoState extends State<UploadPhoto> {
                              const SizedBox(height: 20,),
                              InkWell(
                                onTap: (){
-                                 _pickedImage();
+                                 _pickedImage(size);
                                },
                                child: Container(
                                  padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 25),

@@ -13,6 +13,8 @@ class OtpResendSuccessState extends OtpVerificationActionState {
 
 class OtpResendFailed extends OtpVerificationActionState{}
 
+class OtpNotFilled extends OtpVerificationActionState{}
+
 class OtpVerificationSuccess extends OtpVerificationActionState {}
 
 class OtpVerificationUserAlreadyExistsState extends OtpVerificationActionState {}

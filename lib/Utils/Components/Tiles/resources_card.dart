@@ -12,8 +12,11 @@ import '../Text/simple_text.dart';
 
 class ResourcesCard extends StatefulWidget {
   final List<ResourcesModel> list;
+  final bool fromUserProfile;
   const ResourcesCard({
-    super.key, required this.list,
+    super.key,
+    required this.list,
+    required this.fromUserProfile,
   });
 
   @override
@@ -25,20 +28,30 @@ class _ResourcesCardState extends State<ResourcesCard> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    if(widget.fromUserProfile){
+      isLiked = List.generate(LocalData.bookmarked.length, (index){
+        if(LocalData.bookmarked[index].bookmark.contains(LocalData.docId)){
+          return true;
+        }else{
+          return false;
+        }
+      });
+    }
     return ListView.builder(
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: widget.list.length,
+        itemCount:widget.fromUserProfile? LocalData.bookmarked.length
+            :widget.list.length,
         itemBuilder: (context, index) {
-          if (isLiked.isEmpty) {
-            isLiked = List.generate(widget.list.length, (index){
-              if(widget.list[index].bookmark.contains(LocalData.docId)){
-                return true;
-              }else{
-                return false;
-              }
-            });
+          if(widget.fromUserProfile ==false){
+            if (isLiked.isEmpty) {
+              isLiked = List.generate(widget.list.length, (index){
+                if(widget.list[index].bookmark.contains(LocalData.docId)){
+                  return true;
+                }else{
+                  return false;
+                }
+              });
+            }
           }
           return Container(
             margin: const EdgeInsets.only(bottom: 10),
@@ -57,7 +70,9 @@ class _ResourcesCardState extends State<ResourcesCard> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: CachedNetworkImage(
-                      imageUrl:widget.list[index].image,
+                      imageUrl: widget.fromUserProfile
+                          ? LocalData.bookmarked[index].image
+                          : widget.list[index].image,
                       progressIndicatorBuilder: (context,
                           url, downloadProgress) =>
                           const Shimmer(
@@ -104,7 +119,9 @@ class _ResourcesCardState extends State<ResourcesCard> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SimpleText(
-                            text: widget.list[index].title,
+                            text: widget.fromUserProfile
+                                ? LocalData.bookmarked[index].title
+                                : widget.list[index].title,
                             fontSize: 13),
                         Row(
                           children: [
@@ -117,7 +134,10 @@ class _ResourcesCardState extends State<ResourcesCard> {
                               width: 6,
                             ),
                             SimpleText(
-                              text: "By- ${widget.list[index].by}",
+                              text: "By- ${
+                                  widget.fromUserProfile
+                                      ? LocalData.bookmarked[index].by
+                                      :  widget.list[index].by}",
                               fontSize: 13,
                               fontColor: const Color(0xffE52A9C),
                             )
@@ -138,7 +158,9 @@ class _ResourcesCardState extends State<ResourcesCard> {
                           });
                           BlocProvider.of<HomeBloc>(context).add(
                             BookmarkResources(
-                                id: widget.list[index].id,
+                                id: widget.fromUserProfile
+                                    ? LocalData.bookmarked[index].id
+                                    : widget.list[index].id,
                                 bookmarkOrNot: isLiked[index]));
                         },
                           child:

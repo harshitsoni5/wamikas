@@ -29,7 +29,9 @@ class _EventsState extends State<Events> {
     return SafeArea(
       child: Column(
         children: [
-          UserProfileAppBar(size: size, title: "Upcoming Events"),
+          UserProfileAppBar(size: size, title: "Upcoming Events",onPressed: (){
+            Navigator.of(context).pop();
+          },),
           Expanded(
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),

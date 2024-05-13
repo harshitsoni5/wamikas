@@ -85,7 +85,7 @@ class _InterestAndPreferencesState extends State<InterestAndPreferences> {
                       shrinkWrap: true,
                       itemCount: interests.length,
                       itemBuilder: (context, index) {
-                        return InkWell(
+                        return GestureDetector(
                           onTap: () {
                             if (selectedInterests.contains(interests[index])) {
                               selectedInterests.removeWhere(
@@ -100,7 +100,7 @@ class _InterestAndPreferencesState extends State<InterestAndPreferences> {
                               ? Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                                color: const Color(0xffE12799),
+                                color:ColorClass.primaryColor,
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
                                     color: const Color(0xffFFC8F5), width: 2)),
@@ -198,7 +198,7 @@ class _InterestAndPreferencesState extends State<InterestAndPreferences> {
                                       text: eventsOrGroupRec[index],
                                       fontSize: 14,
                                     ),
-                                    InkWell(
+                                    GestureDetector(
                                       onTap: () {
                                         if (selectedEventAndRec
                                             .contains(eventsOrGroupRec[index])) {
@@ -218,13 +218,13 @@ class _InterestAndPreferencesState extends State<InterestAndPreferences> {
                                             border: Border.all(
                                                 color: selectedEventAndRec
                                                     .contains(eventsOrGroupRec[index])
-                                                    ? ColorClass.userColor
+                                                    ? ColorClass.primaryColor
                                                     : const Color(0xffCFCFCF))),
                                         child: selectedEventAndRec
                                             .contains(eventsOrGroupRec[index])
                                             ? const Icon(
                                           Icons.check,
-                                          color: ColorClass.userColor,
+                                          color: ColorClass.primaryColor,
                                           size: 20,
                                         )
                                             : const SizedBox(

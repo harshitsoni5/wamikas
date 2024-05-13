@@ -69,6 +69,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 ));
               }
             } else {
+              print("yes");
               emit(HomeError());
             }
           }
@@ -103,13 +104,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               .map((doc) => doc.data()).toList();
           List<ResourcesModel> personalFinance = [];
           List<ResourcesModel> personalGrowth = [];
-          for (int i = 0;
-          i < allResources[0]["personal_financee"].length; i++) {
+          LocalData.bookmarked.clear();
+          for (int i = 0; i < allResources[0]["personal_financee"].length; i++) {
+            if(allResources[0]["personal_financee"][i]["bookmark"].contains(docId)){
+              LocalData.bookmarked.add(ResourcesModel.fromJson(allResources[0]["personal_financee"][i]));
+            }
             personalFinance.add(ResourcesModel.fromJson(
                 allResources[0]["personal_financee"][i]));
           }
           for (int i = 0;
           i < allResources[0]["professional_growth"].length; i++) {
+            if(allResources[0]["professional_growth"][i]["bookmark"].contains(docId)){
+              LocalData.bookmarked.add(ResourcesModel.fromJson(allResources[0]["professional_growth"][i]));
+            }
             personalGrowth.add(ResourcesModel.fromJson(
                 allResources[0]["professional_growth"][i]));
           }
@@ -143,15 +150,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               personalGrowth: personalGrowth,
             isNewNotification: isNewNotification
           ));
+
         }
         else {
+          print("ab yahan par");
           emit(HomeError());
         }
       }
       else {
+        print("hello yes");
         emit(HomeError());
       }
     } catch (e) {
+      print("haha");
+      print(e.toString());
       emit(HomeError());
     }
   }
@@ -267,11 +279,13 @@ FutureOr<void> deletePostEvent(DeletePostEvent event,
       //   }
       // }
       List<PostModel> allPosts = [];
+      print(event.listsOfPost.length);
       for (int i = 0; i < event.listsOfPost.length; i++) {
         if (event.listsOfPost[i].id != event.postId) {
           allPosts.add(event.listsOfPost[i]);
         }
       }
+      print(allPosts.length);
       emit(HomeSuccess(
           listOfAllPost: allPosts,
           userData: event.userData,
@@ -291,21 +305,26 @@ FutureOr<void> deletePostEvent(DeletePostEvent event,
         var data = snapshot.data();
         if (data != null && data is Map) {
           int index = 0;
+          bool isThereAreAnyNotification =false;
           List notifications = data["notifications"];
           for (int i = 0; i < notifications.length; i++) {
             if (notifications[i]["id"] == event.postId) {
+              isThereAreAnyNotification=true;
               break;
             }
             index++;
           }
-          notifications.removeAt(index);
-          await FireStoreDataBaseServices.setDataToUserCollection(
-              "notifications", docId, {
-            "notifications": notifications
-          });
+          if(isThereAreAnyNotification){
+            notifications.removeAt(index);
+            await FireStoreDataBaseServices.setDataToUserCollection(
+                "notifications", docId, {
+              "notifications": notifications
+            });
+          }
         }
       }
     } catch (e) {
+      print(e.toString());
       emit(HomeError());
     }
   }

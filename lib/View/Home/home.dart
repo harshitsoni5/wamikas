@@ -33,10 +33,10 @@ class _HomeScreenState extends State<HomeScreen> {
     Size size =MediaQuery.of(context).size;
     return SafeArea(
         child: BlocConsumer<HomeBloc, HomeState>(
-      listener: (context, state) {
+              listener: (context, state) {
         // TODO: implement listener
-      },
-      builder: (context, state) {
+              },
+              builder: (context, state) {
         if (state is HomeLoading) {
           return const HomeShimmerLoading();
         } else if (state is HomeSuccess) {
@@ -60,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       posts: posts,
                       fromProfileScreen: false,
                       isNewNotification: state.isNewNotification,
+                      profilePercentage: null,
                     ),
                   ),
                 ),
@@ -81,8 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         }
-      },
-    ));
+              },
+            ));
   }
 }
 

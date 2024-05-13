@@ -126,7 +126,14 @@ class _FeedBackState extends State<FeedBack> {
         ),
         body: Column(
           children: [
-            UserProfileAppBar(size: size,title: "Feedback",isBack: true,),
+            UserProfileAppBar(
+              size: size,
+              title: "Feedback",
+              isBack: true,
+              onPressed: (){
+                Navigator.of(context).pop();
+              },
+            ),
             const SizedBox(height: 20,),
             Expanded(
               child: Container(

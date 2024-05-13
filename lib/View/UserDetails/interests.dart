@@ -57,62 +57,73 @@ class _InterestsState extends State<Interests> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
               child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: interests.length,
-                itemBuilder: (context,index){
+                itemBuilder: (context, index) {
                   return InkWell(
-                    onTap: (){
-                      if(selectedInterests.contains(interests[index])){
-                        selectedInterests.removeWhere((element) => element==interests[index]);
+                    onTap: () {
+                      if (selectedInterests.contains(interests[index])) {
+                        selectedInterests.removeWhere(
+                                (element) => element == interests[index]);
                         setState(() {});
-                      }else{
+                      } else {
                         selectedInterests.add(interests[index]);
                         setState(() {});
                       }
                     },
-                    child:selectedInterests.contains(interests[index])?
-                    Container(
+                    child: selectedInterests.contains(interests[index])
+                        ? Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                          color: const Color(0xffE12799),
+                          color:ColorClass.primaryColor,
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                              color: const Color(0xffFFC8F5),
-                            width: 2
-                          )
-                      ),
+                              color: const Color(0xffFFC8F5), width: 2)),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Flexible(child: SimpleText(text: interests[index], fontSize: 14,)),
-                          const SizedBox(width: 5,),
-                          SvgPicture.asset("assets/svg/minus.svg",height: 40,),
+                          Flexible(
+                              child: SimpleText(
+                                text: interests[index],
+                                fontSize: size.width <390? 11:13,
+                                fontColor: Colors.white,
+                              )),
+                          SvgPicture.asset(
+                            "assets/svg/minus.svg",
+                            height: size.width <390? 35:40,
+                          ),
                         ],
                       ),
                     )
-                    :Container(
+                        : Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: const Color(0xffE9E9E9)
-                        )
-                      ),
+                          borderRadius: BorderRadius.circular(10),
+                          border:
+                          Border.all(color: const Color(0xffE9E9E9))),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Flexible(child: SimpleText(text: interests[index], fontSize: 14,)),
-                          const SizedBox(width: 5,),
-                          SvgPicture.asset("assets/svg/plus.svg",height: 40,),
+                          Flexible(
+                              child: SimpleText(
+                                text: interests[index],
+                                fontSize: size.width <390? 11:13,
+                              )),
+                          SvgPicture.asset(
+                            "assets/svg/plus.svg",
+                            height: size.width <390? 35:40,
+                          ),
                         ],
                       ),
                     ),
                   );
                 },
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 5,
-                crossAxisSpacing: 5,
-                  childAspectRatio: 3
-              ),
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 5,
+                    crossAxisSpacing: 5,
+                    childAspectRatio: 3),
               ),
             ),
             const SizedBox(height: 20,),
@@ -125,7 +136,7 @@ class _InterestsState extends State<Interests> {
                     BlocConsumer<InterestsCubit, InterestsState>(
                     listener: (context, state) {
                       if(state is InterestsSuccess){
-                        Navigator.of(context).pushNamed(RouteName.userProfile);
+                        Navigator.of(context).pushNamed(RouteName.bottomBar);
                       }
                       if(state is InterestsNotSelected){
                         Fluttertoast.showToast(
