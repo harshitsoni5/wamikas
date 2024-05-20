@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -33,6 +34,14 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
   print(message.data);
 }
 
+Future<void> _handleNotificationResponse(NotificationResponse response) async {
+  Map<String, dynamic> data = jsonDecode(response.payload!);
+  print(data["post_id"]);
+  navigatorKey.currentState?.restorablePushNamed(
+      RouteName.notificationPost,
+      arguments:data["post_id"]);
+}
+
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async{
@@ -49,20 +58,20 @@ void main() async{
   if(notificationList == null){
     SharedData.notificationList(0);
   }
-  bool? isNotificationOn = await SharedFcmToken.getFcmToken("notification");
-  isNotificationOn ??= false;
-  isNotificationOn ? await PushNotificationServices.firebaseCloudMessaging():null;
-  isNotificationOn? PushNotificationServices.localNotificationInitialization():null;
+  await PushNotificationServices.firebaseCloudMessaging();
+  var initializationSettings =
+  PushNotificationServices.localNotificationInitialization();
   PushNotificationServices.saveFcmToken();
+  await notificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: _handleNotificationResponse);
   PushNotificationServices.incomingMessage();
-  isNotificationOn ? FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler):null;
-  isNotificationOn ? FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage){
-    print(remoteMessage);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+   FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage){
     navigatorKey.currentState?.restorablePushNamed(
         RouteName.notificationPost,
         arguments:remoteMessage.data["post_id"]);
-  }):null;
-  isNotificationOn ? FirebaseMessaging.instance.getInitialMessage().then((message) {
+  }); FirebaseMessaging.instance.getInitialMessage().then((message) {
     if (message != null) {
       navigatorKey.currentState?.restorablePushNamed(
           RouteName.splash,arguments: {
@@ -70,11 +79,6 @@ void main() async{
         "postId":message.data["post_id"]
       });
     }
-  }):null;
-  PushNotificationServices.onClickNotification.stream.listen((event) {
-    navigatorKey.currentState?.restorablePushNamed(
-        RouteName.notificationPost,
-        arguments:event["post_id"]);
   });
   runApp(const MyApp());
 }

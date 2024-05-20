@@ -71,6 +71,7 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
               usersData != null &&
               usersData is Map &&
               event.uid != event.postModel.uid) {
+            print(postUserData["fcm_token"]);
             await PushNotification.sendPushNotification("New comment",
                   "${usersData["name"]} post a comment on your forum",
                   postUserData["fcm_token"],event.postId);

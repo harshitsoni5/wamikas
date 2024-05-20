@@ -97,25 +97,3 @@ class PostModel {
     );
   }
 }
-
-
-// // Example JSON data
-// final json = {
-//   "comments": [
-//     {
-//       "comments_desc": "hello how are you",
-//       "likes": [],
-//       "name": "Harshit Soni",
-//       "profile_pic":
-//       "https://firebasestorage.googleapis.com/v0/b/wamikas-c82b2.appspot.com/o/profile%20pic%2Fimage1711015940993?alt=media&token=c807aa08-5152-439d-b6ec-582621644b99",
-//       "time": "sssjjssjs",
-//       "uid": "fafafaa"
-//     }
-//   ],
-//   "forum_content": "new post guys iiiii",
-//   "forum_name": "Personal Finance",
-//   "forum_title": "Hello",
-//   "like": [],
-//   "time": "2024-04-08 11:45:47.980395",
-//   "uid": "9116852018"
-// };

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -180,7 +181,15 @@ class _ForumScreenState extends State<ForumScreen> {
                                     radius: 25,
                                     child:state.profilePic ==null?
                                     SvgPicture.asset("assets/svg/profile.svg",):
-                                    Image.network(state.profilePic!),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: CachedNetworkImage(
+                                        imageUrl: state.profilePic!,
+                                        height: 40,
+                                        width: 40,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
                                   ),
                                 ),
                                 const SizedBox(width: 10,),

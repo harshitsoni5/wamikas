@@ -35,6 +35,7 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> {
          SharedData.setUid(userCredential.user!.uid);
          SharedData.setPhone(phoneNumber);
          SharedData.setName(username!);
+         SharedData.setEmail(email!);
          collectionReference.doc(phoneNumber).
          set({
            "name":username,
@@ -48,6 +49,7 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> {
        else {
          SharedData.setUid(userCredential.user!.uid);
          SharedData.setPhone(phoneNumber);
+         SharedData.setEmail(email!);
          var userData = await collectionReference.doc(phoneNumber).get();
          if(userData.exists){
            var userInfo = userData.data();

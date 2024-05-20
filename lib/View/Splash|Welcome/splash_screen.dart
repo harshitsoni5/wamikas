@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wamikas/Utils/Color/colors.dart';
 import '../../SharedPrefernce/shared_pref.dart';
-import '../../Utils/Components/Text/simple_text.dart';
 import '../../Utils/Routes/route_name.dart';
 
 class SplashScreen extends StatefulWidget {

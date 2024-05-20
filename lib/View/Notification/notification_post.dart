@@ -46,7 +46,6 @@ class _NotificationPostState extends State<NotificationPost> {
     }
   }
 
-
   @override
   void initState() {
     BlocProvider.of<NotificationPostCubit>(context)
@@ -145,10 +144,6 @@ class _NotificationPostState extends State<NotificationPost> {
                                       fontColor: ColorClass.textColor,
                                     ),
                                   ],
-                                ),
-                                const Spacer(),
-                                const Icon(
-                                    Icons.more_vert
                                 ),
                               ],
                             ),

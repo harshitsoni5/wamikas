@@ -16,13 +16,17 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
+  late ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
     BlocProvider.of<NotificationCubit>(context).getAllNotification();
-    super.initState();
+    scrollController=ScrollController();
+  super.initState();
   }
   
   String getTime(var timestamp) {
+    scrollController =ScrollController();
     final postTime;
     if(timestamp is Timestamp){
       postTime = timestamp.toDate();
@@ -82,28 +86,32 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ),
                   );
                 }
-
                 else if(state is NotificationSuccess){
                   List<NotificationModel> lists = state.listOfNotification;
-                  return lists.isEmpty ? const Expanded(child: Center(
-                    child: SimpleText(
-                      text: "No Notifications yet",
-                      fontSize: 16,
-                      fontColor: Colors.black38,
+                  return lists.isEmpty ?
+                  const Expanded(
+                    child: Center(
+                      child: SimpleText(
+                        text: "No Notifications yet",
+                        fontSize: 16,
+                        fontColor: Colors.black38,
+                      ),
                     ),
-                  )):Expanded(
+                  ):Flexible(
                     child: ListView.builder(
-                      shrinkWrap: true,
+                      controller: scrollController,
                       itemCount: lists.length,
-                      itemBuilder: (context,index) {
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
                         return InkWell(
-                          onTap: (){
-                                    Navigator.of(context).pushNamed(
-                                        RouteName.notificationPost,
-                                        arguments: lists[index].id);
-                                  },
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                              RouteName.notificationPost,
+                              arguments: lists[index].id,
+                            );
+                          },
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
+                            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                             child: Row(
                               children: [
                                 lists[index].profilePic == null
@@ -113,8 +121,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   width: 40,
                                 )
                                     : ClipRRect(
-                                  borderRadius:
-                                  BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(20),
                                   child: Image.network(
                                     lists[index].profilePic!,
                                     height: 40,
@@ -129,15 +136,19 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      SimpleText(text: lists[index].name, fontSize: 15,
-                                        fontColor: const Color(0xffE52A9C),),
+                                      SimpleText(
+                                        text: lists[index].name,
+                                        fontSize: 15,
+                                        fontColor: const Color(0xffE52A9C),
+                                      ),
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                           Flexible(
                                             child: SimpleText(
-                                              text: "commented on your post: ${lists[index].title}",
+                                              text:
+                                              "commented on your post: ${lists[index].title}",
                                               fontSize: 14,
                                               fontColor: Colors.black,
                                               textHeight: 1,
@@ -145,7 +156,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                           ),
                                         ],
                                       )
-                                    ],),
+                                    ],
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 15.0),
@@ -159,7 +171,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             ),
                           ),
                         );
-                      }
+                      },
                     ),
                   );
                 }

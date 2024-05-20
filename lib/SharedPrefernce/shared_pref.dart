@@ -35,6 +35,11 @@ class SharedData {
     preferences.setString("name", name);
   }
 
+  static Future setEmail(String name) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("email", name);
+  }
+
   static Future clearPref(key) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove(key);

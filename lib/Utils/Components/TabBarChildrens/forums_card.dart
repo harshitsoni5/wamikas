@@ -85,7 +85,9 @@ class _ForumCardState extends State<ForumCard> {
                 child: GestureDetector(
                   onTap: () {
                     Navigator.of(context).pop();
-                    setState(() {});
+                    setState(() {
+                      comments.length;
+                    });
                   },
                   child: Center(
                     child: CircleAvatar(
@@ -587,11 +589,11 @@ class _ForumCardState extends State<ForumCard> {
                               setState(() {
                                 isEmpty = true;
                               });
-                              localSearch = widget.posts
-                                  .where((element) => element.forumTitle
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase()))
-                                  .toList();
+                              localSearch = widget.posts.where((element) {
+                                final query = value.toLowerCase();
+                                return element.forumTitle.toLowerCase().contains(query) || element.name.toLowerCase().contains(query);
+                              }).toList();
+
                             }
                           });
                         },
@@ -640,7 +642,6 @@ class _ForumCardState extends State<ForumCard> {
                 itemCount: localSearch.isEmpty
                     ? widget.posts.length
                     : localSearch.length,
-                reverse: true,
                 itemBuilder: (context, index) {
                   PostModel postData = localSearch.isEmpty? widget.posts[index]:localSearch[index];
                   return Column(
@@ -695,13 +696,13 @@ class _ForumCardState extends State<ForumCard> {
                                       fontSize: 12.sp,
                                       textHeight: 0.9,
                                     ),
-                                    SimpleText(
-                                      text: localSearch.isEmpty
-                                          ? widget.posts[index].emailId
-                                          : localSearch[index].name,
-                                      fontSize: 11.5.sp,
-                                      fontColor: ColorClass.textColor,
-                                    ),
+                                    // SimpleText(
+                                    //   text: localSearch.isEmpty
+                                    //       ? widget.posts[index].emailId
+                                    //       : localSearch[index].name,
+                                    //   fontSize: 11.5.sp,
+                                    //   fontColor: ColorClass.textColor,
+                                    // ),
                                   ],
                                 ),
                                 const Spacer(),
@@ -733,7 +734,7 @@ class _ForumCardState extends State<ForumCard> {
                                   ? localSearch[index].forumName
                                   : widget.posts[index].forumName,
                               fontSize: 9.sp,
-                              fontColor: const Color(0xff455A64),
+                              fontColor: ColorClass.textColor,
                             ),
                             const SizedBox(
                               height: 5,

@@ -366,7 +366,7 @@ class _EditProfileState extends State<EditProfile> {
                           child: SimpleText(
                             text: "Not Selected",
                             fontSize: 10,
-                            fontColor: Color(0xffF72532),
+                            fontColor: ColorClass.primaryColor,
                           ),
                         ):
                               const SizedBox(),

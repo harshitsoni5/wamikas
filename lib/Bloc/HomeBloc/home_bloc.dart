@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:wamikas/Models/event_model.dart';
 import 'package:wamikas/Models/resources_model.dart';
 import 'package:wamikas/Models/user_profile_model.dart';
@@ -67,9 +68,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     id: allData[i]["id"],
                     profilePic: postedDataProfileDetails["profile_pic"]
                 ));
+                DateTime parseDateTime(String time) {
+                  return DateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").parse(time, true).toLocal();
+                }
+                listsOfPosts.sort((a, b) => parseDateTime(b.time).compareTo(parseDateTime(a.time)));
               }
             } else {
-              print("yes");
               emit(HomeError());
             }
           }

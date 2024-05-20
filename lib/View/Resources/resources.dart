@@ -30,10 +30,13 @@ class _ResourcesState extends State<Resources> {
     return SafeArea(
       child: Column(
         children: [
-          UserProfileAppBar(size: size, title: "Resources",
-            onPressed: (){
-            Navigator.of(context).pop();
-          },),
+          UserProfileAppBar(
+            size: size,
+            title: "Resources",
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
           Expanded(
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),

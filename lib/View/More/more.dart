@@ -190,6 +190,7 @@ class _MoreState extends State<More> {
               SharedData.clearPref("uid");
               SharedData.clearPref("profile");
               SharedData.clearPref("name");
+              SharedData.clearPref("email");
               Navigator.of(context).pushNamedAndRemoveUntil(
                   RouteName.signIn, (route) => false);
             },
@@ -285,12 +286,11 @@ class _MoreState extends State<More> {
                           else if (value==false && _notificationEnabled==false){
                           }
                          else if(value){
-                           print("here");
                            SharedFcmToken.setNotification(true);
                            PushNotificationServices.firebaseCloudMessaging();
                          }else{
-                            await notificationsPlugin.cancel(0);
-                            await notificationsPlugin.cancelAll();
+                            // await notificationsPlugin.cancel(0);
+                            // await notificationsPlugin.cancelAll();
                            SharedFcmToken.setNotification(false);
                          }
                           setState(() {

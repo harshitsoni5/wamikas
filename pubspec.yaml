@@ -66,6 +66,7 @@ dependencies:
   flutter_emoji_feedback: 0.2.0
   shimmer: ^3.0.0
   rxdart:
+  intl:
 
 dev_dependencies:
   flutter_test:

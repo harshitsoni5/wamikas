@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wamikas/Bloc/FeedBackCubit/feedback_cubit.dart';
 import 'package:wamikas/Bloc/FeedBackCubit/feedback_state.dart';
+import 'package:wamikas/SharedPrefernce/shared_pref.dart';
 import 'package:wamikas/Utils/Components/Text/simple_text.dart';
 import '../../Utils/Components/AppBar/user_profile_app_bar.dart';
 import '../../Utils/Components/Buttons/round_auth_buttons.dart';
@@ -27,6 +28,25 @@ class _FeedBackState extends State<FeedBack> {
   bool emailEmpty =false;
   bool experienceEmpty =false;
   bool commentsEmpty =false;
+  bool isLoading=false;
+  @override
+  void initState() {
+   setState(() {
+     isLoading=true;
+   });
+   getNameAndEmail();
+   super.initState();
+  }
+
+  getNameAndEmail()async{
+    String namePref =await SharedData.getIsLoggedIn("name");
+    name.text=namePref;
+    String emailPref =await SharedData.getIsLoggedIn("email");
+    email.text=emailPref;
+   setState(() {
+     isLoading=false;
+   });
+  }
   @override
   void dispose() {
     name.dispose();
@@ -39,88 +59,90 @@ class _FeedBackState extends State<FeedBack> {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        bottomNavigationBar: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          height: size.height*0.13,
-          padding: const EdgeInsets.only(bottom: 15.0),
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: BlocConsumer<FeedbackCubit, FeedbackState>(
-              listener: (context, state) {
-                if(state is FeedBackName){
-                  setState(() {
-                    fullName=true;
-                  });
-                }
-                if(state is FeedbackEmailEmpty){
-                  setState(() {
-                    fullName=false;
-                    emailEmpty=true;
-                  });
-                }
-                if(state is EmptyComment){
-                 setState(() {
-                   fullName=false;
-                   emailEmpty=false;
-                   experienceEmpty=false;
-                   commentsEmpty=true;
-                 });
-                }
-                if(state is FeedbackExperience){
-                  setState(() {
-                    fullName=false;
-                    emailEmpty=false;
-                    experienceEmpty=true;
-                  });
-                } if(state is FeedBackSuccess){
-                 setState(() {
-                   emailEmpty=false;
-                   fullName=false;
-                   experienceEmpty=false;
-                 });
-                  Fluttertoast.showToast(
-                      msg: "Feedback sent successfully",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.SNACKBAR,
-                      timeInSecForIosWeb: 1,
-                      textColor: Colors.black,
-                      backgroundColor: CupertinoColors.white,
-                      fontSize: 15.0
-                  );
-                  email.clear();
-                  name.clear();
-                }
-                if(state is FeedbackError){
-                  Fluttertoast.showToast(
-                      msg: "oops some error occurred",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.SNACKBAR,
-                      timeInSecForIosWeb: 1,
-                      textColor: Colors.black,
-                      backgroundColor: CupertinoColors.white,
-                      fontSize: 15.0
-                  );
-                }
-              },
-              builder: (context, state) {
-                if(state is FeedbackLoading){
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return InkWell(
-                  onTap: (){
-                    BlocProvider.of<FeedbackCubit>(context).saveFeedback(
-                        name: name.text,
-                        comments: comments.text,
-                        email: email.text,
-                        experience: experience
+        bottomNavigationBar: Visibility(
+          visible: !isLoading,
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            height: size.height*0.13,
+            padding: const EdgeInsets.only(bottom: 15.0),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: BlocConsumer<FeedbackCubit, FeedbackState>(
+                listener: (context, state) {
+                  if(state is FeedBackName){
+                    setState(() {
+                      fullName=true;
+                    });
+                  }
+                  if(state is FeedbackEmailEmpty){
+                    setState(() {
+                      fullName=false;
+                      emailEmpty=true;
+                    });
+                  }
+                  if(state is EmptyComment){
+                   setState(() {
+                     fullName=false;
+                     emailEmpty=false;
+                     experienceEmpty=false;
+                     commentsEmpty=true;
+                   });
+                  }
+                  if(state is FeedbackExperience){
+                    setState(() {
+                      fullName=false;
+                      emailEmpty=false;
+                      experienceEmpty=true;
+                    });
+                  } if(state is FeedBackSuccess){
+                   setState(() {
+                     emailEmpty=false;
+                     fullName=false;
+                     experienceEmpty=false;
+                   });
+                    Fluttertoast.showToast(
+                        msg: "Feedback sent successfully",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.SNACKBAR,
+                        timeInSecForIosWeb: 1,
+                        textColor: Colors.black,
+                        backgroundColor: CupertinoColors.white,
+                        fontSize: 15.0
                     );
-                  },
-                  child: RoundAuthButtons(
-                      size: size, btnText: "Submit Now"),
-                );
-              },
+                    comments.clear();
+                  }
+                  if(state is FeedbackError){
+                    Fluttertoast.showToast(
+                        msg: "oops some error occurred",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.SNACKBAR,
+                        timeInSecForIosWeb: 1,
+                        textColor: Colors.black,
+                        backgroundColor: CupertinoColors.white,
+                        fontSize: 15.0
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  if(state is FeedbackLoading){
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return InkWell(
+                    onTap: (){
+                      BlocProvider.of<FeedbackCubit>(context).saveFeedback(
+                          name: name.text,
+                          comments: comments.text,
+                          email: email.text,
+                          experience: experience
+                      );
+                    },
+                    child: RoundAuthButtons(
+                        size: size, btnText: "Submit Now"),
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -135,7 +157,9 @@ class _FeedBackState extends State<FeedBack> {
               },
             ),
             const SizedBox(height: 20,),
-            Expanded(
+           isLoading? const Expanded(child: Center(
+             child: CircularProgressIndicator(),
+           )):Expanded(
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 child: SingleChildScrollView(
