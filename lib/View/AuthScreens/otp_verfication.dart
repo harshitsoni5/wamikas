@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -173,6 +175,8 @@ class _OtpVerificationState extends State<OtpVerification> {
                             BlocConsumer<OtpVerificationCubit, OtpVerificationState>(
                             listener: (context, state) {
                               if(state is OtpResendSuccessState){
+                                print(jsonEncode(state));
+                                print(verificationId);
                                 verificationId =state.verificationId;
                                 Fluttertoast.showToast(
                                     msg: "Otp has been send successfully",
@@ -250,6 +254,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                             margin: const EdgeInsets.symmetric(horizontal: 30),
                             child: InkWell(
                               onTap: (){
+
                                 BlocProvider.of<OtpVerificationCubit>(context).
                                 verifyOtp(pin.text,verificationId!,
                                   widget.username, widget.phone,

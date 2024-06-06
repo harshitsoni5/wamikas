@@ -164,6 +164,8 @@ class _SignInState extends State<SignIn> {
                     });
                   }
                   if(state is AuthErrorState){
+
+                    print(state.error);
                     Fluttertoast.showToast(
                         msg: "oops something went wrong",
                         toastLength: Toast.LENGTH_SHORT,

@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,16 +22,22 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> {
      emit(OtpNotFilled());
      emit(OtpVerificationInitial());
    }else{
+
+
      try {
        PhoneAuthCredential credential = PhoneAuthProvider.credential(
          verificationId: verificationId,
          smsCode: otp,
        );
+
        UserCredential userCredential = await FirebaseAuth.instance
            .signInWithCredential(credential);
+
        String? fcmToken = await SharedFcmToken.getFcmToken("fcmToken");
        CollectionReference collectionReference = FireStoreDataBaseServices.
        createNewCollectionOrAddToExisting("users");
+
+
        if (userCredential.additionalUserInfo!.isNewUser) {
          SharedData.setUid(userCredential.user!.uid);
          SharedData.setPhone(phoneNumber);
@@ -47,10 +54,11 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> {
          emit(OtpVerificationInitial());
        }
        else {
+         var userData = await collectionReference.doc(phoneNumber).get();
          SharedData.setUid(userCredential.user!.uid);
          SharedData.setPhone(phoneNumber);
-         SharedData.setEmail(email!);
-         var userData = await collectionReference.doc(phoneNumber).get();
+         SharedData.setEmail(userData.get("email"));
+
          if(userData.exists){
            var userInfo = userData.data();
            if(userInfo != null && userInfo is Map){
