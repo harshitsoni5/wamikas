@@ -376,7 +376,7 @@ class _ContactDetailsState extends State<ContactDetails> {
                            }
                            else{
                              Fluttertoast.showToast(
-                                 msg: "Oops something went wrong",
+                                 msg: "Server Busy. Please try after sometime",
                                  toastLength: Toast.LENGTH_LONG,
                                  gravity: ToastGravity.SNACKBAR,
                                  timeInSecForIosWeb: 1,

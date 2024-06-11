@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:wamikas/Bloc/AuthBloc/OtpVerficationCubit/otp_verification_cubit.dart';
 import 'package:wamikas/Bloc/AuthBloc/SignUpCubit/signup_cubit.dart';
 import 'package:wamikas/Bloc/CommentsBloc/comments_bloc.dart';
@@ -25,8 +27,12 @@ import 'Bloc/NotficationPost/notification_post_cubit.dart';
 import 'Bloc/NotificationBloc/notification_cubit.dart';
 import 'Bloc/UserProfileBloc/InterestsCubit/interests_cubit.dart';
 import 'Core/FirebasePushNotificationService/firebase_push_notificatioin_services.dart';
+import 'Utils/Color/colors.dart';
+import 'Utils/Components/Text/simple_text.dart';
 import 'Utils/Routes/route_name.dart';
 import 'Utils/Routes/routes.dart';
+
+
 
 FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -137,6 +143,83 @@ class MyApp extends StatelessWidget {
           initialRoute: RouteName.splash,
           onGenerateRoute: Routes.generateRoute,
           debugShowCheckedModeBanner: false,
+          builder: (context, child) {
+            return StreamBuilder<ConnectivityResult>(
+                stream: Connectivity().onConnectivityChanged,
+                builder: (context, snapshot) {
+                  final connectivityResult = snapshot.data;
+                  // print("hello" + conenctivityResult.toString());
+                  if (connectivityResult == ConnectivityResult.none) {
+                    return Scaffold(
+                        resizeToAvoidBottomInset: false,
+                        backgroundColor: Colors.white,
+                        appBar: AppBar(
+                          backgroundColor: Colors.white,
+
+                          toolbarHeight: 0,
+                          elevation: 0,
+                        ),
+                        body: Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.only(left: 30, right: 30),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(bottom: 20),
+                                  child:
+                                  const Icon(Icons.network_check_rounded,size: 100,),
+                                ),
+                                const Text(
+                                  "Seems you are not\nconnected to the network",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                  textAlign: TextAlign.center,
+
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(top: 10),
+                                  child: Text(
+                                    textAlign: TextAlign.center,
+                                    "Please check your internet connection and try again",
+                                    style: GoogleFonts.inter(
+                                      textStyle: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 14),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(top: 50),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 25),
+                                    width: double.infinity,
+                                    decoration: ShapeDecoration(
+                                      color: ColorClass.primaryColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    child: const Center(
+                                      child: SimpleText(
+                                        text: "Refresh",
+                                        fontColor: Colors.white,
+                                        fontSize: 15,
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )));
+                  }
+
+                  return child!;
+                });
+          },
         ),
       ),
     );

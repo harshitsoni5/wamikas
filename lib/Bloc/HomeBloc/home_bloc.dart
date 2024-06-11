@@ -33,6 +33,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       CollectionReference events =
       await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
           "events");
+
       CollectionReference resources =
       await FireStoreDataBaseServices.createNewCollectionOrAddToExisting(
           "resources");
@@ -40,6 +41,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       LocalData.docId = docId;
       var snapshot = await reference.doc(docId).get();
       if (snapshot.exists) {
+
         var data = snapshot.data();
         if (data != null && data is Map<String, dynamic>) {
           //forums

@@ -164,8 +164,6 @@ class _SignInState extends State<SignIn> {
                     });
                   }
                   if(state is AuthErrorState){
-
-                    print(state.error);
                     Fluttertoast.showToast(
                         msg: "oops something went wrong",
                         toastLength: Toast.LENGTH_SHORT,
@@ -177,6 +175,7 @@ class _SignInState extends State<SignIn> {
                     );
                   }
                   if(state is UserNotExists){
+
                     Fluttertoast.showToast(
                         msg: "User not found",
                         toastLength: Toast.LENGTH_SHORT,
@@ -210,6 +209,7 @@ class _SignInState extends State<SignIn> {
                           fontSize: 15.0);
                     }
                     if (state is PhoneInvalid) {
+
                       Fluttertoast.showToast(
                           msg: "Please enter a valid phone number",
                           toastLength: Toast.LENGTH_LONG,
@@ -232,7 +232,7 @@ class _SignInState extends State<SignIn> {
                     );
                   },
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 25),
+                    margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 15),
                     child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 25),
                     width: size.width,

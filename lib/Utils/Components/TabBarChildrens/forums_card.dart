@@ -271,7 +271,8 @@ class _ForumCardState extends State<ForumCard> {
                                         ),
                                         Row(
                                           children: [
-                                            InkWell(
+                                            Padding(padding: EdgeInsets.symmetric(horizontal: 10),
+                                            child: InkWell(
                                               onTap: () {
                                                 BlocProvider.of<CommentsBloc>(context).add(LikeAComment(
                                                     postId: postId,
@@ -302,28 +303,20 @@ class _ForumCardState extends State<ForumCard> {
                                                 children: [
                                                   isLikeOrNot
                                                       ? SvgPicture.asset(
-                                                          "assets/svg/like_filled.svg",
-                                                          height: 15,
-                                                        )
+                                                    "assets/svg/like_filled.svg",
+                                                    height: 15,
+                                                  )
                                                       : SvgPicture.asset(
-                                                          "assets/svg/like_wami.svg"),
+                                                      "assets/svg/like_wami.svg"),
                                                   const SizedBox(width: 5),
                                                   SimpleText(
-                                                      text: "Like", fontSize: 10.sp),
+                                                      text:'Like ${state.comments[index]["likes"].isNotEmpty ? state.comments[index]["likes"]
+                                                          .length
+                                                          .toString():""}', fontSize: 10.sp),
                                                 ],
                                               ),
-                                            ),
-                                            const SizedBox(width: 5,),
-                                            state.comments[index]["likes"]
-                                                    .isNotEmpty
-                                                ? SimpleText(
-                                                    text: state
-                                                        .comments[index]
-                                                            ["likes"]
-                                                        .length
-                                                        .toString(),
-                                                    fontSize: 10.sp)
-                                                : const SizedBox(),
+                                            ),),
+
                                             const Spacer(),
                                             SimpleText(
                                                 text: LocalData.getTime(

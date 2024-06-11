@@ -68,7 +68,7 @@ class EventsCard extends StatelessWidget {
                         width: eventsData.length == 1
                             ? size.width
                             : size.width * 0.75,
-                        height: size.height * 0.15,
+                        height: size.height * 0.13,
                         child: ClipRRect(
                             borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(10),

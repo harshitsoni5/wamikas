@@ -33,7 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
     Size size =MediaQuery.of(context).size;
     return SafeArea(
         child: BlocConsumer<HomeBloc, HomeState>(
+
       listener: (context, state) {
+
         // TODO: implement listener
       },
       builder: (context, state) {
@@ -70,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
         } else if (state is HomeError) {
           return Center(
             child: SimpleText(
-              text: 'Oops something went wrong',
+              text: 'Server Busy. Please try after sometime',
               fontSize: 14.sp,
             ),
           );

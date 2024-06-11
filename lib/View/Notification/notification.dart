@@ -179,7 +179,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   return const Expanded(
                     child: Center(
                       child: SimpleText(
-                        text: "Oops something went wrong",
+                        text: "Server Busy. Please try after sometime",
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),

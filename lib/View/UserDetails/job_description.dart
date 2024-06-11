@@ -264,7 +264,7 @@ class _JobProfileDescriptionState extends State<JobProfileDescription> {
                           }
                           if(state is JobDescErrorState){
                             Fluttertoast.showToast(
-                                msg: "Oops something went wrong please try again later",
+                                msg: "Server Busy. Please try after sometime",
                                 toastLength: Toast.LENGTH_LONG,
                                 gravity: ToastGravity.SNACKBAR,
                                 timeInSecForIosWeb: 1,

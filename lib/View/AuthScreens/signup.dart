@@ -226,7 +226,7 @@ class _SignUpState extends State<SignUp> {
                    }
                    if(state is UserAlreadyExists){
                      Fluttertoast.showToast(
-                         msg: "user already exists",
+                         msg: "User already exists",
                          toastLength: Toast.LENGTH_SHORT,
                          gravity: ToastGravity.SNACKBAR,
                          timeInSecForIosWeb: 1,
@@ -297,7 +297,7 @@ class _SignUpState extends State<SignUp> {
                       return const Center(child: CircularProgressIndicator(),);
                     }
                     return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 45),
+                        margin: const EdgeInsets.symmetric(horizontal: 45,vertical: 15),
                         child: InkWell(
                           onTap: (){
                             BlocProvider.of<SignupCubit>(context).register(

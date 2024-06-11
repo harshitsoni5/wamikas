@@ -377,7 +377,7 @@ class _EditProfileState extends State<EditProfile> {
                 else{
                   return Center(
                     child: SimpleText(
-                      text: 'Oops something went wrong',
+                      text: 'Server Busy. Please try after sometime',
                       fontSize: 16.sp,
                       fontColor: Colors.black,
                     ),

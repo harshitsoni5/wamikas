@@ -961,6 +961,9 @@ PODS:
     - firebase_core
     - Flutter
     - nanopb (< 2.30910.0, >= 2.30908.0)
+  - connectivity (0.0.1):
+    - Flutter
+    - Reachability
   - DKImagePickerController/Core (4.3.9):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
@@ -1221,6 +1224,7 @@ PODS:
   - permission_handler_apple (9.1.1):
     - Flutter
   - PromisesObjC (2.4.0)
+  - Reachability (3.7.6)
   - RecaptchaInterop (100.0.0)
   - SDWebImage (5.19.2):
     - SDWebImage/Core (= 5.19.2)
@@ -1240,6 +1244,7 @@ PODS:
 
 DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
+  - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_app_check (from `.symlinks/plugins/firebase_app_check/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
@@ -1286,6 +1291,7 @@ SPEC REPOS:
     - leveldb-library
     - nanopb
     - PromisesObjC
+    - Reachability
     - RecaptchaInterop
     - SDWebImage
     - SwiftyGif
@@ -1294,6 +1300,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   cloud_firestore:
     :path: ".symlinks/plugins/cloud_firestore/ios"
+  connectivity:
+    :path: ".symlinks/plugins/connectivity/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   firebase_app_check:
@@ -1332,6 +1340,7 @@ SPEC CHECKSUMS:
   AppCheckCore: db04d539b37794558391bc56bc65e2440b01a195
   BoringSSL-GRPC: 1e2348957acdbcad360b80a264a90799984b2ba6
   cloud_firestore: 1138af5dceea2b6a274633ef8c6de77ff73025ae
+  connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
   file_picker: ce3938a0df3cc1ef404671531facef740d03f920
@@ -1368,6 +1377,7 @@ SPEC CHECKSUMS:
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
+  Reachability: fd0ecd23705e2599e4cceeb943222ae02296cbc6
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   SDWebImage: dfe95b2466a9823cf9f0c6d01217c06550d7b29a
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
